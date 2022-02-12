@@ -26,14 +26,15 @@ namespace AoE2DELobbyNotifications.Api
 
         public async Task Refresh(CancellationToken cancellationToken)
         {
+            Log.Information("Refresh");
             var results = await GetAllLobbiesAsync(cancellationToken);
             var keysToDelete = _items.Keys.ToHashSet();
             keysToDelete.ExceptWith(results.Select(x => x.LobbyId).ToList());
-            _items.RemoveKeys(keysToDelete);
-            //var newKeys = results.Select(x => x.LobbyId).ToHashSet();
-            //newKeys.ExceptWith(_items.Keys);
-            
-            _items.AddOrUpdate(results);
+            _items.Edit(updater =>
+            {
+                updater.RemoveKeys(keysToDelete);
+                updater.AddOrUpdate(results);
+            });
         }
 
         public async Task<List<LobbyDto>> GetAllLobbiesAsync(CancellationToken cancellationToken)
@@ -41,7 +42,6 @@ namespace AoE2DELobbyNotifications.Api
             Log.Information("GetAllLobbiesAsync");
             try
             {
-                //var result = await getLobbiesUrl.GetJsonAsync<List<LobbyDto>>(cancellationToken);
                 var result = await _httpClient.GetFromJsonAsync<List<LobbyDto>>(getLobbiesUrl, cancellationToken);
                 Log.Information($"Found {result.Count} lobbies");
                 return result;
