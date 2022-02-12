@@ -1,4 +1,5 @@
 ﻿using AoE2DELobbyNotifications.Api;
+using DynamicData.Binding;
 using ReactiveUI;
 using System;
 using System.Reactive;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AoE2DELobbyNotifications
 {
-    public class Lobby
+    public class Lobby: AbstractNotifyPropertyChanged
     {
         public Lobby()
         {
@@ -23,7 +24,12 @@ namespace AoE2DELobbyNotifications
 
         public ReactiveCommand<Unit, Unit> JoinGameCommand { get; }
 
-        public bool IsNew { get; set; }
+        private bool _isNew;
+        public bool IsNew
+        {
+            get => _isNew;
+            set => SetAndRaise(ref _isNew, value);
+        }
 
         public async Task JoinGame()
         {

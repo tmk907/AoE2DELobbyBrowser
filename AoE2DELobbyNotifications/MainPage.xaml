@@ -5,9 +5,7 @@
     xmlns:local="using:AoE2DELobbyNotifications"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:api="using:AoE2DELobbyNotifications.Api"
     xmlns:converters="using:AoE2DELobbyNotifications.Converters"
-    xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:toolkitConverters="using:CommunityToolkit.WinUI.UI.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -19,8 +17,10 @@
         <Color x:Key="Accent">#ba080e</Color>
         <Color x:Key="BorderColor">#c3b880</Color>
         <Color x:Key="ForegroundTextColor">#ffe1bf</Color>
+        <Color x:Key="BackgroundColor">#ffeacd</Color>
+        <Color x:Key="AlternateRowColor">#fff0cd</Color>
     </Page.Resources>
-    <Grid Background="#ffeacd">
+    <Grid Background="{StaticResource BackgroundColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />

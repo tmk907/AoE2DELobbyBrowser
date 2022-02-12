@@ -60,28 +60,29 @@ namespace AoE2DELobbyNotifications
 
             var filtered = _aoe2netApiClient
                 .Connect()
+                .Do(x => Log.Information($"Before transform {DateTime.Now} {x.Adds} {x.Removes} {x.Updates} {x.Refreshes}"))
                 //.TransformWithInlineUpdate(dto => Lobby.Create(dto), (lobby, dto) => lobby.NumPlayers = dto.NumPlayers)
                 .Transform(dto => Lobby.Create(dto))
+                .Do(x => Log.Information("Filter"))
                 .Filter(x => x.Name != "AUTOMATCH")
                 .Filter(filterPredicate)
                 .Filter(filterPredicate2)
-                .Filter(filterPredicate3);
+                .Filter(filterPredicate3)
+                .Sort(SortExpressionComparer<Lobby>.Ascending(t => t.Name))
+                .Publish().RefCount();
 
             var newLobbies = filtered
                 .SkipInitial()
+                .OnItemAdded(x => x.IsNew = true)
                 .WhereReasonsAre(ChangeReason.Add)
                 .Select(changeSet => changeSet.Select(x => x.Current).ToList())
-                .Do(list => list.ForEach(x => x.IsNew = true))
-                .Do(x => Log.Information($"Added {x.Count} new lobbies"));
-
-            newLobbies
+                .Do(list => Log.Information($"Added {list.Count} new lobbies"))
                 .Where(_ => ShowNotifications)
                 .Do(x => _notificationsService.ShowNotifications(x))
                 .Subscribe()
                 .DisposeWith(Disposal);
 
             filtered
-                .Sort(SortExpressionComparer<Lobby>.Ascending(t => t.Name))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out _lobbies)
                 .DisposeMany()
@@ -171,60 +172,11 @@ namespace AoE2DELobbyNotifications
             set => this.RaiseAndSetIfChanged(ref selectedGameSpeed, value);
         }
 
-        private bool _showNotifications = true;
+        private bool _showNotifications = false;
         public bool ShowNotifications
         {
             get => _showNotifications;
             set => this.RaiseAndSetIfChanged(ref _showNotifications, value);
-        }
-    }
-
-    public static class Ext
-    {
-        public static IObservable<IChangeSet<TDestination, TKey>> TransformWithInlineUpdate<TObject, TKey, TDestination>(this IObservable<IChangeSet<TObject, TKey>> source,
-        Func<TObject, TDestination> transformFactory,
-        Action<TDestination, TObject> updateAction = null)
-        {
-            return source.Scan((ChangeAwareCache<TDestination, TKey>)null, (cache, changes) =>
-            {
-                //The change aware cache captures a history of all changes so downstream operators can replay the changes
-                if (cache == null)
-                    cache = new ChangeAwareCache<TDestination, TKey>(changes.Count);
-
-                foreach (var change in changes)
-                {
-                    switch (change.Reason)
-                    {
-                        case ChangeReason.Add:
-                            cache.AddOrUpdate(transformFactory(change.Current), change.Key);
-                            break;
-                        case ChangeReason.Update:
-                            {
-                                if (updateAction == null) continue;
-
-                                var previous = cache.Lookup(change.Key)
-                                    .ValueOrThrow(() => new MissingKeyException($"{change.Key} is not found."));
-                                //callback when an update has been received
-                                updateAction(previous, change.Current);
-
-                                //send a refresh as this will force downstream operators to filter, sort, group etc
-                                cache.Refresh(change.Key);
-                            }
-                            break;
-                        case ChangeReason.Remove:
-                            cache.Remove(change.Key);
-                            break;
-                        case ChangeReason.Refresh:
-                            cache.Refresh(change.Key);
-                            break;
-                        case ChangeReason.Moved:
-                            //Do nothing !
-                            break;
-                    }
-                }
-                return cache;
-
-            }).Select(cache => cache.CaptureChanges()); //invoke capture changes to return the changeset
         }
     }
 }
