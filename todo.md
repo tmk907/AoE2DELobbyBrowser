@@ -1,0 +1,33 @@
+## TODO
+
+- notifications
+    - [x] checkbox to enable notifications
+    - disable notifications after joining lobby, show message on top bar
+    - [x] button on notification to join lobby
+    - settings: show notification for every new lobby or for group
+    - [x] two types of notifications:
+        - single lobby with join button
+        - lobby group with nr of new lobbies
+    - when clear notifications from action center?
+- lobby list
+    - click on player numbers shows popup with player names in lobby
+    - show map name in list
+    - filter by map name
+    - query using AND, OR
+- watchlist
+    - list of watchlists
+    - save filter settings, watchlist name, notification settings
+    - should use global results
+    - add,remove buttons, enable,disable toggle
+- about app 
+    - link to github
+    - link aoe2 api
+    - microsoft statement
+    - version
+    - check for new release
+    - enable updates
+- before release
+    - app icon
+    - app name
+    - description
+    - link to microsoft

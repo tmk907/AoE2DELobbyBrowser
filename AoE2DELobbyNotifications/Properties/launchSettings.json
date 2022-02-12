@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AoE2DELobbyNotifications (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "AoE2DELobbyNotifications (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
