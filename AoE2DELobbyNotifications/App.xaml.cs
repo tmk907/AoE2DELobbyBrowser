@@ -26,22 +26,16 @@ namespace AoE2DELobbyNotifications
                .WriteTo.Debug()
                .CreateLogger();
 
-            //Akavache.Registrations.Start("AoE2DELobbyNotifications");
-
             ToastNotificationManagerCompat.OnActivated += ToastNotificationManagerCompat_OnActivated;
         }
 
         private async void ToastNotificationManagerCompat_OnActivated(ToastNotificationActivatedEventArgsCompat toastArgs)
         {
-            // Obtain the arguments from the notification
             ToastArguments args = ToastArguments.Parse(toastArgs.Argument);
             if (args.TryGetValue("JoinLink", out string link))
             {
                 await Windows.System.Launcher.LaunchUriAsync(new Uri(link));
             }
-
-            // Obtain any user input (text boxes, menu selections) from the notification
-            //ValueSet userInput = toastArgs.UserInput;
         }
 
         /// <summary>
