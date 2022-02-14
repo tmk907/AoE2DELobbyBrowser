@@ -13,7 +13,7 @@ namespace AoE2DELobbyNotifications
 
         public void ShowNotifications(IEnumerable<Lobby> lobbies)
         {
-            var group = false;
+            var group = lobbies.Count() > 3;
             if (group)
             {
                 ShowNotificationForGroup(lobbies);
