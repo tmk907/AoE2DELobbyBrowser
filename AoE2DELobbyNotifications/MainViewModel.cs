@@ -13,16 +13,6 @@ using System.Reactive.Linq;
 
 namespace AoE2DELobbyNotifications
 {
-    public class LobbySettings
-    {
-        public string Query { get; set; }
-        public bool IsAutoRefreshEnabled { get; set; }
-        public int Interval { get; set; }
-        public string SelectedGameType { get; set; }
-        public string SelectedGameSpeed { get; set; }
-        public bool ShowNotifications { get; set; }
-    }
-
     public class MainViewModel : ReactiveObject
     {
         private readonly Aoe2netApiClient _aoe2netApiClient;
@@ -56,7 +46,15 @@ namespace AoE2DELobbyNotifications
             IsAutoRefreshEnabled = _lobbySettings.IsAutoRefreshEnabled;
 
             this.WhenAnyPropertyChanged()
-                .Do(_ => _settingsService.Save("lobby-settings", _lobbySettings))
+                .Do(_ => {
+                    _lobbySettings.Query = Query;
+                    _lobbySettings.Interval = Interval;
+                    _lobbySettings.IsAutoRefreshEnabled = IsAutoRefreshEnabled;
+                    _lobbySettings.SelectedGameSpeed = SelectedGameSpeed;
+                    _lobbySettings.SelectedGameType = SelectedGameType;
+                    _lobbySettings.ShowNotifications = ShowNotifications;
+                    _settingsService.Save("lobby-settings", _lobbySettings);
+                })
                 .Subscribe()
                 .DisposeWith(Disposal);
 
@@ -102,9 +100,9 @@ namespace AoE2DELobbyNotifications
                 .Skip(1)
                 .OnItemAdded(x => x.IsNew = true)
                 .WhereReasonsAre(ChangeReason.Add)
-                .Filter(queryFilter(_query))
-                .Filter(gameSpeedFilter(selectedGameSpeed))
-                .Filter(gameTypeFilter(_selectedGameType))
+                .Filter(queryFilter(Query))
+                .Filter(gameSpeedFilter(SelectedGameSpeed))
+                .Filter(gameTypeFilter(SelectedGameType))
                 .Select(changeSet => changeSet.Select(x => x.Current).ToList())
                 .Do(list => Log.Information($"Added {list.Count} new lobbies"))
                 .Where(_ => ShowNotifications)
