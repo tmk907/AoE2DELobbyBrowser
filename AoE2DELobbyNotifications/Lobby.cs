@@ -46,8 +46,8 @@ namespace AoE2DELobbyNotifications
                 Name = dto.Name,
                 NumPlayers = dto.NumPlayers,
                 NumSlots = dto.NumSlots,
-                Speed = gameSpeed.GetById(dto.Speed),
-                GameType = gameTypes.GetById(dto.GameType)
+                Speed = gameSpeed.GetById(dto.Speed.GetValueOrDefault(-2)),
+                GameType = gameTypes.GetById(dto.GameType.GetValueOrDefault(-2))
             };
         }
     }

@@ -33,37 +33,37 @@ namespace AoE2DELobbyNotifications.Api
         public bool? Cheats { get; set; }
 
         [JsonPropertyName("full_tech_tree")]
-        public bool FullTechTree { get; set; }
+        public bool? FullTechTree { get; set; }
 
         [JsonPropertyName("ending_age")]
-        public int EndingAge { get; set; }
+        public int? EndingAge { get; set; }
 
         [JsonPropertyName("expansion")]
         public object Expansion { get; set; }
 
         [JsonPropertyName("game_type")]
-        public int GameType { get; set; }
+        public int? GameType { get; set; }
 
         [JsonPropertyName("has_custom_content")]
         public object HasCustomContent { get; set; }
 
         [JsonPropertyName("has_password")]
-        public bool HasPassword { get; set; }
+        public bool? HasPassword { get; set; }
 
         [JsonPropertyName("lock_speed")]
-        public bool LockSpeed { get; set; }
+        public bool? LockSpeed { get; set; }
 
         [JsonPropertyName("lock_teams")]
-        public bool LockTeams { get; set; }
+        public bool? LockTeams { get; set; }
 
         [JsonPropertyName("map_size")]
-        public int MapSize { get; set; }
+        public int? MapSize { get; set; }
 
         [JsonPropertyName("map_type")]
-        public int MapType { get; set; }
+        public int? MapType { get; set; }
 
         [JsonPropertyName("pop")]
-        public int Pop { get; set; }
+        public int? Pop { get; set; }
 
         [JsonPropertyName("ranked")]
         public bool? Ranked { get; set; }
@@ -87,34 +87,34 @@ namespace AoE2DELobbyNotifications.Api
         public string Server { get; set; }
 
         [JsonPropertyName("shared_exploration")]
-        public bool SharedExploration { get; set; }
+        public bool? SharedExploration { get; set; }
 
         [JsonPropertyName("speed")]
-        public int Speed { get; set; }
+        public int? Speed { get; set; }
 
         [JsonPropertyName("starting_age")]
-        public int StartingAge { get; set; }
+        public int? StartingAge { get; set; }
 
         [JsonPropertyName("team_together")]
-        public bool TeamTogether { get; set; }
+        public bool? TeamTogether { get; set; }
 
         [JsonPropertyName("team_positions")]
-        public bool TeamPositions { get; set; }
+        public bool? TeamPositions { get; set; }
 
         [JsonPropertyName("treaty_length")]
-        public int TreatyLength { get; set; }
+        public int? TreatyLength { get; set; }
 
         [JsonPropertyName("turbo")]
-        public bool Turbo { get; set; }
+        public bool? Turbo { get; set; }
 
         [JsonPropertyName("victory")]
-        public int Victory { get; set; }
+        public int? Victory { get; set; }
 
         [JsonPropertyName("victory_time")]
-        public int VictoryTime { get; set; }
+        public int? VictoryTime { get; set; }
 
         [JsonPropertyName("visibility")]
-        public int Visibility { get; set; }
+        public int? Visibility { get; set; }
 
         [JsonPropertyName("opened")]
         public int? Opened { get; set; }

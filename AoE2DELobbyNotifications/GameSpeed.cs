@@ -14,9 +14,10 @@ namespace AoE2DELobbyNotifications
             { 1, "Casual" },
             { 2, "Normal" },
             { 3, "Fast" },
+            { -2, "Unknown" }
         };
 
-        public List<string> GetAll() => _map.Select(kv => kv.Value).ToList();
+        public List<string> GetAll() => _map.Where(kv => kv.Key != -2).Select(kv => kv.Value).ToList();
 
         public string GetById(int id)
         {
