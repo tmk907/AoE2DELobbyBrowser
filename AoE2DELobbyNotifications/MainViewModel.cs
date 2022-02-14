@@ -1,7 +1,6 @@
 ﻿using AoE2DELobbyNotifications.Api;
 using DynamicData;
 using DynamicData.Binding;
-using DynamicData.Kernel;
 using ReactiveUI;
 using Serilog;
 using System;
@@ -11,24 +10,57 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Runtime.Serialization;
 
 namespace AoE2DELobbyNotifications
 {
-    [DataContract]
+    public class LobbySettings
+    {
+        public string Query { get; set; }
+        public bool IsAutoRefreshEnabled { get; set; }
+        public int Interval { get; set; }
+        public string SelectedGameType { get; set; }
+        public string SelectedGameSpeed { get; set; }
+        public bool ShowNotifications { get; set; }
+    }
+
     public class MainViewModel : ReactiveObject
     {
         private readonly Aoe2netApiClient _aoe2netApiClient;
         private readonly NotificationsService _notificationsService;
+        private readonly SettingsService _settingsService;
+        private readonly LobbySettings _lobbySettings;
+
         public MainViewModel()
         {
             _aoe2netApiClient = new Aoe2netApiClient();
             _notificationsService = new NotificationsService();
+            _settingsService = new SettingsService();
 
-            SelectedGameType = GameTypes.First();
-            SelectedGameSpeed = GameSpeeds.First();
+            var defaultSettings = new LobbySettings
+            {
+                Interval = 30,
+                IsAutoRefreshEnabled = true,
+                Query = "",
+                SelectedGameSpeed = GameSpeeds.First(),
+                SelectedGameType = GameTypes.First(),
+                ShowNotifications = false,
+            };
 
-            Func<Lobby, bool> lobbyFilter(string text) => lobby =>
+            _lobbySettings = _settingsService.Get("lobby-settings", defaultSettings);
+
+            SelectedGameType = _lobbySettings.SelectedGameType;
+            SelectedGameSpeed = _lobbySettings.SelectedGameSpeed;
+            Interval = _lobbySettings.Interval;
+            ShowNotifications = _lobbySettings.ShowNotifications;
+            Query = _lobbySettings.Query;
+            IsAutoRefreshEnabled = _lobbySettings.IsAutoRefreshEnabled;
+
+            this.WhenAnyPropertyChanged()
+                .Do(_ => _settingsService.Save("lobby-settings", _lobbySettings))
+                .Subscribe()
+                .DisposeWith(Disposal);
+
+            Func<Lobby, bool> queryFilter(string text) => lobby =>
             {
                 return string.IsNullOrEmpty(text) || lobby.Name.ToLower().Contains(text.ToLower());
             };
@@ -43,38 +75,36 @@ namespace AoE2DELobbyNotifications
                 return gameSpeed == GameType.All || lobby.Speed == gameSpeed;
             };
 
-            var filterPredicate = this
+            var filterQuery = this
                 .WhenAnyValue(x => x.Query)
                 .DistinctUntilChanged()
-                .Select(lobbyFilter);
+                .Select(queryFilter);
 
-            var filterPredicate2 = this
+            var filterGameType = this
                 .WhenAnyValue(x => x.SelectedGameType)
                 .DistinctUntilChanged()
                 .Select(gameTypeFilter);
 
-            var filterPredicate3 = this
+            var filterGameSpeed = this
                 .WhenAnyValue(x => x.SelectedGameSpeed)
                 .DistinctUntilChanged()
                 .Select(gameSpeedFilter);
 
-            var filtered = _aoe2netApiClient
+            var all = _aoe2netApiClient
                 .Connect()
-                .Do(x => Log.Information($"Before transform {DateTime.Now} {x.Adds} {x.Removes} {x.Updates} {x.Refreshes}"))
-                //.TransformWithInlineUpdate(dto => Lobby.Create(dto), (lobby, dto) => lobby.NumPlayers = dto.NumPlayers)
                 .Transform(dto => Lobby.Create(dto))
-                .Do(x => Log.Information("Filter"))
                 .Filter(x => x.Name != "AUTOMATCH")
-                .Filter(filterPredicate)
-                .Filter(filterPredicate2)
-                .Filter(filterPredicate3)
-                .Sort(SortExpressionComparer<Lobby>.Ascending(t => t.Name))
+                .Do(x => Log.Information($"Before transform {DateTime.Now} Add: {x.Adds} Remove: {x.Removes} " +
+                    $"Update:{x.Updates} Refresh: {x.Refreshes}"))
                 .Publish().RefCount();
 
-            var newLobbies = filtered
-                .SkipInitial()
+            var newLobbies = all
+                .Skip(1)
                 .OnItemAdded(x => x.IsNew = true)
                 .WhereReasonsAre(ChangeReason.Add)
+                .Filter(queryFilter(_query))
+                .Filter(gameSpeedFilter(selectedGameSpeed))
+                .Filter(gameTypeFilter(_selectedGameType))
                 .Select(changeSet => changeSet.Select(x => x.Current).ToList())
                 .Do(list => Log.Information($"Added {list.Count} new lobbies"))
                 .Where(_ => ShowNotifications)
@@ -82,7 +112,11 @@ namespace AoE2DELobbyNotifications
                 .Subscribe()
                 .DisposeWith(Disposal);
 
-            filtered
+            var filtered = all
+                .Filter(filterQuery)
+                .Filter(filterGameType)
+                .Filter(filterGameSpeed)
+                .Sort(SortExpressionComparer<Lobby>.Ascending(t => t.Name))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out _lobbies)
                 .DisposeMany()
@@ -90,6 +124,7 @@ namespace AoE2DELobbyNotifications
                 .DisposeWith(Disposal);
 
             this.RefreshCommand = ReactiveCommand.CreateFromTask(ct => _aoe2netApiClient.Refresh(ct));
+
             this.WhenAnyObservable(x => x.RefreshCommand.IsExecuting)
                 .StartWith(false)
                 .DistinctUntilChanged()
@@ -126,15 +161,13 @@ namespace AoE2DELobbyNotifications
         public ReadOnlyObservableCollection<Lobby> Lobbies => _lobbies;
 
         private string _query;
-        [DataMember]
         public string Query
         {
             get => _query;
             set => this.RaiseAndSetIfChanged(ref _query, value);
         }
 
-        private int _interval = 15;
-        [DataMember]
+        private int _interval;
         public int Interval
         {
             get => _interval;
@@ -142,7 +175,6 @@ namespace AoE2DELobbyNotifications
         }
 
         private bool _isAutoRefreshEnabled;
-        [DataMember]
         public bool IsAutoRefreshEnabled
         {
             get => _isAutoRefreshEnabled;
@@ -156,23 +188,21 @@ namespace AoE2DELobbyNotifications
         public List<string> GameSpeeds { get; } = new GameSpeed().GetAll();
 
 
-        private string selectedGameType;
-        [DataMember]
+        private string _selectedGameType;
         public string SelectedGameType
         {
-            get => selectedGameType;
-            set => this.RaiseAndSetIfChanged(ref selectedGameType, value);
+            get => _selectedGameType;
+            set => this.RaiseAndSetIfChanged(ref _selectedGameType, value);
         }
 
         private string selectedGameSpeed;
-        [DataMember]
         public string SelectedGameSpeed
         {
             get => selectedGameSpeed;
             set => this.RaiseAndSetIfChanged(ref selectedGameSpeed, value);
         }
 
-        private bool _showNotifications = false;
+        private bool _showNotifications;
         public bool ShowNotifications
         {
             get => _showNotifications;
