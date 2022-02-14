@@ -58,35 +58,35 @@ namespace AoE2DELobbyNotifications
                 .Subscribe()
                 .DisposeWith(Disposal);
 
-            Func<Lobby, bool> queryFilter(string text) => lobby =>
+            Func<Lobby, bool> queryFilter = lobby =>
             {
-                return string.IsNullOrEmpty(text) || lobby.Name.ToLower().Contains(text.ToLower());
+                return string.IsNullOrEmpty(Query) || lobby.Name.ToLower().Contains(Query.ToLower());
             };
 
-            Func<Lobby, bool> gameTypeFilter(string gameType) => lobby =>
+            Func<Lobby, bool> gameTypeFilter = lobby =>
             {
-                return gameType == GameType.All || lobby.GameType == gameType;
+                return SelectedGameType == GameType.All || lobby.GameType == SelectedGameType;
             };
 
-            Func<Lobby, bool> gameSpeedFilter(string gameSpeed) => lobby =>
+            Func<Lobby, bool> gameSpeedFilter = lobby =>
             {
-                return gameSpeed == GameType.All || lobby.Speed == gameSpeed;
+                return SelectedGameSpeed == GameType.All || lobby.Speed == SelectedGameSpeed;
             };
 
             var filterQuery = this
                 .WhenAnyValue(x => x.Query)
                 .DistinctUntilChanged()
-                .Select(queryFilter);
+                .Select(_ => queryFilter);
 
             var filterGameType = this
                 .WhenAnyValue(x => x.SelectedGameType)
                 .DistinctUntilChanged()
-                .Select(gameTypeFilter);
+                .Select(_ => gameTypeFilter);
 
             var filterGameSpeed = this
                 .WhenAnyValue(x => x.SelectedGameSpeed)
                 .DistinctUntilChanged()
-                .Select(gameSpeedFilter);
+                .Select(_ => gameSpeedFilter);
 
             var all = _aoe2netApiClient
                 .Connect()
@@ -100,9 +100,9 @@ namespace AoE2DELobbyNotifications
                 .Skip(1)
                 .OnItemAdded(x => x.IsNew = true)
                 .WhereReasonsAre(ChangeReason.Add)
-                .Filter(queryFilter(Query))
-                .Filter(gameSpeedFilter(SelectedGameSpeed))
-                .Filter(gameTypeFilter(SelectedGameType))
+                .Filter(queryFilter)
+                .Filter(gameSpeedFilter)
+                .Filter(gameTypeFilter)
                 .Select(changeSet => changeSet.Select(x => x.Current).ToList())
                 .Do(list => Log.Information($"Added {list.Count} new lobbies"))
                 .Where(_ => ShowNotifications)
