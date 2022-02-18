@@ -6,6 +6,7 @@ namespace AoE2DELobbyNotifications
     public class GameType 
     {
         public const string All = "All";
+        public const string Unknown = "Unknown";
 
         private Dictionary<int, string> _map = new Dictionary<int, string>()
         {
@@ -23,7 +24,7 @@ namespace AoE2DELobbyNotifications
             { 12, "Battle Royale" },
             { 13, "Empire Wars" },
             { 15, "Co-Op Campaign" },
-            { -2, "Unknown" },
+            { -2, Unknown },
         };
 
         public List<string> GetAll() => _map.Select(kv => kv.Value).ToList();
@@ -31,7 +32,7 @@ namespace AoE2DELobbyNotifications
         public string GetById(int id)
         {
             if (_map.ContainsKey(id)) return _map[id];
-            return _map[-2];
+            return Unknown;
         }
     }
 }

@@ -6,11 +6,11 @@ namespace AoE2DELobbyNotifications
     public class MapType 
     {
         public const string All = "All";
+        public const string Unknown = "Unknown";
 
         private Dictionary<int, string> _map = new Dictionary<int, string>()
         {
             { -1, All},          
-            { -2, "Unknown" },
             { 0, "Random Map" },
             { 9, "Arabia" },
             { 10, "Archipelago" },
@@ -154,7 +154,8 @@ namespace AoE2DELobbyNotifications
             { 171, "Kawasan" },
             { 172, "Land Madness" },
             { 173, "Sacred Springs" },
-            { 174, "Wade"}
+            { 174, "Wade"},
+            { -2, Unknown },
         };
 
         public List<string> GetAll() => _map.Select(kv => kv.Value).ToList();
@@ -162,7 +163,7 @@ namespace AoE2DELobbyNotifications
         public string GetById(int id)
         {
             if (_map.ContainsKey(id)) return _map[id];
-            return _map[-2];
+            return Unknown;
         }
     }
 }

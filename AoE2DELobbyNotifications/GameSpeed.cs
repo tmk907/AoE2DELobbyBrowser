@@ -6,6 +6,7 @@ namespace AoE2DELobbyNotifications
     public class GameSpeed
     {
         public const string All = "All";
+        public const string Unknown = "Unknown";
 
         private Dictionary<int, string> _map = new Dictionary<int, string>()
         {
@@ -14,7 +15,7 @@ namespace AoE2DELobbyNotifications
             { 1, "Casual" },
             { 2, "Normal" },
             { 3, "Fast" },
-            { -2, "Unknown" }
+            { -2, Unknown }
         };
 
         public List<string> GetAll() => _map.Where(kv => kv.Key != -2).Select(kv => kv.Value).ToList();
@@ -22,7 +23,7 @@ namespace AoE2DELobbyNotifications
         public string GetById(int id)
         {
             if (_map.ContainsKey(id)) return _map[id];
-            return "Unknown";
+            return Unknown;
         }
     }
 }
