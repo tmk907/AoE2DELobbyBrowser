@@ -7,8 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:AoE2DELobbyNotifications.Converters"
     xmlns:toolkitConverters="using:CommunityToolkit.WinUI.UI.Converters"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
     <Page.Resources>
         <converters:BoolToInvertedVisibilityConverter x:Key="BoolToInvertedVisibility" />
         <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
@@ -25,87 +25,89 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0"
-                    Spacing="2"
-                    Padding="2"
-                    BorderBrush="{StaticResource BorderColor}"
-                    BorderThickness="1"
-                    Orientation="Horizontal"
-                    IsTabStop="True"
-                    Background="{StaticResource DarkAccent}">
-            <TextBox Text="{x:Bind ViewModel.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     PlaceholderText="search"
-                     Width="180"/>
-            <ComboBox ItemsSource="{x:Bind ViewModel.GameTypes}"
-                      SelectedItem="{x:Bind ViewModel.SelectedGameType, Mode=TwoWay}" 
-                      Width="180"/>
-            <ComboBox ItemsSource="{x:Bind ViewModel.MapTypes}"
-                      SelectedItem="{x:Bind ViewModel.SelectedMapType, Mode=TwoWay}"
-                      Width="180" />
-            <ComboBox ItemsSource="{x:Bind ViewModel.GameSpeeds}"
-                      SelectedItem="{x:Bind ViewModel.SelectedGameSpeed, Mode=TwoWay}"
-                      Width="100" />
-            <Button Content="Refresh"
-                    Command="{x:Bind ViewModel.RefreshCommand}"
-                    Width="80"/>
-            <CheckBox IsChecked="{x:Bind ViewModel.IsAutoRefreshEnabled, Mode=TwoWay}"
-                      >
-                <TextBlock Text="Auto refresh (sec)"
-                           Foreground="{StaticResource ForegroundTextColor}"  />
+        <StackPanel
+            Grid.Row="0"
+            Padding="2"
+            Background="{StaticResource DarkAccent}"
+            BorderBrush="{StaticResource BorderColor}"
+            BorderThickness="1"
+            IsTabStop="True"
+            Orientation="Horizontal"
+            Spacing="2">
+            <TextBox
+                Width="180"
+                PlaceholderText="search"
+                Text="{x:Bind ViewModel.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <ComboBox
+                Width="180"
+                ItemsSource="{x:Bind ViewModel.GameTypes}"
+                SelectedItem="{x:Bind ViewModel.SelectedGameType, Mode=TwoWay}" />
+            <ComboBox
+                Width="180"
+                ItemsSource="{x:Bind ViewModel.MapTypes}"
+                SelectedItem="{x:Bind ViewModel.SelectedMapType, Mode=TwoWay}" />
+            <ComboBox
+                Width="100"
+                ItemsSource="{x:Bind ViewModel.GameSpeeds}"
+                SelectedItem="{x:Bind ViewModel.SelectedGameSpeed, Mode=TwoWay}" />
+            <Button
+                Width="80"
+                Command="{x:Bind ViewModel.RefreshCommand}"
+                Content="Refresh" />
+            <CheckBox IsChecked="{x:Bind ViewModel.IsAutoRefreshEnabled, Mode=TwoWay}">
+                <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Auto refresh (sec)" />
             </CheckBox>
-            <NumberBox Value="{x:Bind ViewModel.Interval, Mode=TwoWay}"
-                       Minimum="5"
-                       Maximum="120"
-                       SpinButtonPlacementMode="Inline"
-                       SmallChange="5" />
+            <NumberBox
+                Maximum="120"
+                Minimum="5"
+                SmallChange="5"
+                SpinButtonPlacementMode="Inline"
+                Value="{x:Bind ViewModel.Interval, Mode=TwoWay}" />
             <CheckBox IsChecked="{x:Bind ViewModel.ShowNotifications, Mode=TwoWay}">
-                <TextBlock Text="Notifications"
-                           Foreground="{StaticResource ForegroundTextColor}" />
+                <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Notifications" />
             </CheckBox>
         </StackPanel>
-        <ProgressRing Grid.Row="1"
-                      IsActive="{x:Bind ViewModel.Loading, Mode=OneWay}"
-                      Visibility="{x:Bind ViewModel.Loading, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"/>
+        <ProgressRing
+            Grid.Row="1"
+            IsActive="{x:Bind ViewModel.Loading, Mode=OneWay}"
+            Visibility="{x:Bind ViewModel.Loading, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" />
         <ListView
             Grid.Row="1"
-            SelectionMode="None"
-            ItemsSource="{x:Bind ViewModel.Lobbies, Mode=OneWay}">
+            ItemsSource="{x:Bind ViewModel.Lobbies, Mode=OneWay}"
+            SelectionMode="None">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="local:Lobby">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
-                            <ColumnDefinition Width="80"/>
-                            <ColumnDefinition Width="140"/>
+                            <ColumnDefinition Width="80" />
                             <ColumnDefinition Width="140" />
-                            <ColumnDefinition Width="80"/>
-                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="140" />
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="80" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" 
-                                   Text="{x:Bind Name}"
-                                   FontWeight="{x:Bind IsNew, Converter={StaticResource BoolToFontWeight}}" />
+                        <TextBlock
+                            Grid.Column="0"
+                            FontWeight="{x:Bind IsNew, Converter={StaticResource BoolToFontWeight}}"
+                            Text="{x:Bind Name}" />
                         <TextBlock Grid.Column="1">
                             <Run Text="{x:Bind NumPlayers}" />
-                            /
-                            <Run Text="{x:Bind NumSlots}" />
+                            /<Run Text="{x:Bind NumSlots}" />
                         </TextBlock>
-                        <TextBlock Grid.Column="2"
-                                   Text="{x:Bind GameType}" />
+                        <TextBlock Grid.Column="2" Text="{x:Bind GameType}" />
 
-                        <TextBlock Grid.Column="3"
-                                   Text="{x:Bind Map}" />
+                        <TextBlock Grid.Column="3" Text="{x:Bind Map}" />
 
-                        <TextBlock Grid.Column="4" 
-                                   Text="{x:Bind Speed}" />
-                        <Button 
+                        <TextBlock Grid.Column="4" Text="{x:Bind Speed}" />
+                        <Button
+                            Grid.Column="5"
+                            Width="80"
+                            Background="{StaticResource Accent}"
                             BorderBrush="{StaticResource BorderColor}"
                             BorderThickness="1"
-                            Background="{StaticResource Accent}"
-                            Foreground="{StaticResource ForegroundTextColor}"
-                            Width="80"
-                            Grid.Column="5"
+                            Command="{x:Bind JoinGameCommand}"
                             Content="Join"
-                            Command="{x:Bind JoinGameCommand}" />
+                            Foreground="{StaticResource ForegroundTextColor}" />
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
