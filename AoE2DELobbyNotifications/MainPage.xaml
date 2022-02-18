@@ -13,12 +13,7 @@
         <converters:BoolToInvertedVisibilityConverter x:Key="BoolToInvertedVisibility" />
         <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
         <converters:BoolToFontWeightConverter x:Key="BoolToFontWeight" />
-        <Color x:Key="DarkAccent">#92040a</Color>
-        <Color x:Key="Accent">#ba080e</Color>
-        <Color x:Key="BorderColor">#c3b880</Color>
-        <Color x:Key="ForegroundTextColor">#ffe1bf</Color>
-        <Color x:Key="BackgroundColor">#ffeacd</Color>
-        <Color x:Key="AlternateRowColor">#fff0cd</Color>
+
     </Page.Resources>
     <Grid Background="{StaticResource BackgroundColor}">
         <Grid.RowDefinitions>
