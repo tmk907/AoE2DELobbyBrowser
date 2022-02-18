@@ -33,6 +33,7 @@ namespace AoE2DELobbyNotifications
                 Query = "",
                 SelectedGameSpeed = GameSpeeds.First(),
                 SelectedGameType = GameTypes.First(),
+                SelectedMapType = MapTypes.First(),
                 ShowNotifications = false,
             };
 
@@ -122,7 +123,7 @@ namespace AoE2DELobbyNotifications
                 .Filter(mapTypeFilter)
                 .Filter(queryFilter)
                 .Select(changeSet => changeSet.Select(x => x.Current).ToList())
-                .Do(list => Log.Information($"Added {list.Count} new lobbies"))
+                .Do(list => Log.Information($"Notification: {list.Count} new lobbies"))
                 .Where(_ => ShowNotifications)
                 .Do(x => _notificationsService.ShowNotifications(x))
                 .Subscribe()
@@ -131,7 +132,7 @@ namespace AoE2DELobbyNotifications
             var filtered = all
                 .Filter(filterGameSpeed)
                 .Filter(filterGameType)
-                .Filter(mapTypeFilter)
+                .Filter(filterMapType)
                 .Filter(filterQuery)
                 .Sort(SortExpressionComparer<Lobby>.Ascending(t => t.Name))
                 .ObserveOn(RxApp.MainThreadScheduler)
@@ -224,7 +225,7 @@ namespace AoE2DELobbyNotifications
         public string SelectedMapType
         {
             get => _selectedMapType;
-            set => this.RaiseAndSetIfChanged(ref _selectedMapType, value, nameof(SelectedMapType));
+            set => this.RaiseAndSetIfChanged(ref _selectedMapType, value);
         }
 
         private bool _showNotifications;
