@@ -40,18 +40,21 @@ namespace AoE2DELobbyNotifications
 
             SelectedGameType = _lobbySettings.SelectedGameType;
             SelectedGameSpeed = _lobbySettings.SelectedGameSpeed;
+            SelectedMapType = _lobbySettings.SelectedMapType;
             Interval = _lobbySettings.Interval;
             ShowNotifications = _lobbySettings.ShowNotifications;
             Query = _lobbySettings.Query;
             IsAutoRefreshEnabled = _lobbySettings.IsAutoRefreshEnabled;
 
             this.WhenAnyPropertyChanged()
-                .Do(_ => {
+                .Do(_ =>
+                {
                     _lobbySettings.Query = Query;
                     _lobbySettings.Interval = Interval;
                     _lobbySettings.IsAutoRefreshEnabled = IsAutoRefreshEnabled;
                     _lobbySettings.SelectedGameSpeed = SelectedGameSpeed;
                     _lobbySettings.SelectedGameType = SelectedGameType;
+                    _lobbySettings.SelectedMapType = SelectedMapType;
                     _lobbySettings.ShowNotifications = ShowNotifications;
                     _settingsService.Save("lobby-settings", _lobbySettings);
                 })
@@ -73,20 +76,34 @@ namespace AoE2DELobbyNotifications
                 return SelectedGameSpeed == GameType.All || lobby.Speed == SelectedGameSpeed;
             };
 
+            Func<Lobby, bool> mapTypeFilter = lobby =>
+            {
+                return SelectedMapType == MapType.All || lobby.Map == SelectedMapType;
+            };
+
             var filterQuery = this
                 .WhenAnyValue(x => x.Query)
+                .Do(x => Log.Information($"Filter Query  {x}"))
                 .DistinctUntilChanged()
                 .Select(_ => queryFilter);
 
             var filterGameType = this
                 .WhenAnyValue(x => x.SelectedGameType)
+                .Do(x => Log.Information($"Filter SelectedGameType  {x}"))
                 .DistinctUntilChanged()
                 .Select(_ => gameTypeFilter);
 
             var filterGameSpeed = this
                 .WhenAnyValue(x => x.SelectedGameSpeed)
+                .Do(x => Log.Information($"Filter SelectedGameSpeed  {x}"))
                 .DistinctUntilChanged()
                 .Select(_ => gameSpeedFilter);
+
+            var filterMapType = this
+                .WhenAnyValue(x => x.SelectedMapType)
+                .Do(x => Log.Information($"Filter SelectedMapType  {x}"))
+                .DistinctUntilChanged()
+                .Select(_ => mapTypeFilter);
 
             var all = _aoe2netApiClient
                 .Connect()
@@ -100,9 +117,10 @@ namespace AoE2DELobbyNotifications
                 .Skip(1)
                 .OnItemAdded(x => x.IsNew = true)
                 .WhereReasonsAre(ChangeReason.Add)
-                .Filter(queryFilter)
                 .Filter(gameSpeedFilter)
                 .Filter(gameTypeFilter)
+                .Filter(mapTypeFilter)
+                .Filter(queryFilter)
                 .Select(changeSet => changeSet.Select(x => x.Current).ToList())
                 .Do(list => Log.Information($"Added {list.Count} new lobbies"))
                 .Where(_ => ShowNotifications)
@@ -111,9 +129,10 @@ namespace AoE2DELobbyNotifications
                 .DisposeWith(Disposal);
 
             var filtered = all
-                .Filter(filterQuery)
-                .Filter(filterGameType)
                 .Filter(filterGameSpeed)
+                .Filter(filterGameType)
+                .Filter(mapTypeFilter)
+                .Filter(filterQuery)
                 .Sort(SortExpressionComparer<Lobby>.Ascending(t => t.Name))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out _lobbies)
@@ -184,6 +203,7 @@ namespace AoE2DELobbyNotifications
 
         public List<string> GameTypes { get; } = new GameType().GetAll();
         public List<string> GameSpeeds { get; } = new GameSpeed().GetAll();
+        public List<string> MapTypes { get; } = new MapType().GetAll();
 
 
         private string _selectedGameType;
@@ -193,11 +213,18 @@ namespace AoE2DELobbyNotifications
             set => this.RaiseAndSetIfChanged(ref _selectedGameType, value);
         }
 
-        private string selectedGameSpeed;
+        private string _selectedGameSpeed;
         public string SelectedGameSpeed
         {
-            get => selectedGameSpeed;
-            set => this.RaiseAndSetIfChanged(ref selectedGameSpeed, value);
+            get => _selectedGameSpeed;
+            set => this.RaiseAndSetIfChanged(ref _selectedGameSpeed, value);
+        }
+
+        private string _selectedMapType;
+        public string SelectedMapType
+        {
+            get => _selectedMapType;
+            set => this.RaiseAndSetIfChanged(ref _selectedMapType, value, nameof(SelectedMapType));
         }
 
         private bool _showNotifications;

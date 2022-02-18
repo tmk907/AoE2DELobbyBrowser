@@ -21,6 +21,7 @@ namespace AoE2DELobbyNotifications
         public string JoinLink => $"steam://joinlobby/813780/{LobbyId}";
         public string Speed { get; set; }
         public string GameType { get; set; }
+        public string Map { get; set; }
 
         public ReactiveCommand<Unit, Unit> JoinGameCommand { get; }
 
@@ -40,6 +41,8 @@ namespace AoE2DELobbyNotifications
         {
             var gameTypes = new GameType();
             var gameSpeed = new GameSpeed();
+            var mapTypes = new MapType();
+
             return new Lobby()
             {
                 LobbyId = dto.LobbyId,
@@ -47,7 +50,8 @@ namespace AoE2DELobbyNotifications
                 NumPlayers = dto.NumPlayers,
                 NumSlots = dto.NumSlots,
                 Speed = gameSpeed.GetById(dto.Speed.GetValueOrDefault(-2)),
-                GameType = gameTypes.GetById(dto.GameType.GetValueOrDefault(-2))
+                GameType = gameTypes.GetById(dto.GameType.GetValueOrDefault(-2)),
+                Map = mapTypes.GetById(dto.MapType.GetValueOrDefault(-2))
             };
         }
     }

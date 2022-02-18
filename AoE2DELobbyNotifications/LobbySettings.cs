@@ -7,6 +7,7 @@
         public int Interval { get; set; }
         public string SelectedGameType { get; set; }
         public string SelectedGameSpeed { get; set; }
+        public string SelectedMapType { get; set; }
         public bool ShowNotifications { get; set; }
     }
 }
