@@ -9,8 +9,8 @@
   IgnorableNamespaces="uap rescap com desktop">
 
   <Identity
-    Name="c6e91475-9225-459e-8dd0-fd59c4f2ef04"
-    Publisher="CN=tomek"
+    Name="60490polApki.AoE2DELobbyNotifications"
+    Publisher="CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE"
     Version="1.0.0.0" />
 
   <Properties>
