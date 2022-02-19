@@ -7,6 +7,7 @@ namespace AoE2DELobbyNotifications
     {
         public const string All = "All";
         public const string Unknown = "Unknown";
+        public const string Scenario = "Scenario";
 
         private Dictionary<int, string> _map = new Dictionary<int, string>()
         {
@@ -14,7 +15,7 @@ namespace AoE2DELobbyNotifications
             { 0, "Random Map" },
             { 1, "Regicide" },
             { 2, "Death Match" },
-            { 3, "Scenario" },
+            { 3, Scenario },
             { 6, "King of the Hill" },
             { 7, "Wonder Race" },
             { 8, "Defend the Wonder" },

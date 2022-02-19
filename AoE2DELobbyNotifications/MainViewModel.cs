@@ -79,7 +79,8 @@ namespace AoE2DELobbyNotifications
 
             Func<Lobby, bool> mapTypeFilter = lobby =>
             {
-                return SelectedMapType == MapType.All || lobby.Map == SelectedMapType;
+                return SelectedGameType == GameType.Scenario 
+                || SelectedMapType == MapType.All || lobby.Map == SelectedMapType;
             };
 
             var filterQuery = this
