@@ -30,9 +30,17 @@
                 <Button
                     Width="80"
                     Command="{x:Bind ViewModel.RefreshCommand}"
-                    Content="Refresh" />
-                <CheckBox IsChecked="{x:Bind ViewModel.IsAutoRefreshEnabled, Mode=TwoWay}">
+                    Content="Refresh"
+                    ToolTipService.ToolTip="Refresh (Ctrl + R)">
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="R" Modifiers="Control" />
+                    </Button.KeyboardAccelerators>
+                </Button>
+                <CheckBox IsChecked="{x:Bind ViewModel.IsAutoRefreshEnabled, Mode=TwoWay}" ToolTipService.ToolTip="Auto refresh (Ctrl + T)">
                     <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Auto refresh (sec)" />
+                    <CheckBox.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="T" Modifiers="Control" />
+                    </CheckBox.KeyboardAccelerators>
                 </CheckBox>
                 <NumberBox
                     Maximum="120"
@@ -40,8 +48,11 @@
                     SmallChange="5"
                     SpinButtonPlacementMode="Inline"
                     Value="{x:Bind ViewModel.Interval, Mode=TwoWay}" />
-                <CheckBox IsChecked="{x:Bind ViewModel.ShowNotifications, Mode=TwoWay}">
+                <CheckBox IsChecked="{x:Bind ViewModel.ShowNotifications, Mode=TwoWay}" ToolTipService.ToolTip="Show notifications (Ctrl + N)">
                     <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Notifications" />
+                    <CheckBox.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="N" Modifiers="Control" />
+                    </CheckBox.KeyboardAccelerators>
                 </CheckBox>
             </StackPanel>
             <StackPanel
@@ -53,19 +64,39 @@
                 <TextBox
                     Width="180"
                     PlaceholderText="search"
-                    Text="{x:Bind ViewModel.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    KeyDown="SearchBox_KeyDown"
+                    Text="{x:Bind ViewModel.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="F" Modifiers="Control" Invoked="SearchBox_KeyboardAcceleratorInvoked" />
+                    </TextBox.KeyboardAccelerators>
+                </TextBox>
                 <ComboBox
                     Width="180"
                     ItemsSource="{x:Bind ViewModel.GameTypes}"
-                    SelectedItem="{x:Bind ViewModel.SelectedGameType, Mode=TwoWay}" />
+                    SelectedItem="{x:Bind ViewModel.SelectedGameType, Mode=TwoWay}"
+                    ToolTipService.ToolTip="Game type (Ctrl + Q)">
+                    <ComboBox.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="Q" Modifiers="Control" />
+                    </ComboBox.KeyboardAccelerators>
+                </ComboBox>
                 <ComboBox
                     Width="180"
                     ItemsSource="{x:Bind ViewModel.MapTypes}"
-                    SelectedItem="{x:Bind ViewModel.SelectedMapType, Mode=TwoWay}" />
+                    SelectedItem="{x:Bind ViewModel.SelectedMapType, Mode=TwoWay}"
+                    ToolTipService.ToolTip="Map type (Ctrl + W)">
+                    <ComboBox.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="W" Modifiers="Control" />
+                    </ComboBox.KeyboardAccelerators>
+                </ComboBox>
                 <ComboBox
                     Width="100"
                     ItemsSource="{x:Bind ViewModel.GameSpeeds}"
-                    SelectedItem="{x:Bind ViewModel.SelectedGameSpeed, Mode=TwoWay}" />
+                    SelectedItem="{x:Bind ViewModel.SelectedGameSpeed, Mode=TwoWay}"
+                    ToolTipService.ToolTip="Game speed (Ctrl + E)">
+                    <ComboBox.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="E" Modifiers="Control" />
+                    </ComboBox.KeyboardAccelerators>
+                </ComboBox>
 
             </StackPanel>
         </StackPanel>

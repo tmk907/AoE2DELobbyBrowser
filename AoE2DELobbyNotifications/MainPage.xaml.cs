@@ -16,5 +16,23 @@ namespace AoE2DELobbyNotifications
             this.InitializeComponent();
             ViewModel = new MainViewModel();
         }
+
+        private void SearchBox_KeyboardAcceleratorInvoked(Microsoft.UI.Xaml.Input.KeyboardAccelerator sender, Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
+        {
+            var textBox = args.Element as TextBox;
+            if (textBox != null)
+            {
+                textBox.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);
+            }
+            args.Handled = true;
+        }
+
+        private void SearchBox_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if(e.Key == Windows.System.VirtualKey.Escape || e.Key == Windows.System.VirtualKey.Enter)
+            {
+                this.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);
+            }
+        }
     }
 }
