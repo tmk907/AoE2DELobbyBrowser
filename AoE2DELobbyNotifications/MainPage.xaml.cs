@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml.Controls;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -33,6 +34,11 @@ namespace AoE2DELobbyNotifications
             {
                 this.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);
             }
+        }
+
+        private void NavigateToSettigns_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            WeakReferenceMessenger.Default.Send(new NavigateToMessage { Destination = typeof(SettingsPage) });
         }
     }
 }

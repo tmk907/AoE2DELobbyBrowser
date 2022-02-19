@@ -54,6 +54,15 @@
                         <KeyboardAccelerator Key="N" Modifiers="Control" />
                     </CheckBox.KeyboardAccelerators>
                 </CheckBox>
+                <Button
+                    Background="Transparent"
+                    Click="NavigateToSettigns_Click"
+                    ToolTipService.ToolTip="Settings (Ctrl + I)">
+                    <SymbolIcon Foreground="{StaticResource ForegroundTextColor}" Symbol="Setting" />
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="I" Modifiers="Control" />
+                    </Button.KeyboardAccelerators>
+                </Button>
             </StackPanel>
             <StackPanel
                 Padding="2"
@@ -63,11 +72,14 @@
                 Spacing="2">
                 <TextBox
                     Width="180"
-                    PlaceholderText="search"
                     KeyDown="SearchBox_KeyDown"
+                    PlaceholderText="search"
                     Text="{x:Bind ViewModel.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="F" Modifiers="Control" Invoked="SearchBox_KeyboardAcceleratorInvoked" />
+                        <KeyboardAccelerator
+                            Key="F"
+                            Invoked="SearchBox_KeyboardAcceleratorInvoked"
+                            Modifiers="Control" />
                     </TextBox.KeyboardAccelerators>
                 </TextBox>
                 <ComboBox

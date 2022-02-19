@@ -17,14 +17,14 @@ namespace AoE2DELobbyNotifications
     {
         private readonly Aoe2netApiClient _aoe2netApiClient;
         private readonly NotificationsService _notificationsService;
-        private readonly SettingsService _settingsService;
+        private readonly AppSettingsService _settingsService;
         private readonly LobbySettings _lobbySettings;
 
         public MainViewModel()
         {
             _aoe2netApiClient = new Aoe2netApiClient();
             _notificationsService = new NotificationsService();
-            _settingsService = new SettingsService();
+            _settingsService = new AppSettingsService();
 
             var defaultSettings = new LobbySettings
             {

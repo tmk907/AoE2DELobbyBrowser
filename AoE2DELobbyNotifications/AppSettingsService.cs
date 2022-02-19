@@ -3,11 +3,11 @@ using Windows.Storage;
 
 namespace AoE2DELobbyNotifications
 {
-    internal class SettingsService
+    internal class AppSettingsService
     {
         private ApplicationDataContainer _localSettings;
 
-        public SettingsService()
+        public AppSettingsService()
         {
             _localSettings = ApplicationData.Current.LocalSettings;
         }

@@ -20,10 +20,10 @@
     - should use global results
     - add,remove buttons, enable,disable toggle
 - about app 
-    - link to github
-    - link aoe2 api
-    - microsoft statement
-    - version
+    - [x] link to github
+    - [x] link aoe2 api
+    - [x] microsoft statement
+    - [x] version
     - check for new release
     - enable updates
 - before release

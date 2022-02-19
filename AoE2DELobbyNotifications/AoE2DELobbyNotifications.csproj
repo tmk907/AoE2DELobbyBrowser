@@ -13,6 +13,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="MainPage.xaml" />
+    <None Remove="SettingsPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +29,7 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
     <PackageReference Include="ReactiveUI.WinUI" Version="17.1.17" />
@@ -52,6 +54,11 @@
        package has not yet been restored -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnablePreviewMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="MainPage.xaml">
