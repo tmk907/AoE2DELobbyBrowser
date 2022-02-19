@@ -20,50 +20,59 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <StackPanel
-            Grid.Row="0"
-            Padding="2"
-            Background="{StaticResource DarkAccent}"
-            BorderBrush="{StaticResource BorderColor}"
-            BorderThickness="1"
-            IsTabStop="True"
-            Orientation="Horizontal"
-            Spacing="2">
-            <TextBox
-                Width="180"
-                PlaceholderText="search"
-                Text="{x:Bind ViewModel.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            <ComboBox
-                Width="180"
-                ItemsSource="{x:Bind ViewModel.GameTypes}"
-                SelectedItem="{x:Bind ViewModel.SelectedGameType, Mode=TwoWay}" />
-            <ComboBox
-                Width="180"
-                ItemsSource="{x:Bind ViewModel.MapTypes}"
-                SelectedItem="{x:Bind ViewModel.SelectedMapType, Mode=TwoWay}" />
-            <ComboBox
-                Width="100"
-                ItemsSource="{x:Bind ViewModel.GameSpeeds}"
-                SelectedItem="{x:Bind ViewModel.SelectedGameSpeed, Mode=TwoWay}" />
-            <Button
-                Width="80"
-                Command="{x:Bind ViewModel.RefreshCommand}"
-                Content="Refresh" />
-            <CheckBox IsChecked="{x:Bind ViewModel.IsAutoRefreshEnabled, Mode=TwoWay}">
-                <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Auto refresh (sec)" />
-            </CheckBox>
-            <NumberBox
-                Maximum="120"
-                Minimum="5"
-                SmallChange="5"
-                SpinButtonPlacementMode="Inline"
-                Value="{x:Bind ViewModel.Interval, Mode=TwoWay}" />
-            <CheckBox IsChecked="{x:Bind ViewModel.ShowNotifications, Mode=TwoWay}">
-                <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Notifications" />
-            </CheckBox>
+        <StackPanel Grid.Row="0" Orientation="Vertical">
+            <StackPanel
+                Padding="2"
+                Background="{StaticResource DarkAccent}"
+                IsTabStop="True"
+                Orientation="Horizontal"
+                Spacing="2">
+                <Button
+                    Width="80"
+                    Command="{x:Bind ViewModel.RefreshCommand}"
+                    Content="Refresh" />
+                <CheckBox IsChecked="{x:Bind ViewModel.IsAutoRefreshEnabled, Mode=TwoWay}">
+                    <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Auto refresh (sec)" />
+                </CheckBox>
+                <NumberBox
+                    Maximum="120"
+                    Minimum="5"
+                    SmallChange="5"
+                    SpinButtonPlacementMode="Inline"
+                    Value="{x:Bind ViewModel.Interval, Mode=TwoWay}" />
+                <CheckBox IsChecked="{x:Bind ViewModel.ShowNotifications, Mode=TwoWay}">
+                    <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Notifications" />
+                </CheckBox>
+            </StackPanel>
+            <StackPanel
+                Padding="2"
+                Background="{StaticResource DarkAccent}"
+                IsTabStop="True"
+                Orientation="Horizontal"
+                Spacing="2">
+                <TextBox
+                    Width="180"
+                    PlaceholderText="search"
+                    Text="{x:Bind ViewModel.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <ComboBox
+                    Width="180"
+                    ItemsSource="{x:Bind ViewModel.GameTypes}"
+                    SelectedItem="{x:Bind ViewModel.SelectedGameType, Mode=TwoWay}" />
+                <ComboBox
+                    Width="180"
+                    ItemsSource="{x:Bind ViewModel.MapTypes}"
+                    SelectedItem="{x:Bind ViewModel.SelectedMapType, Mode=TwoWay}" />
+                <ComboBox
+                    Width="100"
+                    ItemsSource="{x:Bind ViewModel.GameSpeeds}"
+                    SelectedItem="{x:Bind ViewModel.SelectedGameSpeed, Mode=TwoWay}" />
+
+            </StackPanel>
         </StackPanel>
+
         <ProgressRing
             Grid.Row="1"
+            Foreground="{StaticResource DarkAccent}"
             IsActive="{x:Bind ViewModel.Loading, Mode=OneWay}"
             Visibility="{x:Bind ViewModel.Loading, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" />
         <ListView
