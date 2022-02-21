@@ -27,7 +27,7 @@
     - check for new release
     - enable updates
 - before release
-    - app icon
-    - app name
-    - description
-    - link to microsoft
+    - [x] app icon
+    - [x] app name
+    - [x] description
+    - [x] link to microsoft
