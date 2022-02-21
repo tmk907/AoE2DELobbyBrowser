@@ -11,14 +11,13 @@
     <UseWinUI>true</UseWinUI>
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+    <GenerateTestArtifacts>False</GenerateTestArtifacts>
+    <AppxBundle>Never</AppxBundle>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Remove="Assets\BadgeLogo.scale-100.png" />
-    <Content Remove="Assets\BadgeLogo.scale-125.png" />
-    <Content Remove="Assets\BadgeLogo.scale-150.png" />
-    <Content Remove="Assets\BadgeLogo.scale-200.png" />
-    <Content Remove="Assets\BadgeLogo.scale-400.png" />
-  </ItemGroup>
   <ItemGroup>
     <None Remove="MainPage.xaml" />
     <None Remove="SettingsPage.xaml" />
