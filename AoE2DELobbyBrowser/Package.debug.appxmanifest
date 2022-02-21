@@ -34,7 +34,7 @@
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
         DisplayName="AoE2DE Lobby Browser Dev"
-        Description="AoE2DE Lobby Browser"
+        Description="AoE2DE Lobby Browser Dev"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
