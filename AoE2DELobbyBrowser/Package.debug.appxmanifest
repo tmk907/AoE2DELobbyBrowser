@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  IgnorableNamespaces="uap rescap com desktop">
+
+  <Identity
+    Name="60490polApki.AoE2DELobbyBrowserDev"
+    Publisher="CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE"
+    Version="1.0.0.0" />
+
+  <Properties>
+    <DisplayName>AoE2DE Lobby Browser Dev</DisplayName>
+    <PublisherDisplayName>DryForest</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="$targetentrypoint$">
+      <uap:VisualElements
+        DisplayName="AoE2DE Lobby Browser Dev"
+        Description="AoE2DE Lobby Browser"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+		<uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"  Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
+		<uap:SplashScreen Image="Assets\SplashScreen.png" />
+		<uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badgeAndTileText"/>
+      </uap:VisualElements>
+
+	    <Extensions>
+
+		    <!--Specify which CLSID to activate when toast clicked-->
+		    <desktop:Extension Category="windows.toastNotificationActivation">
+			    <desktop:ToastNotificationActivation ToastActivatorCLSID="DE9296BF-70D9-40C5-9CC2-6A8898318349" />
+		    </desktop:Extension>
+
+		    <!--Register COM CLSID LocalServer32 registry key-->
+		    <com:Extension Category="windows.comServer">
+			    <com:ComServer>
+				    <com:ExeServer Executable="AoE2DELobbyBrowser.exe" Arguments="-ToastActivated" DisplayName="Toast activator">
+					    <com:Class Id="DE9296BF-70D9-40C5-9CC2-6A8898318349" DisplayName="Toast activator"/>
+				    </com:ExeServer>
+			    </com:ComServer>
+		    </com:Extension>
+
+	    </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

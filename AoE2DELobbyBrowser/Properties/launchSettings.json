@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AoE2DELobbyBrowser (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "AoE2DELobbyBrowser (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
