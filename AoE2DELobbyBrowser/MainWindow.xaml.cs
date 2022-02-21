@@ -18,6 +18,16 @@ namespace AoE2DELobbyBrowser
             Title = "AoE2DE Lobby Browser";
             WeakReferenceMessenger.Default.Register<NavigateToMessage>(this, (r, m) => NavigateTo(m));
             WeakReferenceMessenger.Default.Register<NavigateBackMessage>(this, (r, m) => GoBack());
+
+            this.Content.ProcessKeyboardAccelerators += Content_ProcessKeyboardAccelerators;
+        }
+
+        private void Content_ProcessKeyboardAccelerators(UIElement sender, Microsoft.UI.Xaml.Input.ProcessKeyboardAcceleratorEventArgs args)
+        {
+            if (args.Modifiers == Windows.System.VirtualKeyModifiers.Menu && args.Key == Windows.System.VirtualKey.Left)
+            {
+                GoBack();
+            }
         }
 
         private void NavigateTo(NavigateToMessage message)
