@@ -24,6 +24,7 @@ namespace AoE2DELobbyBrowser
         public string Speed { get; set; }
         public string GameType { get; set; }
         public string Map { get; set; }
+        public DateTime OpenedAt { get; set; }
 
         public ReactiveCommand<Unit, Unit> JoinGameCommand { get; }
         public ReactiveCommand<Unit,Unit> CopyLobbyLinkCommand { get; }
@@ -62,7 +63,8 @@ namespace AoE2DELobbyBrowser
                 NumSlots = dto.NumSlots,
                 Speed = gameSpeed.GetById(dto.Speed.GetValueOrDefault(-2)),
                 GameType = gameTypes.GetById(dto.GameType.GetValueOrDefault(-2)),
-                Map = mapTypes.GetById(dto.MapType.GetValueOrDefault(-2))
+                Map = mapTypes.GetById(dto.MapType.GetValueOrDefault(-2)),
+                OpenedAt = DateTimeOffset.FromUnixTimeSeconds(dto.Opened ?? 0).ToLocalTime().DateTime
             };
         }
     }

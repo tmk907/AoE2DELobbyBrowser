@@ -13,10 +13,8 @@
         <converters:BoolToInvertedVisibilityConverter x:Key="BoolToInvertedVisibility" />
         <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
         <converters:BoolToFontWeightConverter x:Key="BoolToFontWeight" />
-        <Style
-            x:Key="ListItemTextBlock"
-            BasedOn="{StaticResource BaseTextBlockStyle}"
-            TargetType="TextBlock">
+        <converters:DateTimeToTimeConverter x:Key="DateTimeToTime" />
+        <Style x:Key="ListItemTextBlock" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </Page.Resources>
@@ -132,37 +130,41 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
-                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="70" />
+                            <ColumnDefinition Width="70" />
                             <ColumnDefinition Width="140" />
                             <ColumnDefinition Width="140" />
                             <ColumnDefinition Width="80" />
                             <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="44" />
                         </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Column="0"
                             FontWeight="{x:Bind IsNew, Converter={StaticResource BoolToFontWeight}}"
                             Style="{StaticResource ListItemTextBlock}"
                             Text="{x:Bind Name}" />
-                        <TextBlock Grid.Column="1" Style="{StaticResource ListItemTextBlock}">
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource ListItemTextBlock}"
+                            Text="{x:Bind OpenedAt, Converter={StaticResource DateTimeToTime}}" />
+                        <TextBlock Grid.Column="2" Style="{StaticResource ListItemTextBlock}">
                             <Run Text="{x:Bind NumPlayers}" />
                             /<Run Text="{x:Bind NumSlots}" />
                         </TextBlock>
                         <TextBlock
-                            Grid.Column="2"
-                            VerticalAlignment="Center"
+                            Grid.Column="3"
                             Style="{StaticResource ListItemTextBlock}"
                             Text="{x:Bind GameType}" />
                         <TextBlock
-                            Grid.Column="3"
+                            Grid.Column="4"
                             Style="{StaticResource ListItemTextBlock}"
                             Text="{x:Bind Map}" />
                         <TextBlock
-                            Grid.Column="4"
+                            Grid.Column="5"
                             Style="{StaticResource ListItemTextBlock}"
                             Text="{x:Bind Speed}" />
                         <Button
-                            Grid.Column="5"
+                            Grid.Column="6"
                             Width="80"
                             Background="{StaticResource Accent}"
                             BorderBrush="{StaticResource BorderColor}"
@@ -171,10 +173,10 @@
                             Content="Join"
                             Foreground="{StaticResource ForegroundTextColor}" />
                         <Button
-                            Grid.Column="6"
+                            Grid.Column="7"
                             Width="32"
                             Height="32"
-                            Margin="4,0,4,0"
+                            Margin="12,0,0,0"
                             Padding="0"
                             Background="Transparent"
                             BorderBrush="{StaticResource BorderColor}"
