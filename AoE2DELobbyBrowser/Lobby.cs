@@ -4,6 +4,7 @@ using ReactiveUI;
 using System;
 using System.Reactive;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace AoE2DELobbyBrowser
 {
@@ -12,6 +13,7 @@ namespace AoE2DELobbyBrowser
         public Lobby()
         {
             JoinGameCommand = ReactiveCommand.CreateFromTask(JoinGame);
+            CopyLobbyLinkCommand = ReactiveCommand.Create(() => CopyJoinLinkToClipboard());
         }
 
         public string Name { get; set; }
@@ -24,6 +26,7 @@ namespace AoE2DELobbyBrowser
         public string Map { get; set; }
 
         public ReactiveCommand<Unit, Unit> JoinGameCommand { get; }
+        public ReactiveCommand<Unit,Unit> CopyLobbyLinkCommand { get; }
 
         private bool _isNew;
         public bool IsNew
@@ -35,6 +38,14 @@ namespace AoE2DELobbyBrowser
         public async Task JoinGame()
         {
             await Windows.System.Launcher.LaunchUriAsync(new Uri(JoinLink));
+        }
+
+        public void CopyJoinLinkToClipboard()
+        {
+            DataPackage dataPackage = new DataPackage();
+            dataPackage.RequestedOperation = DataPackageOperation.Copy;
+            dataPackage.SetText(JoinLink);
+            Clipboard.SetContent(dataPackage);
         }
 
         public static Lobby Create(LobbyDto dto)

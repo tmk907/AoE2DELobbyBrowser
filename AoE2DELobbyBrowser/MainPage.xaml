@@ -13,7 +13,12 @@
         <converters:BoolToInvertedVisibilityConverter x:Key="BoolToInvertedVisibility" />
         <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
         <converters:BoolToFontWeightConverter x:Key="BoolToFontWeight" />
-
+        <Style
+            x:Key="ListItemTextBlock"
+            BasedOn="{StaticResource BaseTextBlockStyle}"
+            TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
     </Page.Resources>
     <Grid Background="{StaticResource BackgroundColor}">
         <Grid.RowDefinitions>
@@ -132,20 +137,30 @@
                             <ColumnDefinition Width="140" />
                             <ColumnDefinition Width="80" />
                             <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="40" />
                         </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Column="0"
                             FontWeight="{x:Bind IsNew, Converter={StaticResource BoolToFontWeight}}"
+                            Style="{StaticResource ListItemTextBlock}"
                             Text="{x:Bind Name}" />
-                        <TextBlock Grid.Column="1">
+                        <TextBlock Grid.Column="1" Style="{StaticResource ListItemTextBlock}">
                             <Run Text="{x:Bind NumPlayers}" />
                             /<Run Text="{x:Bind NumSlots}" />
                         </TextBlock>
-                        <TextBlock Grid.Column="2" Text="{x:Bind GameType}" />
-
-                        <TextBlock Grid.Column="3" Text="{x:Bind Map}" />
-
-                        <TextBlock Grid.Column="4" Text="{x:Bind Speed}" />
+                        <TextBlock
+                            Grid.Column="2"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource ListItemTextBlock}"
+                            Text="{x:Bind GameType}" />
+                        <TextBlock
+                            Grid.Column="3"
+                            Style="{StaticResource ListItemTextBlock}"
+                            Text="{x:Bind Map}" />
+                        <TextBlock
+                            Grid.Column="4"
+                            Style="{StaticResource ListItemTextBlock}"
+                            Text="{x:Bind Speed}" />
                         <Button
                             Grid.Column="5"
                             Width="80"
@@ -155,6 +170,20 @@
                             Command="{x:Bind JoinGameCommand}"
                             Content="Join"
                             Foreground="{StaticResource ForegroundTextColor}" />
+                        <Button
+                            Grid.Column="6"
+                            Width="32"
+                            Height="32"
+                            Margin="4,0,4,0"
+                            Padding="0"
+                            Background="Transparent"
+                            BorderBrush="{StaticResource BorderColor}"
+                            BorderThickness="1"
+                            Command="{x:Bind CopyLobbyLinkCommand}"
+                            Foreground="{StaticResource DarkAccent}"
+                            ToolTipService.ToolTip="{x:Bind JoinLink}">
+                            <SymbolIcon Symbol="Copy" />
+                        </Button>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
