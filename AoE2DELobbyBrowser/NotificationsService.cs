@@ -47,10 +47,9 @@ namespace AoE2DELobbyBrowser
             try
             {
                 var toastArguments = new ToastArguments();
-                toastArguments.Add("JoinLink", "");
+                toastArguments.Add("JoinLink", lobby.JoinLink);
                 new ToastContentBuilder()
-                    .AddHeader("singlelobby","New lobby",lobby.LobbyId)
-                    //.AddText($"New lobby")
+                    .AddHeader("singlelobby", "New lobby", lobby.LobbyId)
                     .AddText(lobby.Name)
                     .AddButton("Join game", ToastActivationType.Foreground, toastArguments.ToString())
                     .Show();

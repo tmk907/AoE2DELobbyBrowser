@@ -32,7 +32,7 @@ namespace AoE2DELobbyBrowser
         private async void ToastNotificationManagerCompat_OnActivated(ToastNotificationActivatedEventArgsCompat toastArgs)
         {
             ToastArguments args = ToastArguments.Parse(toastArgs.Argument);
-            if (args.TryGetValue("JoinLink", out string link))
+            if (args.TryGetValue("JoinLink", out string link) && !string.IsNullOrEmpty(link))
             {
                 await Windows.System.Launcher.LaunchUriAsync(new Uri(link));
             }
