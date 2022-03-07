@@ -2,6 +2,8 @@
 using DynamicData.Binding;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -36,6 +38,8 @@ namespace AoE2DELobbyBrowser
             set => SetAndRaise(ref _isNew, value);
         }
 
+        public List<Player> Players { get; } = new List<Player>();
+
         public async Task JoinGame()
         {
             await Windows.System.Launcher.LaunchUriAsync(new Uri(JoinLink));
@@ -55,7 +59,7 @@ namespace AoE2DELobbyBrowser
             var gameSpeed = new GameSpeed();
             var mapTypes = new MapType();
 
-            return new Lobby()
+            var lobby = new Lobby()
             {
                 LobbyId = dto.LobbyId,
                 Name = dto.Name,
@@ -64,8 +68,10 @@ namespace AoE2DELobbyBrowser
                 Speed = gameSpeed.GetById(dto.Speed.GetValueOrDefault(-2)),
                 GameType = gameTypes.GetById(dto.GameType.GetValueOrDefault(-2)),
                 Map = mapTypes.GetById(dto.MapType.GetValueOrDefault(-2)),
-                OpenedAt = DateTimeOffset.FromUnixTimeSeconds(dto.Opened ?? 0).ToLocalTime().DateTime
+                OpenedAt = DateTimeOffset.FromUnixTimeSeconds(dto.Opened ?? 0).ToLocalTime().DateTime                
             };
+            lobby.Players.AddRange(dto.Players.OrderBy(x => x.Slot).Take(dto.NumSlots).Select(x => Player.Create(x)));
+            return lobby;
         }
     }
 }

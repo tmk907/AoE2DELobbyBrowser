@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -39,6 +40,19 @@ namespace AoE2DELobbyBrowser
         private void NavigateToSettigns_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             WeakReferenceMessenger.Default.Send(new NavigateToMessage { Destination = typeof(SettingsPage) });
+        }
+
+        private void ShowPlayersPopup(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            PlayersPopup.Visibility = Visibility.Visible;
+            var lobby = (e.OriginalSource as FrameworkElement).DataContext as Lobby;
+            PlayersPopup.DataContext = lobby;
+        }
+
+        private void ClosePlayersPopup(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            PlayersPopup.Visibility = Visibility.Collapsed;
+            PlayersPopup.DataContext = null;
         }
     }
 }

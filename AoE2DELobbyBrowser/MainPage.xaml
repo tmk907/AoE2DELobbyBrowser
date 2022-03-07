@@ -115,7 +115,6 @@
 
             </StackPanel>
         </StackPanel>
-
         <ProgressRing
             Grid.Row="1"
             Foreground="{StaticResource DarkAccent}"
@@ -142,12 +141,16 @@
                             Grid.Column="0"
                             FontWeight="{x:Bind IsNew, Converter={StaticResource BoolToFontWeight}}"
                             Style="{StaticResource ListItemTextBlock}"
-                            Text="{x:Bind Name}" />
+                            Text="{x:Bind Name}"
+                            TextTrimming="CharacterEllipsis" />
                         <TextBlock
                             Grid.Column="1"
                             Style="{StaticResource ListItemTextBlock}"
                             Text="{x:Bind OpenedAt, Converter={StaticResource DateTimeToTime}}" />
-                        <TextBlock Grid.Column="2" Style="{StaticResource ListItemTextBlock}">
+                        <TextBlock
+                            Grid.Column="2"
+                            Style="{StaticResource ListItemTextBlock}"
+                            Tapped="ShowPlayersPopup">
                             <Run Text="{x:Bind NumPlayers}" />
                             /<Run Text="{x:Bind NumSlots}" />
                         </TextBlock>
@@ -190,5 +193,115 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <Grid
+            x:Name="PlayersPopup"
+            Grid.Row="1"
+            Background="Transparent"
+            Tapped="ClosePlayersPopup"
+            Visibility="Collapsed">
+            <Grid
+                Width="640"
+                Padding="10"
+                VerticalAlignment="Center"
+                Background="{StaticResource SystemControlChromeLowAcrylicElementBrush}"
+                CornerRadius="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid
+                    Grid.Row="0"
+                    Margin="0,4,0,0"
+                    Padding="8,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60" />
+                        <ColumnDefinition Width="240" />
+                        <ColumnDefinition Width="60" />
+                        <ColumnDefinition Width="60" />
+                        <ColumnDefinition Width="60" />
+                        <ColumnDefinition Width="60" />
+                        <ColumnDefinition Width="60" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        FontWeight="SemiBold"
+                        Text="Country" />
+                    <TextBlock
+                        Grid.Column="1"
+                        FontWeight="SemiBold"
+                        Text="Name" />
+                    <TextBlock
+                        Grid.Column="2"
+                        FontWeight="SemiBold"
+                        Text="Rating"
+                        TextAlignment="Right" />
+                    <TextBlock
+                        Grid.Column="3"
+                        FontWeight="SemiBold"
+                        Text="Games"
+                        TextAlignment="Right" />
+                    <TextBlock
+                        Grid.Column="4"
+                        FontWeight="SemiBold"
+                        Text="Wins"
+                        TextAlignment="Right" />
+                    <TextBlock
+                        Grid.Column="5"
+                        FontWeight="SemiBold"
+                        Text="Streak"
+                        TextAlignment="Right" />
+                    <TextBlock
+                        Grid.Column="6"
+                        FontWeight="SemiBold"
+                        Text="Drops"
+                        TextAlignment="Right" />
+                </Grid>
+                <ListView Grid.Row="1" ItemsSource="{Binding ElementName=PlayersPopup, Path=DataContext.Players}">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Padding" Value="8" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="local:Player">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="240" />
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="60" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{x:Bind Country}" />
+                                <TextBlock Grid.Column="1" Text="{x:Bind Name}" />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Text="{x:Bind Rating}"
+                                    TextAlignment="Right" />
+                                <TextBlock
+                                    Grid.Column="3"
+                                    Text="{x:Bind Games}"
+                                    TextAlignment="Right" />
+                                <TextBlock
+                                    Grid.Column="4"
+                                    Text="{x:Bind Wins}"
+                                    TextAlignment="Right" />
+                                <TextBlock
+                                    Grid.Column="5"
+                                    Text="{x:Bind Streak}"
+                                    TextAlignment="Right" />
+                                <TextBlock
+                                    Grid.Column="6"
+                                    Text="{x:Bind Drops}"
+                                    TextAlignment="Right" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Grid>
     </Grid>
 </Page>
