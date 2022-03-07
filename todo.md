@@ -10,9 +10,9 @@
         - lobby group with nr of new lobbies
     - when clear notifications from action center?
 - lobby list
-    - click on player numbers shows popup with player names in lobby
-    - show map name in list
-    - filter by map name
+    - [x] click on player numbers shows popup with player names in lobby
+    - [x] show map name in list
+    - [x] filter by map name
     - query using AND, OR
 - watchlist
     - list of watchlists
