@@ -8,7 +8,7 @@ namespace AoE2DELobbyBrowser.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var dt = (DateTime)value;
-            if (dt == DateTime.MinValue) return "";
+            if (dt == DateTimeOffset.FromUnixTimeSeconds(0).ToLocalTime().DateTime || dt == DateTime.MinValue) return "";
             return dt.ToShortTimeString();
         }
 

@@ -111,7 +111,7 @@ namespace AoE2DELobbyBrowser
                 .Connect()
                 .Transform(dto => Lobby.Create(dto))
                 .Filter(x => x.Name != "AUTOMATCH")
-                .Filter(x => x.OpenedAt > DateTime.Now.AddHours(-12))
+                .Filter(x => x.IsUnknownOpenedAt || x.OpenedAt > DateTime.Now.AddHours(-12))
                 .Do(x => Log.Information($"Before transform {DateTime.Now} Add: {x.Adds} Remove: {x.Removes} " +
                     $"Update:{x.Updates} Refresh: {x.Refreshes}"))
                 .Publish().RefCount();
