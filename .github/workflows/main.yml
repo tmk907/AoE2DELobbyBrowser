@@ -24,7 +24,6 @@ jobs:
           - channel: Prod_Sideload
             Configuration: Release
             ChannelName: Prod_Sideload
-            DistributionUrl: https://microsoft.github.io/github-actions-for-desktop-apps-distribution-prod
             MsixPackageId: DryForest.AoE2DELobbyBrowser
             MsixPublisherId: CN=DryForest
             MsixPackageDisplayName: AoE2DE Lobby Browser
@@ -33,7 +32,6 @@ jobs:
           - channel: Prod_Store
             Configuration: Release
             ChannelName: Prod_Store
-            DistributionUrl: 
             MsixPackageId: 60490polApki.AoE2DELobbyBrowserDev
             MsixPublisherId: CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE
             MsixPackageDisplayName: AoE2DE Lobby Browser
@@ -82,9 +80,10 @@ jobs:
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      run: msbuild $env:Solution_Name /t:$env:ProjectName /t:Restore /p:Configuration=$env:Configuration
       env:
         Configuration: ${{ matrix.configuration }}
+        ProjectName: AoE2DELobbyBrowser
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
@@ -96,7 +95,7 @@ jobs:
 
     # Create the app package by building and packaging the project Prod_Sideload
     - name: Create the app package by building and packaging the project for Prod_Sideload
-      run: msbuild $env:Solution_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:AppxBundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:PackageCertificateKeyFile=$env:SigningCertificate 
+      run: msbuild $env:Solution_Name /t:$env:ProjectName /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:AppxBundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:PackageCertificateKeyFile=$env:SigningCertificate 
       if: matrix.ChannelName == 'Prod_Sideload'
       env:
         AppxBundle: Never
@@ -104,10 +103,11 @@ jobs:
         Appx_Package_Dir: Packages\
         Configuration: ${{ matrix.Configuration }}
         TargetPlatform: ${{ matrix.targetplatform }}
+        ProjectName: AoE2DELobbyBrowser
         
     # Create the app package by building and packaging the project for Prod_Store
     - name: Create the app package by building and packaging the project for Prod_Store
-      run: msbuild $env:Solution_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:AppxBundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=$env:AppxPackageSigningEnabled 
+      run: msbuild $env:Solution_Name /t:$env:ProjectName /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:AppxBundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=$env:AppxPackageSigningEnabled 
       if: matrix.ChannelName == 'Prod_Store'
       env:
         AppxBundle: Never
@@ -116,6 +116,7 @@ jobs:
         Appx_Package_Dir: Packages\
         Configuration: ${{ matrix.Configuration }}
         TargetPlatform: ${{ matrix.targetplatform }}
+        ProjectName: AoE2DELobbyBrowser
 
     # Remove the pfx
     - name: Remove the pfx
