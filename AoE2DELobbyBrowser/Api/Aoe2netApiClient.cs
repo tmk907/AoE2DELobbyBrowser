@@ -12,7 +12,7 @@ namespace AoE2DELobbyBrowser.Api
 {
     internal class Aoe2netApiClient
     {
-        private const string getLobbiesUrl = "https://aoe2.net/api/lobbies?game=aoe2de";
+        private const string getLobbiesUrl = "http://aoe2api.dryforest.net/api/lobbies";
 
         private readonly HttpClient _httpClient;
         private readonly SourceCache<LobbyDto, string> _items = new SourceCache<LobbyDto, string>(x => x.LobbyId);
