@@ -99,7 +99,7 @@ jobs:
 
     # Create the app package by building and packaging the project Prod_Sideload
     - name: Create the app package by building and packaging the project for Prod_Sideload
-      run: msbuild Project_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:AppxBundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:PackageCertificateKeyFile=$env:SigningCertificate 
+      run: msbuild $env:Project_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:AppxBundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:PackageCertificateKeyFile=$env:SigningCertificate 
       if: matrix.ChannelName == 'Prod_Sideload'
       env:
         AppxBundle: Never
@@ -107,11 +107,10 @@ jobs:
         Appx_Package_Dir: Packages\
         Configuration: ${{ matrix.Configuration }}
         TargetPlatform: ${{ matrix.targetplatform }}
-        ProjectName: AoE2DELobbyBrowser
         
     # Create the app package by building and packaging the project for Prod_Store
     - name: Create the app package by building and packaging the project for Prod_Store
-      run: msbuild Project_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:AppxBundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=$env:AppxPackageSigningEnabled 
+      run: msbuild $env:Project_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:AppxBundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=$env:AppxPackageSigningEnabled 
       if: matrix.ChannelName == 'Prod_Store'
       env:
         AppxBundle: Never
@@ -120,7 +119,6 @@ jobs:
         Appx_Package_Dir: Packages\
         Configuration: ${{ matrix.Configuration }}
         TargetPlatform: ${{ matrix.targetplatform }}
-        ProjectName: AoE2DELobbyBrowser
 
     # Remove the pfx
     - name: Remove the pfx
