@@ -43,6 +43,7 @@ jobs:
 
     env:
       Solution_Name: AoE2DELobbyBrowser.sln
+      Project_Path: AoE2DELobbyBrowser/AoE2DELobbyBrowser.csproj
       App_Version: 1.0.0
       SigningCertificate: GitHubActionsWorkflow.pfx
       Project_Directory: AoE2DELobbyBrowser
@@ -82,9 +83,7 @@ jobs:
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
-      run: |
-        msbuild -version
-        msbuild $env:Solution_Name /t:$env:ProjectName /t:Restore /p:Configuration=$env:Configuration
+      run: msbuild $env:Project_Path /t:Restore /p:Configuration=$env:Configuration
       env:
         Configuration: ${{ matrix.configuration }}
         TargetPlatform: ${{ matrix.targetplatform }}
@@ -100,7 +99,7 @@ jobs:
 
     # Create the app package by building and packaging the project Prod_Sideload
     - name: Create the app package by building and packaging the project for Prod_Sideload
-      run: msbuild $env:Solution_Name /t:$env:ProjectName /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:AppxBundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:PackageCertificateKeyFile=$env:SigningCertificate 
+      run: msbuild Project_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:AppxBundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:PackageCertificateKeyFile=$env:SigningCertificate 
       if: matrix.ChannelName == 'Prod_Sideload'
       env:
         AppxBundle: Never
@@ -112,7 +111,7 @@ jobs:
         
     # Create the app package by building and packaging the project for Prod_Store
     - name: Create the app package by building and packaging the project for Prod_Store
-      run: msbuild $env:Solution_Name /t:$env:ProjectName /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:AppxBundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=$env:AppxPackageSigningEnabled 
+      run: msbuild Project_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:AppxBundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=$env:AppxPackageSigningEnabled 
       if: matrix.ChannelName == 'Prod_Store'
       env:
         AppxBundle: Never
