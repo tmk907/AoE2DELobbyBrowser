@@ -80,9 +80,10 @@ jobs:
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
-      run: msbuild $env:Solution_Name /t:$env:ProjectName /t:Restore /p:Configuration=$env:Configuration
+      run: msbuild $env:Solution_Name /t:$env:ProjectName /t:Restore /p:Configuration=$env:Configuration /p:$env:TargetPlatform
       env:
         Configuration: ${{ matrix.configuration }}
+        TargetPlatform: ${{ matrix.targetplatform }}
         ProjectName: AoE2DELobbyBrowser
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
