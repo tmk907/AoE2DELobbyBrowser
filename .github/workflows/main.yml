@@ -84,7 +84,7 @@ jobs:
     - name: Restore the application
       run: |
         msbuild -version
-        msbuild $env:Solution_Name /t:$env:ProjectName /t:Restore /p:Configuration=$env:Configuration /p:$env:TargetPlatform
+        msbuild $env:Solution_Name /t:$env:ProjectName /t:Restore /p:Configuration=$env:Configuration
       env:
         Configuration: ${{ matrix.configuration }}
         TargetPlatform: ${{ matrix.targetplatform }}
