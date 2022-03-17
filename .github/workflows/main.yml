@@ -32,7 +32,7 @@ jobs:
           - channel: Prod_Store
             Configuration: Release
             ChannelName: Prod_Store
-            MsixPackageId: 60490polApki.AoE2DELobbyBrowserDev
+            MsixPackageId: 60490polApki.AoE2DELobbyBrowser
             MsixPublisherId: CN=EFEE17C1-DC2A-4553-8CE6-82B55CBC72FE
             MsixPackageDisplayName: AoE2DE Lobby Browser
 
