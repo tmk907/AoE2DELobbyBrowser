@@ -61,7 +61,6 @@ jobs:
     # Update the appxmanifest before build by setting the per-channel values set in the matrix.
     - name: Update manifest version
       run: |
-        $path = "AoE2DELobbyBrowser/Package.appxmanifest"
         [xml]$manifest = get-content ".\$env:Project_Directory\Package.appxmanifest"
         $manifest.Package.Identity.Name = "${{ matrix.MsixPackageId }}"
         $manifest.Package.Identity.Publisher = "${{ matrix.MsixPublisherId }}"
@@ -84,13 +83,12 @@ jobs:
       run: msbuild $env:Project_Path /t:Restore /p:Configuration=$env:Configuration
       env:
         Configuration: ${{ matrix.configuration }}
-        ProjectName: AoE2DELobbyBrowser
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
       run: |
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.BASE64_ENCODED_PFX }}")
-        $certificatePath = "AoE2DELobbyBrowser/GitHubActionsWorkflow.pfx"
+        $certificatePath = "$env:Project_Directory/GitHubActionsWorkflow.pfx"
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
 
     # Create the app package by building and packaging the project Prod_Sideload
@@ -119,13 +117,13 @@ jobs:
     # Remove the pfx
     - name: Remove the pfx
       run: |
-        Remove-Item -path AoE2DELobbyBrowser/GitHubActionsWorkflow.pfx
+        Remove-Item -path $env:Project_Directory/GitHubActionsWorkflow.pfx
 
     # Move package
     - name: Move package
       run: |
-        Move-Item AoE2DELobbyBrowser/Packages/AoE2DELobbyBrowser*/*.msix ./
-        Move-Item AoE2DELobbyBrowser/Packages/AoE2DELobbyBrowser*/*.cer ./
+        Move-Item $env:Project_Directory/Packages/AoE2DELobbyBrowser*/*.msix ./
+        Move-Item $env:Project_Directory/Packages/AoE2DELobbyBrowser*/*.cer ./
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload MSIX package
