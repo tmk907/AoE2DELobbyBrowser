@@ -1,0 +1,55 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy to Webio
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  deploy:
+    runs-on: windows-latest
+
+    env:
+      publishProfilePath: AoE2DELobbyBrowser.WebApi\Properties\PublishProfiles
+      publishProfileFileName: ftp-profile.pubxml
+      publishProfileFilePath: AoE2DELobbyBrowser.WebApi\Properties\PublishProfiles\ftp-profile.pubxml
+      webConfigTransformationsFilePath: AoE2DELobbyBrowser.WebApi\web.Release.config
+      projectPath: AoE2DELobbyBrowser.WebApi\AoE2DELobbyBrowser.WebApi.csproj
+      
+    steps:
+      - uses: actions/checkout@v2
+
+      # Create file with publish profile
+      - name: Create file with publish profile
+        run: |
+          $pubxml = @"
+            ${{ secrets.WEBDEPLOY_PUBXML }}
+          "@
+          New-Item -ItemType Directory -Force -Path $env:publishProfilePath          
+          [IO.File]::WriteAllText($env:publishProfileFilePath, $pubxml.Trim())
+          
+      # Create file with publish profile
+      - name: Create file web config transformations
+        run: |
+          $webconfig = @"
+            ${{ secrets.WEBCONFIG_TRANSFORM }}
+          "@
+          [IO.File]::WriteAllText($env:webConfigTransformationsFilePath, $webconfig.Trim())
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+          include-prerelease: true
+
+      # build and publish    
+      - name: Build and publish
+        run: dotnet publish --configuration Release $env:projectPath /p:PublishProfile=$env:publishProfileFilePath /p:Password=${{ secrets.PUBLISH_PROFILE_PASSWORD }}
+    
+      # Remove publish profile
+      - name: Remove config files
+        run: |
+          Remove-Item -path $env:publishProfileFilePath
+          Remove-Item -path $env:webConfigTransformationsFilePath
