@@ -5,10 +5,12 @@
 alt='English badge'/></a>
 
 Lobby browser for Age of Empires II DE
-- Filter games by game type, map type, speed
+- Filter games by lobby name, game type, map type, speed
 - Auto refresh
 - Show notifications for new games
-- Join game directy from lobby browser
+- Join game directy from app or notification
+- List players in lobby
+- Copy link to game
 
 ![alt text](https://github.com/tmk907/AoE2DELobbyBrowser/blob/master/files/screenshots/browser-with-notification.png "Browser")
 
