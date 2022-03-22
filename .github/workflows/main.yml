@@ -69,7 +69,7 @@ jobs:
         $manifest.Package.Properties.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
         $manifest.Package.Applications.Application.VisualElements.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
         $ext = $manifest.Package.Applications.Application.Extensions
-        $ext.Extension.ToastNotificationActivation.ToastActivatorCLSID = "${{ matrix.ToastActivatorCLSID }}"
+        $ext.Extension[0].ToastNotificationActivation.ToastActivatorCLSID = "${{ matrix.ToastActivatorCLSID }}"
         $ext.Extension.comServer.ExeServer.Class.Id = "${{ matrix.ToastActivatorCLSID }}"
         $manifest.save(".\$env:Project_Directory\Package.appxmanifest")
 
