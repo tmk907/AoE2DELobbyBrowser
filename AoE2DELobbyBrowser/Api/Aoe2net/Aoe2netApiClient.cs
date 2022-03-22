@@ -8,32 +8,33 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AoE2DELobbyBrowser.Api
+namespace AoE2DELobbyBrowser.Api.Aoe2net
 {
-    internal class Aoe2netApiClient
+    internal class Aoe2netApiClient : IApiClient
     {
-        private const string getLobbiesUrl = "http://aoe2api.dryforest.net/api/lobbies";
+        private const string getLobbiesUrl = "https://aoe2.net/api/lobbies?game=aoe2de";
 
         private readonly HttpClient _httpClient;
-        private readonly SourceCache<LobbyDto, string> _items = new SourceCache<LobbyDto, string>(x => x.LobbyId);
+        private readonly SourceCache<Lobby, string> _items = new SourceCache<Lobby, string>(x => x.LobbyId);
 
         public Aoe2netApiClient()
         {
             _httpClient = new HttpClient();
         }
 
-        public IObservable<IChangeSet<LobbyDto,string>> Connect() => _items.Connect();
+        public IObservable<IChangeSet<Lobby, string>> Connect() => _items.Connect();
 
         public async Task Refresh(CancellationToken cancellationToken)
         {
             Log.Information("Refresh");
             var results = await GetAllLobbiesAsync(cancellationToken);
+            var lobbies = results.Select(dto => Lobby.Create(dto));
             var keysToDelete = _items.Keys.ToHashSet();
-            keysToDelete.ExceptWith(results.Select(x => x.LobbyId).ToList());
+            keysToDelete.ExceptWith(lobbies.Select(x => x.LobbyId).ToList());
             _items.Edit(updater =>
             {
                 updater.RemoveKeys(keysToDelete);
-                updater.AddOrUpdate(results);
+                updater.AddOrUpdate(lobbies);
             });
         }
 

@@ -1,5 +1,7 @@
+using AoE2DELobbyBrowser.WebApi;
 using Serilog;
 using System.Net.Mime;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient();
@@ -28,7 +30,7 @@ app.MapGet("/api", () =>
 
 app.MapGet("/api/lobbies", async (IHttpClientFactory httpClientFactory, ApiCache cache) =>
 {
-    var data = await cache.GetOrCreateAsync(() =>
+    var data = await cache.GetOrCreateAsync("cachedaoe2netLobbies", () =>
     {
         try
         {
@@ -41,6 +43,32 @@ app.MapGet("/api/lobbies", async (IHttpClientFactory httpClientFactory, ApiCache
             Log.Error(ex.ToString());
             return Task.FromResult("");
         }
+    });
+
+    return Results.Content(data, contentType: MediaTypeNames.Application.Json);
+});
+
+app.MapGet("/api/v1/lobbies", async (IHttpClientFactory httpClientFactory, ApiCache cache) =>
+{
+    var data = await cache.GetOrCreateAsync("cachedLobbies", async () =>
+    {
+        try
+        {
+            var url = "https://aoe2.net/api/lobbies?game=aoe2de";
+            var httpClient = httpClientFactory.CreateClient();
+            var result = await httpClient.GetFromJsonAsync<IEnumerable<AoE2DELobbyBrowser.WebApi.Aoe2net.LobbyDto>>(url);
+            if (result != null)
+            {
+                var lobbies = result.Select(x => LobbyDto.Create(x));
+                var serialized = JsonSerializer.Serialize(lobbies);
+                return serialized;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex.ToString());
+        }
+        return "";
     });
 
     return Results.Content(data, contentType: MediaTypeNames.Application.Json);

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace AoE2DELobbyBrowser.Api
+namespace AoE2DELobbyBrowser.WebApi
 {
     public class PlayerDto
     {
@@ -27,5 +27,20 @@ namespace AoE2DELobbyBrowser.Api
 
         [JsonPropertyName("drops")]
         public int? Drops { get; set; }
+
+        public static PlayerDto Create(Aoe2net.PlayerDto dto)
+        {
+            return new PlayerDto
+            {
+                Country = dto.Country,
+                Drops = dto.Drops,
+                Games = dto.Games,
+                Name = dto.Name,
+                Rating = dto.Rating,
+                Slot = dto.Slot,
+                Streak = dto.Streak,
+                Wins = dto.Wins
+            };
+        }
     }
 }

@@ -15,14 +15,14 @@ namespace AoE2DELobbyBrowser
 {
     public class MainViewModel : ReactiveObject
     {
-        private readonly Aoe2netApiClient _aoe2netApiClient;
+        private readonly IApiClient _apiClient;
         private readonly NotificationsService _notificationsService;
         private readonly AppSettingsService _settingsService;
         private readonly LobbySettings _lobbySettings;
 
         public MainViewModel()
         {
-            _aoe2netApiClient = new Aoe2netApiClient();
+            _apiClient = new Aoe2ApiClient();
             _notificationsService = new NotificationsService();
             _settingsService = new AppSettingsService();
 
@@ -85,34 +85,33 @@ namespace AoE2DELobbyBrowser
 
             var filterQuery = this
                 .WhenAnyValue(x => x.Query)
-                .Do(x => Log.Information($"Filter Query  {x}"))
+                .Do(x => Log.Debug($"Filter Query  {x}"))
                 .DistinctUntilChanged()
                 .Select(_ => queryFilter);
 
             var filterGameType = this
                 .WhenAnyValue(x => x.SelectedGameType)
-                .Do(x => Log.Information($"Filter SelectedGameType  {x}"))
+                .Do(x => Log.Debug($"Filter SelectedGameType  {x}"))
                 .DistinctUntilChanged()
                 .Select(_ => gameTypeFilter);
 
             var filterGameSpeed = this
                 .WhenAnyValue(x => x.SelectedGameSpeed)
-                .Do(x => Log.Information($"Filter SelectedGameSpeed  {x}"))
+                .Do(x => Log.Debug($"Filter SelectedGameSpeed  {x}"))
                 .DistinctUntilChanged()
                 .Select(_ => gameSpeedFilter);
 
             var filterMapType = this
                 .WhenAnyValue(x => x.SelectedMapType)
-                .Do(x => Log.Information($"Filter SelectedMapType  {x}"))
+                .Do(x => Log.Debug($"Filter SelectedMapType  {x}"))
                 .DistinctUntilChanged()
                 .Select(_ => mapTypeFilter);
 
-            var all = _aoe2netApiClient
+            var all = _apiClient
                 .Connect()
-                .Transform(dto => Lobby.Create(dto))
                 .Filter(x => x.Name != "AUTOMATCH")
                 .Filter(x => x.IsUnknownOpenedAt || x.OpenedAt > DateTime.Now.AddHours(-12))
-                .Do(x => Log.Information($"Before transform {DateTime.Now} Add: {x.Adds} Remove: {x.Removes} " +
+                .Do(x => Log.Debug($"Before transform {DateTime.Now} Add: {x.Adds} Remove: {x.Removes} " +
                     $"Update:{x.Updates} Refresh: {x.Refreshes}"))
                 .Publish().RefCount();
 
@@ -125,7 +124,7 @@ namespace AoE2DELobbyBrowser
                 .Filter(mapTypeFilter)
                 .Filter(queryFilter)
                 .Select(changeSet => changeSet.Select(x => x.Current).ToList())
-                .Do(list => Log.Information($"Notification: {list.Count} new lobbies"))
+                .Do(list => Log.Debug($"Notification: {list.Count} new lobbies"))
                 .Where(_ => ShowNotifications)
                 .Do(x => _notificationsService.ShowNotifications(x))
                 .Subscribe()
@@ -143,7 +142,7 @@ namespace AoE2DELobbyBrowser
                 .Subscribe()
                 .DisposeWith(Disposal);
 
-            this.RefreshCommand = ReactiveCommand.CreateFromTask(ct => _aoe2netApiClient.Refresh(ct));
+            this.RefreshCommand = ReactiveCommand.CreateFromTask(ct => _apiClient.Refresh(ct));
 
             this.WhenAnyObservable(x => x.RefreshCommand.IsExecuting)
                 .StartWith(false)
@@ -156,15 +155,15 @@ namespace AoE2DELobbyBrowser
                 .Where(x => x.Item2)
                 .Select(x => x.Item1)
                 .Throttle(TimeSpan.FromMilliseconds(500))
-                .Do(_ => Log.Information("value changed"))
+                .Do(_ => Log.Debug("value changed"))
                 .Select(interval =>
                     Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(interval), RxApp.TaskpoolScheduler)
-                        .Do(x => Log.Information($"Inner observable interval {x}"))
+                        .Do(x => Log.Debug($"Inner observable interval {x}"))
                         .Select(time => Unit.Default)
                     )
                 .Switch()
                 .Where(_ => _isAutoRefreshEnabled)
-                .Do(_ => Log.Information("Refresh enabled"))
+                .Do(_ => Log.Debug("Refresh enabled"))
                 .InvokeCommand(this, x => x.RefreshCommand)
                 .DisposeWith(Disposal);
         }

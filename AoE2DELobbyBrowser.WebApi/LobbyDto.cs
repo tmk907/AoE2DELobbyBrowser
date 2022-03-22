@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace AoE2DELobbyBrowser.Api
+namespace AoE2DELobbyBrowser.WebApi
 {
     public class LobbyDto
     {
@@ -22,7 +21,7 @@ namespace AoE2DELobbyBrowser.Api
 
         [JsonPropertyName("map_type")]
         public int? MapType { get; set; }
-       
+
         [JsonPropertyName("scenario")]
         public string Scenario { get; set; }
 
@@ -34,5 +33,22 @@ namespace AoE2DELobbyBrowser.Api
 
         [JsonPropertyName("players")]
         public List<PlayerDto> Players { get; set; }
+
+        public static LobbyDto Create(Aoe2net.LobbyDto dto)
+        {
+            return new LobbyDto
+            {
+                GameType = dto.GameType,
+                LobbyId = dto.LobbyId,
+                MapType = dto.MapType,
+                Name = dto.Name,
+                NumPlayers = dto.NumPlayers,
+                NumSlots = dto.NumSlots,
+                Opened = dto.Opened,
+                Players = dto.Players.Select(x => PlayerDto.Create(x)).ToList(),
+                Scenario = dto.Scenario,
+                Speed = dto.Speed
+            };
+        }
     }
 }

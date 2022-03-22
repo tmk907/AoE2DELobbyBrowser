@@ -26,6 +26,20 @@ namespace AoE2DELobbyBrowser
             };
         }
 
+        public static Player Create(Api.Aoe2net.PlayerDto dto)
+        {
+            return new Player
+            {
+                Name = dto.Name,
+                Country = dto.Country,
+                Rating = FormatValue(dto.Rating),
+                Games = FormatValue(dto.Games),
+                Wins = FormatValue(dto.Wins),
+                Streak = FormatValue(dto.Streak),
+                Drops = FormatValue(dto.Drops)
+            };
+        }
+
         private static string FormatValue(int? value)
         {
             if (value.HasValue) return value.ToString();
