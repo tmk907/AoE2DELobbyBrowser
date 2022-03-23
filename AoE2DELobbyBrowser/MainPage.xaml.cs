@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -12,44 +13,51 @@ namespace AoE2DELobbyBrowser
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public MainViewModel ViewModel { get; }
+        public MainViewModel ViewModel { get; private set; }
         public MainPage()
         {
             this.InitializeComponent();
             ViewModel = new MainViewModel();
+            Unloaded += MainPage_Unloaded;
         }
 
-        private void SearchBox_KeyboardAcceleratorInvoked(Microsoft.UI.Xaml.Input.KeyboardAccelerator sender, Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
+        private void MainPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Bindings.StopTracking();
+            ViewModel.Dispose();
+        }
+
+        private void SearchBox_KeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             var textBox = args.Element as TextBox;
             if (textBox != null)
             {
-                textBox.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);
+                textBox.Focus(FocusState.Programmatic);
             }
             args.Handled = true;
         }
 
-        private void SearchBox_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+        private void SearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if(e.Key == Windows.System.VirtualKey.Escape || e.Key == Windows.System.VirtualKey.Enter)
             {
-                this.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);
+                this.Focus(FocusState.Programmatic);
             }
         }
 
-        private void NavigateToSettigns_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private void NavigateToSettigns_Click(object sender, RoutedEventArgs e)
         {
             WeakReferenceMessenger.Default.Send(new NavigateToMessage { Destination = typeof(SettingsPage) });
         }
 
-        private void ShowPlayersPopup(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private void ShowPlayersPopup(object sender, TappedRoutedEventArgs e)
         {
             PlayersPopup.Visibility = Visibility.Visible;
             var lobby = (e.OriginalSource as FrameworkElement).DataContext as Lobby;
             PlayersPopup.DataContext = lobby;
         }
 
-        private void ClosePlayersPopup(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private void ClosePlayersPopup(object sender, TappedRoutedEventArgs e)
         {
             PlayersPopup.Visibility = Visibility.Collapsed;
             PlayersPopup.DataContext = null;

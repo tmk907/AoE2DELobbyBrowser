@@ -113,6 +113,7 @@ namespace AoE2DELobbyBrowser
                 .Filter(x => x.IsUnknownOpenedAt || x.OpenedAt > DateTime.Now.AddHours(-12))
                 .Do(x => Log.Debug($"Before transform {DateTime.Now} Add: {x.Adds} Remove: {x.Removes} " +
                     $"Update:{x.Updates} Refresh: {x.Refreshes}"))
+                .DisposeMany()
                 .Publish().RefCount();
 
             var newLobbies = all
@@ -172,6 +173,7 @@ namespace AoE2DELobbyBrowser
         public void Dispose()
         {
             Disposal.Dispose();
+            _apiClient.Dispose();
         }
 
         public ReactiveCommand<Unit,Unit> RefreshCommand { get; }

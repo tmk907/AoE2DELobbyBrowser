@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AoE2DELobbyBrowser.Api.Aoe2net
 {
-    internal class Aoe2netApiClient : IApiClient
+    internal class Aoe2netApiClient : IApiClient, IDisposable
     {
         private const string getLobbiesUrl = "https://aoe2.net/api/lobbies?game=aoe2de";
 
@@ -52,6 +52,11 @@ namespace AoE2DELobbyBrowser.Api.Aoe2net
                 Log.Error(ex.ToString());
                 return new List<LobbyDto>();
             }
+        }
+        public void Dispose()
+        {
+            _items.Clear();
+            _items.Dispose();
         }
     }
 }
