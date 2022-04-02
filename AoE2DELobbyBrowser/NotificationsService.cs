@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.WinUI.Notifications;
 using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,7 +35,11 @@ namespace AoE2DELobbyBrowser
                 new ToastContentBuilder()
                     .AddArgument("type", "lobby notification")
                     .AddText($"{lobbies.Count()} new lobbies")
-                    .Show();
+                    .Show(toast =>
+                    {
+                        toast.ExpiresOnReboot = true;
+                        toast.ExpirationTime = DateTime.Now.AddHours(1);
+                    });
             }
             catch (System.Exception ex)
             {
@@ -49,10 +54,15 @@ namespace AoE2DELobbyBrowser
                 var toastArguments = new ToastArguments();
                 toastArguments.Add("JoinLink", lobby.JoinLink);
                 new ToastContentBuilder()
+                    .AddArgument("type", "lobby notification")
                     .AddHeader("singlelobby", "New lobby", lobby.LobbyId)
                     .AddText(lobby.Name)
                     .AddButton("Join game", ToastActivationType.Foreground, toastArguments.ToString())
-                    .Show();
+                    .Show(toast =>
+                    {
+                        toast.ExpiresOnReboot = true;
+                        toast.ExpirationTime = DateTime.Now.AddHours(1);
+                    });
             }
             catch (System.Exception ex)
             {
