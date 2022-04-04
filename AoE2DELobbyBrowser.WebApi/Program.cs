@@ -28,27 +28,32 @@ app.MapGet("/api", () =>
     return Results.Content(html, contentType: MediaTypeNames.Text.Html);
 });
 
-app.MapGet("/api/lobbies", async (IHttpClientFactory httpClientFactory, ApiCache cache) =>
+app.MapGet("/api/lobbies", async (IHttpClientFactory httpClientFactory, ApiCache cache, IConfiguration config) =>
 {
-    var data = await cache.GetOrCreateAsync("cachedaoe2netLobbies", () =>
+    var data = await cache.GetOrCreateAsync("cachedaoe2netLobbies", async () =>
     {
         try
         {
             var url = "https://aoe2.net/api/lobbies?game=aoe2de";
             var httpClient = httpClientFactory.CreateClient();
-            return httpClient.GetStringAsync(url);
+            httpClient.Timeout = TimeSpan.FromSeconds(config.GetValue<int>("TimeoutSeconds"));
+            return await httpClient.GetStringAsync(url);
+        }
+        catch (TaskCanceledException ex)
+        {
+            Log.Error(ex.ToString());
         }
         catch (Exception ex)
         {
             Log.Error(ex.ToString());
-            return Task.FromResult("");
         }
+        return "";
     });
 
     return Results.Content(data, contentType: MediaTypeNames.Application.Json);
 });
 
-app.MapGet("/api/v1/lobbies", async (IHttpClientFactory httpClientFactory, ApiCache cache) =>
+app.MapGet("/api/v1/lobbies", async (IHttpClientFactory httpClientFactory, ApiCache cache, IConfiguration config) =>
 {
     var data = await cache.GetOrCreateAsync("cachedLobbies", async () =>
     {
@@ -56,6 +61,7 @@ app.MapGet("/api/v1/lobbies", async (IHttpClientFactory httpClientFactory, ApiCa
         {
             var url = "https://aoe2.net/api/lobbies?game=aoe2de";
             var httpClient = httpClientFactory.CreateClient();
+            httpClient.Timeout = TimeSpan.FromSeconds(config.GetValue<int>("TimeoutSeconds"));
             var result = await httpClient.GetFromJsonAsync<IEnumerable<AoE2DELobbyBrowser.WebApi.Aoe2net.LobbyDto>>(url);
             if (result != null)
             {
@@ -63,6 +69,10 @@ app.MapGet("/api/v1/lobbies", async (IHttpClientFactory httpClientFactory, ApiCa
                 var serialized = JsonSerializer.Serialize(lobbies);
                 return serialized;
             }
+        }
+        catch (TaskCanceledException ex)
+        {
+            Log.Error(ex.ToString());
         }
         catch (Exception ex)
         {
