@@ -7,6 +7,9 @@ namespace AoE2DELobbyBrowser.WebApi
         [JsonPropertyName("name")]
         public string Name { get; set; }
 
+        [JsonPropertyName("avatar")]
+        public string? Avatar { get; set; }
+
         [JsonPropertyName("country")]
         public string Country { get; set; }
 

@@ -17,16 +17,13 @@ namespace AoE2DELobbyBrowser.WebApi
         public int NumSlots { get; set; }
 
         [JsonPropertyName("game_type")]
-        public int? GameType { get; set; }
+        public string GameType { get; set; }
 
         [JsonPropertyName("map_type")]
-        public int? MapType { get; set; }
-
-        [JsonPropertyName("scenario")]
-        public string Scenario { get; set; }
+        public string MapType { get; set; }
 
         [JsonPropertyName("speed")]
-        public int? Speed { get; set; }
+        public string Speed { get; set; }
 
         [JsonPropertyName("opened")]
         public int? Opened { get; set; }
@@ -38,16 +35,15 @@ namespace AoE2DELobbyBrowser.WebApi
         {
             return new LobbyDto
             {
-                GameType = dto.GameType,
+                GameType = GameTypeConverter.ToName(dto.GameType),
                 LobbyId = dto.LobbyId,
-                MapType = dto.MapType,
+                MapType = MapTypeConverter.ToName(dto.MapType),
                 Name = dto.Name,
                 NumPlayers = dto.NumPlayers,
                 NumSlots = dto.NumSlots,
                 Opened = dto.Opened,
                 Players = dto.Players.Select(x => PlayerDto.Create(x)).ToList(),
-                Scenario = dto.Scenario,
-                Speed = dto.Speed
+                Speed = GameSpeedConverter.ToName(dto.Speed)
             };
         }
     }

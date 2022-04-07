@@ -13,6 +13,9 @@ var logger = new LoggerConfiguration()
     .CreateLogger();
 builder.Logging.AddSerilog(logger);
 builder.Services.AddSingleton<ApiCache>();
+builder.Services.AddSingleton<LobbiesRepository>();
+
+builder.Services.AddHostedService<MyBackgroundService>();
 
 var app = builder.Build();
 
@@ -82,6 +85,12 @@ app.MapGet("/api/v1/lobbies", async (IHttpClientFactory httpClientFactory, ApiCa
     });
 
     return Results.Content(data, contentType: MediaTypeNames.Application.Json);
+});
+
+app.MapGet("/api/v2/lobbies", (LobbiesRepository lobbiesRepository) =>
+{
+    var lobbies = lobbiesRepository.GetLobbies();
+    return Results.Json(lobbies);
 });
 
 app.Logger.LogInformation("The application started");
