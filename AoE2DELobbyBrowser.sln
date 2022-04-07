@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AoE2DELobbyBrowser", "AoE2DELobbyBrowser\AoE2DELobbyBrowser.csproj", "{84B3EC2D-C38C-4D63-9178-6695E0A602DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoE2DELobbyBrowser.WebApi", "AoE2DELobbyBrowser.WebApi\AoE2DELobbyBrowser.WebApi.csproj", "{0F9D2745-86B2-4057-B290-E2929CBFA029}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AoE2DELobbyBrowser.WebApi", "AoE2DELobbyBrowser.WebApi\AoE2DELobbyBrowser.WebApi.csproj", "{0F9D2745-86B2-4057-B290-E2929CBFA029}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketClient", "WebSocketClient\WebSocketClient.csproj", "{0C334652-2A6A-43F1-A448-670D2B3AB1EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,22 @@ Global
 		{0F9D2745-86B2-4057-B290-E2929CBFA029}.Release|x64.Build.0 = Release|Any CPU
 		{0F9D2745-86B2-4057-B290-E2929CBFA029}.Release|x86.ActiveCfg = Release|Any CPU
 		{0F9D2745-86B2-4057-B290-E2929CBFA029}.Release|x86.Build.0 = Release|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Debug|arm64.Build.0 = Debug|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Debug|x64.Build.0 = Debug|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Debug|x86.Build.0 = Debug|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Release|arm64.ActiveCfg = Release|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Release|arm64.Build.0 = Release|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Release|x64.ActiveCfg = Release|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Release|x64.Build.0 = Release|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Release|x86.ActiveCfg = Release|Any CPU
+		{0C334652-2A6A-43F1-A448-670D2B3AB1EA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
