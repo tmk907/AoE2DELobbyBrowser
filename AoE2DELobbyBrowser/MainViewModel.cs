@@ -118,6 +118,7 @@ namespace AoE2DELobbyBrowser
 
             var newLobbies = all
                 .Skip(1)
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .OnItemAdded(x => x.IsNew = true)
                 .WhereReasonsAre(ChangeReason.Add)
                 .Filter(gameSpeedFilter)

@@ -56,19 +56,15 @@ namespace AoE2DELobbyBrowser
 
         public static Lobby Create(LobbyDto dto)
         {
-            var gameTypes = new GameType();
-            var gameSpeed = new GameSpeed();
-            var mapTypes = new MapType();
-
             var lobby = new Lobby()
             {
                 LobbyId = dto.LobbyId,
                 Name = dto.Name,
                 NumPlayers = dto.NumPlayers,
                 NumSlots = dto.NumSlots,
-                Speed = gameSpeed.GetById(dto.Speed.GetValueOrDefault(-2)),
-                GameType = gameTypes.GetById(dto.GameType.GetValueOrDefault(-2)),
-                Map = mapTypes.GetById(dto.MapType.GetValueOrDefault(-2)),
+                Speed = dto.Speed,
+                GameType = dto.GameType,
+                Map = dto.MapType,
                 OpenedAt = DateTimeOffset.FromUnixTimeSeconds(dto.Opened ?? 0).ToLocalTime().DateTime,
                 IsUnknownOpenedAt = (dto.Opened ?? 0) == 0
             };

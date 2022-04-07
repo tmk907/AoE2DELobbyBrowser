@@ -18,16 +18,16 @@ namespace AoE2DELobbyBrowser.Api
         public int NumSlots { get; set; }
 
         [JsonPropertyName("game_type")]
-        public int? GameType { get; set; }
+        public string GameType { get; set; }
 
         [JsonPropertyName("map_type")]
-        public int? MapType { get; set; }
+        public string MapType { get; set; }
        
         [JsonPropertyName("scenario")]
         public string Scenario { get; set; }
 
         [JsonPropertyName("speed")]
-        public int? Speed { get; set; }
+        public string Speed { get; set; }
 
         [JsonPropertyName("opened")]
         public int? Opened { get; set; }
