@@ -83,7 +83,7 @@ namespace AoE2DELobbyBrowser.WebApi
         {
             return new PlayerDto
             {
-                Avatar = dto.Avatar,
+                //Avatar = dto.Avatar,
                 Country = dto.CountryCode,
                 Drops = dto.Drops,
                 Games = dto.Games,
