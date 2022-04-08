@@ -12,7 +12,7 @@ namespace AoE2DELobbyBrowser.Api
 {
     internal class Aoe2ApiClient : IApiClient, IDisposable
     {
-        private const string getLobbiesUrl = "https://aoe2api.dryforest.net/api/v1/lobbies";
+        private const string getLobbiesUrl = "https://aoe2api.dryforest.net/api/v2/lobbies";
         //private const string getLobbiesUrl = "https://localhost:7214/api/v2/lobbies";
 
         private readonly HttpClient _httpClient;
@@ -21,6 +21,7 @@ namespace AoE2DELobbyBrowser.Api
         public Aoe2ApiClient()
         {
             _httpClient = new HttpClient();
+            _httpClient.Timeout = TimeSpan.FromSeconds(20);
         }
 
         public IObservable<IChangeSet<Lobby, string>> Connect() => _items.Connect();
@@ -29,6 +30,8 @@ namespace AoE2DELobbyBrowser.Api
         {
             Log.Information("Refresh");
             var results = await GetAllLobbiesAsync(cancellationToken);
+            if (results.Count == 0) return;
+
             var lobbies = results.Select(dto => Lobby.Create(dto));
             var keysToDelete = _items.Keys.ToHashSet();
             keysToDelete.ExceptWith(lobbies.Select(x => x.LobbyId).ToList());
