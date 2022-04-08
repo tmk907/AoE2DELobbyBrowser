@@ -16,11 +16,25 @@ namespace AoE2DELobbyBrowser
         {
             JoinGameCommand = ReactiveCommand.CreateFromTask(JoinGame);
             CopyLobbyLinkCommand = ReactiveCommand.Create(() => CopyJoinLinkToClipboard());
+            AddedAt = DateTime.Now;
         }
 
         public string Name { get; set; }
-        public int NumPlayers { get; set; }
-        public int NumSlots { get; set; }
+
+        private int _numPlayers;
+        public int NumPlayers
+        {
+            get => _numPlayers;
+            set => SetAndRaise(ref _numPlayers, value);
+        }
+
+        private int _numSlots;
+        public int NumSlots
+        {
+            get => _numSlots;
+            set => SetAndRaise(ref _numSlots, value);
+        }
+
         public string LobbyId { get; set; }
         public string JoinLink => $"steam://joinlobby/813780/{LobbyId}";
         public string Speed { get; set; }
@@ -38,6 +52,8 @@ namespace AoE2DELobbyBrowser
             get => _isNew;
             set => SetAndRaise(ref _isNew, value);
         }
+
+        public DateTime AddedAt { get; set; }
 
         public List<Player> Players { get; } = new List<Player>();
 

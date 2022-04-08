@@ -139,7 +139,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Column="0"
-                            FontWeight="{x:Bind IsNew, Converter={StaticResource BoolToFontWeight}}"
+                            FontWeight="{x:Bind IsNew, Mode=OneWay, Converter={StaticResource BoolToFontWeight}}"
                             Style="{StaticResource ListItemTextBlock}"
                             Text="{x:Bind Name}"
                             TextTrimming="CharacterEllipsis" />
@@ -151,8 +151,8 @@
                             Grid.Column="2"
                             Style="{StaticResource ListItemTextBlock}"
                             Tapped="ShowPlayersPopup">
-                            <Run Text="{x:Bind NumPlayers}" />
-                            /<Run Text="{x:Bind NumSlots}" />
+                            <Run Text="{x:Bind NumPlayers, Mode=OneWay}" />
+                            /<Run Text="{x:Bind NumSlots, Mode=OneWay}" />
                         </TextBlock>
                         <TextBlock
                             Grid.Column="3"

@@ -79,7 +79,7 @@ namespace AoE2DELobbyBrowser
 
             Func<Lobby, bool> mapTypeFilter = lobby =>
             {
-                return SelectedGameType == GameType.Scenario 
+                return SelectedGameType == GameType.Scenario
                 || SelectedMapType == MapType.All || lobby.Map == SelectedMapType;
             };
 
@@ -118,7 +118,6 @@ namespace AoE2DELobbyBrowser
 
             var newLobbies = all
                 .Skip(1)
-                .ObserveOn(RxApp.MainThreadScheduler)
                 .OnItemAdded(x => x.IsNew = true)
                 .WhereReasonsAre(ChangeReason.Add)
                 .Filter(gameSpeedFilter)
@@ -132,6 +131,7 @@ namespace AoE2DELobbyBrowser
                 .Subscribe()
                 .DisposeWith(Disposal);
 
+            var myAdaptor = new MySortedObservableCollectionAdaptor();
             var filtered = all
                 .Filter(filterGameSpeed)
                 .Filter(filterGameType)
@@ -139,7 +139,7 @@ namespace AoE2DELobbyBrowser
                 .Filter(filterQuery)
                 .Sort(SortExpressionComparer<Lobby>.Ascending(t => t.Name))
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out _lobbies)
+                .Bind(out _lobbies, adaptor:myAdaptor)
                 .DisposeMany()
                 .Subscribe()
                 .DisposeWith(Disposal);
@@ -149,7 +149,7 @@ namespace AoE2DELobbyBrowser
             this.WhenAnyObservable(x => x.RefreshCommand.IsExecuting)
                 .StartWith(false)
                 .DistinctUntilChanged()
-                .ToProperty(this, x => x.Loading, out _loading  )
+                .ToProperty(this, x => x.Loading, out _loading)
                 .DisposeWith(Disposal);
 
             this
@@ -177,7 +177,7 @@ namespace AoE2DELobbyBrowser
             _apiClient.Dispose();
         }
 
-        public ReactiveCommand<Unit,Unit> RefreshCommand { get; }
+        public ReactiveCommand<Unit, Unit> RefreshCommand { get; }
 
         private readonly ReadOnlyObservableCollection<Lobby> _lobbies;
         public ReadOnlyObservableCollection<Lobby> Lobbies => _lobbies;
