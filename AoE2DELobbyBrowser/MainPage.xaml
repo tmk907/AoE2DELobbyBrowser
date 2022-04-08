@@ -222,6 +222,7 @@
                         <ColumnDefinition Width="60" />
                         <ColumnDefinition Width="60" />
                         <ColumnDefinition Width="60" />
+                        <!--<ColumnDefinition Width="48" />-->
                     </Grid.ColumnDefinitions>
                     <TextBlock
                         Grid.Column="0"
@@ -274,6 +275,7 @@
                                     <ColumnDefinition Width="60" />
                                     <ColumnDefinition Width="60" />
                                     <ColumnDefinition Width="60" />
+                                    <!--<ColumnDefinition Width="40" />-->
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="{x:Bind Country}" />
                                 <TextBlock Grid.Column="1" Text="{x:Bind Name}" />
@@ -297,6 +299,15 @@
                                     Grid.Column="6"
                                     Text="{x:Bind Drops}"
                                     TextAlignment="Right" />
+                                <!--<Image
+                                    Grid.Column="7"
+                                    Width="32"
+                                    Height="32"
+                                    Margin="-8">
+                                    <Image.Source>
+                                        <BitmapImage UriSource="{x:Bind Avatar}" />
+                                    </Image.Source>
+                                </Image>-->
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

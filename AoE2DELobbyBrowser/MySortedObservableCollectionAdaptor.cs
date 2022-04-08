@@ -9,6 +9,12 @@ namespace AoE2DELobbyBrowser
 {
     public class MySortedObservableCollectionAdaptor : ISortedObservableCollectionAdaptor<Lobby, string>
     {
+        private TimeSpan _newLobbyHighlightTime;
+        public MySortedObservableCollectionAdaptor()
+        {
+            _newLobbyHighlightTime = AppSettings.NewLobbyHighlightTime;
+        }
+
         public void Adapt(ISortedChangeSet<Lobby, string> changes, IObservableCollection<Lobby> collection)
         {
             if (changes is null)
@@ -54,7 +60,7 @@ namespace AoE2DELobbyBrowser
             }
         }
 
-        private static void DoUpdate(ISortedChangeSet<Lobby, string> updates, IObservableCollection<Lobby> list)
+        private void DoUpdate(ISortedChangeSet<Lobby, string> updates, IObservableCollection<Lobby> list)
         {
             foreach (var update in updates)
             {
@@ -105,7 +111,7 @@ namespace AoE2DELobbyBrowser
                             }
 
                             current = list[update.CurrentIndex];
-                            if (current.IsNew && current.AddedAt + TimeSpan.FromSeconds(30) < DateTime.Now)
+                            if (current.IsNew && current.AddedAt + _newLobbyHighlightTime < DateTime.Now)
                             {
                                 current.IsNew = false;
                             }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -15,6 +16,7 @@ namespace AoE2DELobbyBrowser
         public SettingsPage()
         {
             this.InitializeComponent();
+            newLobbyNumberBox.Value = AppSettings.NewLobbyHighlightTime.TotalSeconds;
         }
 
         public string Version
@@ -29,6 +31,13 @@ namespace AoE2DELobbyBrowser
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
             WeakReferenceMessenger.Default.Send(new NavigateBackMessage());
+        }
+
+        private void newLobbyNumberBox_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            double seconds = args.NewValue;
+            if (double.IsNaN(seconds)) return;
+            AppSettings.NewLobbyHighlightTime = TimeSpan.FromSeconds(seconds);
         }
     }
 }

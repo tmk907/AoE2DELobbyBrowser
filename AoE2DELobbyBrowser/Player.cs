@@ -5,6 +5,7 @@ namespace AoE2DELobbyBrowser
     public class Player
     {
         public string Name { get; set; }
+        public string Avatar { get; set; }
         public string Country { get; set; }
         public string Rating { get; set; }
         public string Games { get; set; }
@@ -17,6 +18,7 @@ namespace AoE2DELobbyBrowser
             return new Player
             {
                 Name = dto.Name,
+                Avatar = dto.Avatar,
                 Country = dto.Country,
                 Rating = FormatValue(dto.Rating),
                 Games = FormatValue(dto.Games),

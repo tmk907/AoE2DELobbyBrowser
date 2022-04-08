@@ -42,6 +42,21 @@
                     <TextBlock
                         Margin="0,40,0,0"
                         Style="{StaticResource SubtitleTextBlockStyle}"
+                        Text="Browser" />
+                    <TextBlock Margin="0,10,0,0" Text="For many seconds new lobby should be highlighted" />
+                    <NumberBox
+                        x:Name="newLobbyNumberBox"
+                        Width="140"
+                        HorizontalAlignment="Left"
+                        Maximum="300"
+                        Minimum="5"
+                        SmallChange="5"
+                        SpinButtonPlacementMode="Inline"
+                        ValueChanged="newLobbyNumberBox_ValueChanged" />
+
+                    <TextBlock
+                        Margin="0,40,0,0"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
                         Text="About" />
                     <TextBlock Margin="0,10,0,0" IsTextSelectionEnabled="True">
                         <Run>Version:</Run>
