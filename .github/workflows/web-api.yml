@@ -5,9 +5,6 @@ name: Build and deploy to Webio
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - 'dev'
 
 jobs:
 
