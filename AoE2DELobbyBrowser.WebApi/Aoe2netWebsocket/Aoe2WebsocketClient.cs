@@ -39,6 +39,7 @@ namespace AoE2DELobbyBrowser.WebApi.Aoe2netWebsocket
                 client.Options.SetRequestHeader("Cookie", cookieValue);
                 client.Options.SetRequestHeader("Origin", "aoe2.net");
                 client.Options.SetRequestHeader("Origin", "https://aoe2.net");
+                client.Options.SetRequestHeader("User-Agent", "AoE2DE Lobby Browser");
                 return client;
             });
 
