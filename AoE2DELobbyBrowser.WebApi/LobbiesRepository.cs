@@ -13,7 +13,7 @@ namespace AoE2DELobbyBrowser.WebApi
         {
             _logger = logger;
             _lobbies = new ConcurrentDictionary<string, LobbyDto>();
-            semaphore = new SemaphoreSlim(0, 1);
+            semaphore = new SemaphoreSlim(1, 1);
         }
 
         public void AddLobbies(IEnumerable<Aoe2netWebsocket.LobbyDto> newLobbies)
