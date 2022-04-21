@@ -99,6 +99,8 @@ namespace AoE2DELobbyBrowser
                                 Log.Debug($"Update nums {update.CurrentIndex} {prev.NumPlayers} {current.NumPlayers}");
                                 prev.NumPlayers = current.NumPlayers;
                                 prev.NumSlots = current.NumSlots;
+                                prev.Players.Clear();
+                                prev.Players.AddRange(current.Players.ToList());
                             }
                             if (AreDifferent(prev, current, x => x.GameType) ||
                                 AreDifferent(prev, current, x => x.Map) ||
