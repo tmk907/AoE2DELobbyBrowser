@@ -7,22 +7,27 @@ namespace AoE2DELobbyBrowser.WebApi
         private readonly ILogger<LobbiesRepository> _logger;
         private readonly ConcurrentDictionary<string, LobbyDto> _lobbies;
 
-        private static SemaphoreSlim semaphore;
+        private static SemaphoreSlim _semaphore;
 
         public LobbiesRepository(ILogger<LobbiesRepository> logger)
         {
             _logger = logger;
             _lobbies = new ConcurrentDictionary<string, LobbyDto>();
-            semaphore = new SemaphoreSlim(1, 1);
+            _semaphore = new SemaphoreSlim(1, 1);
         }
 
         public void AddLobbies(IEnumerable<Aoe2netWebsocket.LobbyDto> newLobbies)
         {
-            semaphore.Wait();
+            _semaphore.Wait();
             try
             {
                 // remove lobbies where first player and game name is the same
-                var nameToLobbyId = _lobbies.ToDictionary(x => GetHostAndGameName(x.Value), x => x.Key);
+                var nameToLobbyId = new Dictionary<string, string>();
+                foreach(var lobby in _lobbies)
+                {
+                    var key = GetHostAndGameName(lobby.Value);
+                    nameToLobbyId.TryAdd(key, lobby.Key);
+                }
                 foreach(var lobby in newLobbies)
                 {
                     var name = GetHostAndGameName(Create(lobby));
@@ -67,9 +72,13 @@ namespace AoE2DELobbyBrowser.WebApi
 
                 _logger.LogInformation($"Total lobbies {_lobbies.Count}");
             }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
             finally
             {
-                semaphore.Release();
+                _semaphore.Release();
             }
         }
 
@@ -104,7 +113,7 @@ namespace AoE2DELobbyBrowser.WebApi
 
         private string GetHostAndGameName(LobbyDto lobby)
         {
-            return $"{lobby.Players.FirstOrDefault()?.Name ?? ""}~{lobby.Name}";
+            return $"{lobby.Players.FirstOrDefault()?.Name ?? ""}~{lobby.Name}~{lobby.MapType}";
         }
 
         private PlayerDto Create(Aoe2netWebsocket.PlayerDto dto)

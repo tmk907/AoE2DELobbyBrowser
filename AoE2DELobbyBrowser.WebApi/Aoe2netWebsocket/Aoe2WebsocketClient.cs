@@ -37,7 +37,7 @@ namespace AoE2DELobbyBrowser.WebApi.Aoe2netWebsocket
                     }
                 };
                 client.Options.SetRequestHeader("Cookie", cookieValue);
-                client.Options.SetRequestHeader("Origin", "aoe2.net");
+                client.Options.SetRequestHeader("Host", "aoe2.net");
                 client.Options.SetRequestHeader("Origin", "https://aoe2.net");
                 client.Options.SetRequestHeader("User-Agent", "AoE2DE Lobby Browser");
                 return client;
@@ -55,7 +55,7 @@ namespace AoE2DELobbyBrowser.WebApi.Aoe2netWebsocket
                 _logger.LogInformation($"Reconnection happened, type: {info.Type}, url: {client.Url}");
             });
             client.DisconnectionHappened.Subscribe(info =>
-                _logger.LogWarning($"Disconnection happened, type: {info.Type}"));
+                            _logger.LogWarning($"Disconnection happened, type: {info.Type}"));
 
             //var receivedMessages = client.MessageReceived
             //    .Select(x => (Response: x, Msg: JsonSerializer.Deserialize<WebsocketMessage<object>>(x.Text)));
