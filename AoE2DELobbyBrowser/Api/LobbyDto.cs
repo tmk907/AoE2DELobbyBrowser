@@ -8,6 +8,9 @@ namespace AoE2DELobbyBrowser.Api
         [JsonPropertyName("lobby_id")]
         public string LobbyId { get; set; }
 
+        [JsonPropertyName("match_id")]
+        public string MatchId { get; set; }
+
         [JsonPropertyName("name")]
         public string Name { get; set; }
 

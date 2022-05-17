@@ -19,6 +19,9 @@ namespace AoE2DELobbyBrowser
             newLobbyNumberBox.Value = AppSettings.NewLobbyHighlightTime.TotalSeconds;
         }
 
+        public bool IsAoe2deLink => AppSettings.JoinLinkType == AppSettings.JoinLink.Aoe2de;
+        public bool IsSteamLink => AppSettings.JoinLinkType == AppSettings.JoinLink.Steam;
+
         public string Version
         {
             get
@@ -38,6 +41,16 @@ namespace AoE2DELobbyBrowser
             double seconds = args.NewValue;
             if (double.IsNaN(seconds)) return;
             AppSettings.NewLobbyHighlightTime = TimeSpan.FromSeconds(seconds);
+        }
+
+        private void Aoe2de_RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            AppSettings.JoinLinkType = AppSettings.JoinLink.Aoe2de;
+        }
+
+        private void Steam_RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            AppSettings.JoinLinkType = AppSettings.JoinLink.Steam;
         }
     }
 }

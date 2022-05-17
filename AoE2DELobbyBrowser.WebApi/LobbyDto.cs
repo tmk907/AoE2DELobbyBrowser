@@ -7,6 +7,9 @@ namespace AoE2DELobbyBrowser.WebApi
         [JsonPropertyName("lobby_id")]
         public string LobbyId { get; set; }
 
+        [JsonPropertyName("match_id")]
+        public string MatchId { get; set; }
+
         [JsonPropertyName("name")]
         public string Name { get; set; }
 
@@ -37,6 +40,7 @@ namespace AoE2DELobbyBrowser.WebApi
             {
                 GameType = GameTypeConverter.ToName(dto.GameType),
                 LobbyId = dto.LobbyId,
+                MatchId = dto.MatchId,
                 MapType = MapTypeConverter.ToName(dto.MapType),
                 Name = dto.Name,
                 NumPlayers = dto.NumPlayers,

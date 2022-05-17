@@ -36,7 +36,8 @@ namespace AoE2DELobbyBrowser
         }
 
         public string LobbyId { get; set; }
-        public string JoinLink => $"steam://joinlobby/813780/{LobbyId}";
+        public string MatchId { get; set; }
+        public string JoinLink { get; set; }
         public string Speed { get; set; }
         public string GameType { get; set; }
         public string Map { get; set; }
@@ -75,6 +76,7 @@ namespace AoE2DELobbyBrowser
             var lobby = new Lobby()
             {
                 LobbyId = dto.LobbyId,
+                MatchId = dto.MatchId,
                 Name = dto.Name,
                 NumPlayers = dto.NumPlayers,
                 NumSlots = dto.NumSlots,
@@ -85,6 +87,14 @@ namespace AoE2DELobbyBrowser
                 IsUnknownOpenedAt = (dto.Opened ?? 0) == 0
             };
             lobby.Players.AddRange(dto.Players.OrderBy(x => x.Slot).Take(dto.NumSlots).Select(x => Player.Create(x)));
+            if (AppSettings.JoinLinkType == AppSettings.JoinLink.Aoe2de)
+            {
+                lobby.JoinLink = $"aoe2de://0/{lobby.MatchId}";
+            }
+            else
+            {
+                lobby.JoinLink = $"steam://joinlobby/813780/{lobby.LobbyId}";
+            }
             return lobby;
         }
 
@@ -107,6 +117,14 @@ namespace AoE2DELobbyBrowser
                 IsUnknownOpenedAt = (dto.Opened ?? 0) == 0
             };
             lobby.Players.AddRange(dto.Players.OrderBy(x => x.Slot).Take(dto.NumSlots).Select(x => Player.Create(x)));
+            if (AppSettings.JoinLinkType == AppSettings.JoinLink.Aoe2de)
+            {
+                lobby.JoinLink = $"aoe2de://0/{lobby.MatchId}";
+            }
+            else
+            {
+                lobby.JoinLink = $"steam://joinlobby/813780/{lobby.LobbyId}";
+            }
             return lobby;
         }
     }

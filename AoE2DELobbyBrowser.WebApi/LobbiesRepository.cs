@@ -69,6 +69,7 @@ namespace AoE2DELobbyBrowser.WebApi
             {
                 GameType = dto.GameType,
                 LobbyId = dto.SteamLobbyId,
+                MatchId = dto.Id,
                 MapType = dto.Location,
                 Name = dto.Name,
                 NumPlayers = dto.NumPlayers,

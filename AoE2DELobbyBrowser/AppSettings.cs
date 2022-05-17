@@ -25,5 +25,29 @@ namespace AoE2DELobbyBrowser
                 _localSettings.Values[nameof(NewLobbyHighlightTime)] = (int)value.TotalSeconds;
             } 
         }
+
+        public enum JoinLink
+        {
+            Aoe2de,
+            Steam
+        }
+
+        private static JoinLink? _joinLinkType = null;
+        public static JoinLink JoinLinkType
+        {
+            get
+            {
+                if (_joinLinkType is null)
+                {
+                    _joinLinkType = (JoinLink)(_localSettings.Values[nameof(JoinLinkType)] ?? 0);
+                }
+                return _joinLinkType.Value;
+            }
+            set
+            {
+                _joinLinkType = value;
+                _localSettings.Values[nameof(JoinLinkType)] = (int)value;
+            }
+        }
     }
 }
