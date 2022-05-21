@@ -7,9 +7,6 @@ namespace AoE2DELobbyBrowser.WebApi
         [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        //[JsonPropertyName("avatar")]
-        //public string? Avatar { get; set; }
-
         [JsonPropertyName("country")]
         public string Country { get; set; }
 
@@ -30,20 +27,5 @@ namespace AoE2DELobbyBrowser.WebApi
 
         [JsonPropertyName("drops")]
         public int? Drops { get; set; }
-
-        public static PlayerDto Create(Aoe2net.PlayerDto dto)
-        {
-            return new PlayerDto
-            {
-                Country = dto.Country,
-                Drops = dto.Drops,
-                Games = dto.Games,
-                Name = dto.Name,
-                Rating = dto.Rating,
-                Slot = dto.Slot,
-                Streak = dto.Streak,
-                Wins = dto.Wins
-            };
-        }
     }
 }

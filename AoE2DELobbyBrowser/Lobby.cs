@@ -97,35 +97,5 @@ namespace AoE2DELobbyBrowser
             }
             return lobby;
         }
-
-        public static Lobby Create(Api.Aoe2net.LobbyDto dto)
-        {
-            var gameTypes = new GameType();
-            var gameSpeed = new GameSpeed();
-            var mapTypes = new MapType();
-
-            var lobby = new Lobby()
-            {
-                LobbyId = dto.LobbyId,
-                Name = dto.Name,
-                NumPlayers = dto.NumPlayers,
-                NumSlots = dto.NumSlots,
-                Speed = gameSpeed.GetById(dto.Speed.GetValueOrDefault(-2)),
-                GameType = gameTypes.GetById(dto.GameType.GetValueOrDefault(-2)),
-                Map = mapTypes.GetById(dto.MapType.GetValueOrDefault(-2)),
-                OpenedAt = DateTimeOffset.FromUnixTimeSeconds(dto.Opened ?? 0).ToLocalTime().DateTime,
-                IsUnknownOpenedAt = (dto.Opened ?? 0) == 0
-            };
-            lobby.Players.AddRange(dto.Players.OrderBy(x => x.Slot).Take(dto.NumSlots).Select(x => Player.Create(x)));
-            if (AppSettings.JoinLinkType == AppSettings.JoinLink.Aoe2de)
-            {
-                lobby.JoinLink = $"aoe2de://0/{lobby.MatchId}";
-            }
-            else
-            {
-                lobby.JoinLink = $"steam://joinlobby/813780/{lobby.LobbyId}";
-            }
-            return lobby;
-        }
     }
 }

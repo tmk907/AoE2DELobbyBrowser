@@ -33,22 +33,5 @@ namespace AoE2DELobbyBrowser.WebApi
 
         [JsonPropertyName("players")]
         public List<PlayerDto> Players { get; set; }
-
-        public static LobbyDto Create(Aoe2net.LobbyDto dto)
-        {
-            return new LobbyDto
-            {
-                GameType = GameTypeConverter.ToName(dto.GameType),
-                LobbyId = dto.LobbyId,
-                MatchId = dto.MatchId,
-                MapType = MapTypeConverter.ToName(dto.MapType),
-                Name = dto.Name,
-                NumPlayers = dto.NumPlayers,
-                NumSlots = dto.NumSlots,
-                Opened = dto.Opened,
-                Players = dto.Players.Select(x => PlayerDto.Create(x)).ToList(),
-                Speed = GameSpeedConverter.ToName(dto.Speed)
-            };
-        }
     }
 }
