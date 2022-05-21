@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace AoE2DELobbyBrowser
+namespace AoE2DELobbyBrowser.Models
 {
-    public class MapType 
+    public class MapType
     {
         public const string All = "All";
         public const string Unknown = "Unknown";
 
         private Dictionary<int, string> _map = new Dictionary<int, string>()
         {
-            { -1, All},          
+            { -1, All},
             { 0, "Random Map" },
             { 9, "Arabia" },
             { 10, "Archipelago" },

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Windows.Storage;
 
-namespace AoE2DELobbyBrowser
+namespace AoE2DELobbyBrowser.Services
 {
     internal class AppSettingsService
     {
@@ -14,7 +14,7 @@ namespace AoE2DELobbyBrowser
 
         public T Get<T>(string key, T defaultValue)
         {
-            if(_localSettings.Values.TryGetValue(key, out object serialized))
+            if (_localSettings.Values.TryGetValue(key, out object serialized))
             {
                 var data = JsonSerializer.Deserialize<T>(serialized as string);
                 return data;
@@ -29,7 +29,7 @@ namespace AoE2DELobbyBrowser
         public void Save<T>(string key, T data)
         {
             var serialized = JsonSerializer.Serialize(data);
-            _localSettings.Values[key]=serialized;
+            _localSettings.Values[key] = serialized;
         }
     }
 }

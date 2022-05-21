@@ -1,4 +1,5 @@
-﻿using DynamicData;
+﻿using AoE2DELobbyBrowser.Models;
+using DynamicData;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

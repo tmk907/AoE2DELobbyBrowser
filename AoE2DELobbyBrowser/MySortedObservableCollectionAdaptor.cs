@@ -1,6 +1,7 @@
-﻿using DynamicData;
+﻿using AoE2DELobbyBrowser.Models;
+using AoE2DELobbyBrowser.Services;
+using DynamicData;
 using DynamicData.Binding;
-using Serilog;
 using System;
 using System.Linq;
 using System.Reactive.Linq;
@@ -67,24 +68,20 @@ namespace AoE2DELobbyBrowser
                 switch (update.Reason)
                 {
                     case ChangeReason.Add:
-                        Log.Debug($"Collection add {update.CurrentIndex}");
                         list.Insert(update.CurrentIndex, update.Current);
                         break;
 
                     case ChangeReason.Remove:
-                        Log.Debug($"Collection remove {update.CurrentIndex}");
                         list.RemoveAt(update.CurrentIndex);
                         break;
 
                     case ChangeReason.Moved:
-                        Log.Debug($"Collection move {update.PreviousIndex} {update.CurrentIndex}");
                         list.Move(update.PreviousIndex, update.CurrentIndex);
                         break;
 
                     case ChangeReason.Update:
                         if (update.PreviousIndex != update.CurrentIndex)
                         {
-                            Log.Debug($"Collection update remove insert {update.PreviousIndex} {update.CurrentIndex}");
                             list.RemoveAt(update.PreviousIndex);
                             list.Insert(update.CurrentIndex, update.Current);
                         }
@@ -96,7 +93,6 @@ namespace AoE2DELobbyBrowser
                             if (AreDifferent(prev, current, x => x.NumPlayers) ||
                                 AreDifferent(prev, current, x => x.NumSlots))
                             {
-                                Log.Debug($"Update nums {update.CurrentIndex} {prev.NumPlayers} {current.NumPlayers}");
                                 prev.NumPlayers = current.NumPlayers;
                                 prev.NumSlots = current.NumSlots;
                                 prev.Players.Clear();
@@ -107,7 +103,6 @@ namespace AoE2DELobbyBrowser
                                 AreDifferent(prev, current, x => x.Name) ||
                                 AreDifferent(prev, current, x => x.Speed))
                             {
-                                Log.Debug($"Replace lobby {update.CurrentIndex}");
                                 current.AddedAt = prev.AddedAt;
                                 list[update.CurrentIndex] = current;
                             }

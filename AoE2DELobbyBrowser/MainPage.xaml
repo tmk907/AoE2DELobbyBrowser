@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:AoE2DELobbyBrowser.Converters"
+    xmlns:models="using:AoE2DELobbyBrowser.Models"
     xmlns:toolkitConverters="using:CommunityToolkit.WinUI.UI.Converters"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
@@ -125,7 +126,7 @@
             ItemsSource="{x:Bind ViewModel.Lobbies, Mode=OneWay}"
             SelectionMode="None">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="local:Lobby">
+                <DataTemplate x:DataType="models:Lobby">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -265,7 +266,7 @@
                         </Style>
                     </ListView.ItemContainerStyle>
                     <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="local:Player">
+                        <DataTemplate x:DataType="models:Player">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="60" />

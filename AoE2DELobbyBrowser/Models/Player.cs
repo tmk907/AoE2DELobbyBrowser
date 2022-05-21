@@ -1,6 +1,6 @@
 ﻿using AoE2DELobbyBrowser.Api;
 
-namespace AoE2DELobbyBrowser
+namespace AoE2DELobbyBrowser.Models
 {
     public class Player
     {

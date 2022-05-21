@@ -1,16 +1,16 @@
 ﻿using System;
 using Windows.Storage;
 
-namespace AoE2DELobbyBrowser
+namespace AoE2DELobbyBrowser.Services
 {
     internal class AppSettings
     {
         private static ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
 
         private static TimeSpan _newLobbyHighlightTime = TimeSpan.Zero;
-        public static TimeSpan NewLobbyHighlightTime 
+        public static TimeSpan NewLobbyHighlightTime
         {
-            get 
+            get
             {
                 if (_newLobbyHighlightTime == TimeSpan.Zero)
                 {
@@ -23,7 +23,7 @@ namespace AoE2DELobbyBrowser
             {
                 _newLobbyHighlightTime = value;
                 _localSettings.Values[nameof(NewLobbyHighlightTime)] = (int)value.TotalSeconds;
-            } 
+            }
         }
 
         public enum JoinLink

@@ -1,4 +1,6 @@
 ﻿using AoE2DELobbyBrowser.Api;
+using AoE2DELobbyBrowser.Models;
+using AoE2DELobbyBrowser.Services;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;

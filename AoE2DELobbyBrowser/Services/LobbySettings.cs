@@ -1,4 +1,4 @@
-﻿namespace AoE2DELobbyBrowser
+﻿namespace AoE2DELobbyBrowser.Services
 {
     public class LobbySettings
     {

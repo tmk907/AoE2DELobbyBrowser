@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace AoE2DELobbyBrowser
+namespace AoE2DELobbyBrowser.Models
 {
-    public class GameType 
+    public class GameType
     {
         public const string All = "All";
         public const string Unknown = "Unknown";

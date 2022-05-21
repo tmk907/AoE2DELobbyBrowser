@@ -1,4 +1,5 @@
-﻿using DynamicData;
+﻿using AoE2DELobbyBrowser.Models;
+using DynamicData;
 using Serilog;
 using System;
 using System.Collections.Generic;

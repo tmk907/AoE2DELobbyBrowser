@@ -1,4 +1,5 @@
 ﻿using AoE2DELobbyBrowser.Api;
+using AoE2DELobbyBrowser.Services;
 using DynamicData.Binding;
 using ReactiveUI;
 using System;
@@ -8,9 +9,9 @@ using System.Reactive;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 
-namespace AoE2DELobbyBrowser
+namespace AoE2DELobbyBrowser.Models
 {
-    public class Lobby: AbstractNotifyPropertyChanged
+    public class Lobby : AbstractNotifyPropertyChanged
     {
         public Lobby()
         {
@@ -45,7 +46,7 @@ namespace AoE2DELobbyBrowser
         public bool IsUnknownOpenedAt { get; set; }
 
         public ReactiveCommand<Unit, Unit> JoinGameCommand { get; }
-        public ReactiveCommand<Unit,Unit> CopyLobbyLinkCommand { get; }
+        public ReactiveCommand<Unit, Unit> CopyLobbyLinkCommand { get; }
 
         private bool _isNew;
         public bool IsNew

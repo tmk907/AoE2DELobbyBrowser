@@ -1,10 +1,11 @@
-﻿using CommunityToolkit.WinUI.Notifications;
+﻿using AoE2DELobbyBrowser.Models;
+using CommunityToolkit.WinUI.Notifications;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AoE2DELobbyBrowser
+namespace AoE2DELobbyBrowser.Services
 {
     internal class NotificationsService
     {
@@ -21,7 +22,7 @@ namespace AoE2DELobbyBrowser
             }
             else
             {
-                foreach(var lobby in lobbies)
+                foreach (var lobby in lobbies)
                 {
                     ShowNotification(lobby);
                 }
@@ -41,7 +42,7 @@ namespace AoE2DELobbyBrowser
                         toast.ExpirationTime = DateTime.Now.AddHours(1);
                     });
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }
@@ -64,7 +65,7 @@ namespace AoE2DELobbyBrowser
                         toast.ExpirationTime = DateTime.Now.AddHours(1);
                     });
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }
