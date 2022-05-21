@@ -28,7 +28,7 @@ namespace AoE2DELobbyBrowser
 
             var defaultSettings = new LobbySettings
             {
-                Interval = 30,
+                Interval = 10,
                 IsAutoRefreshEnabled = true,
                 Query = "",
                 SelectedGameSpeed = GameSpeeds.First(),
