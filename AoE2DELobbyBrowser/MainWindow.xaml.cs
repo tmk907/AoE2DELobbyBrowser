@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 
 // To learn more about WinUI, the WinUI project structure,
