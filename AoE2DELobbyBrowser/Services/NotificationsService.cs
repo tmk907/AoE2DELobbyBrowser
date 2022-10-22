@@ -15,11 +15,11 @@ namespace AoE2DELobbyBrowser.Services
 
         public void ShowNotifications(IEnumerable<Lobby> lobbies)
         {
-            Log.Debug($"Show notifications");
-            foreach(var lobby in lobbies)
-            {
-                Log.Debug($"Show notification for {lobby.Name} {lobby.LobbyId} {lobby.MatchId}");
-            }
+            //Log.Debug($"Show notifications");
+            //foreach(var lobby in lobbies)
+            //{
+            //    Log.Debug($"Show notification for {lobby.Name} {lobby.LobbyId} {lobby.MatchId}");
+            //}
             var group = lobbies.Count() > 3;
             if (group)
             {

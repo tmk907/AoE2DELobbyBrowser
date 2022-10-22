@@ -88,7 +88,7 @@
                     <RichTextBlock Margin="0,10,0,0" IsTextSelectionEnabled="True">
                         <Paragraph>
                             <Run>This application uses</Run>
-                            <Hyperlink NavigateUri="https://aoe2.net/#api">aoe2.net</Hyperlink>
+                            <Hyperlink NavigateUri="https://www.aoe2insights.com/lobbies/api">aoe2insights.com</Hyperlink>
                             API</Paragraph>
                     </RichTextBlock>
                     <RichTextBlock Margin="0,10,0,0" IsTextSelectionEnabled="True">
