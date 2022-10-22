@@ -4,6 +4,8 @@ using System;
 using CommunityToolkit.WinUI.Notifications;
 using System.Runtime.InteropServices;
 using Microsoft.UI.Dispatching;
+using Windows.Storage;
+using System.IO;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -26,6 +28,7 @@ namespace AoE2DELobbyBrowser
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()
                .WriteTo.Debug()
+               .WriteTo.File(Path.Combine(ApplicationData.Current.LocalFolder.Path, "logs.txt"), rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
             ToastNotificationManagerCompat.OnActivated += ToastNotificationManagerCompat_OnActivated;

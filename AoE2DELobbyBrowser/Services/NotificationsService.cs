@@ -15,6 +15,11 @@ namespace AoE2DELobbyBrowser.Services
 
         public void ShowNotifications(IEnumerable<Lobby> lobbies)
         {
+            Log.Debug($"Show notifications");
+            foreach(var lobby in lobbies)
+            {
+                Log.Debug($"Show notification for {lobby.Name} {lobby.LobbyId} {lobby.MatchId}");
+            }
             var group = lobbies.Count() > 3;
             if (group)
             {
@@ -56,7 +61,7 @@ namespace AoE2DELobbyBrowser.Services
                 toastArguments.Add("JoinLink", lobby.JoinLink);
                 new ToastContentBuilder()
                     .AddArgument("type", "lobby notification")
-                    .AddHeader("singlelobby", "New lobby", lobby.LobbyId)
+                    .AddHeader("singlelobby", "New lobby", lobby.MatchId)
                     .AddText(lobby.Name)
                     .AddButton("Join game", ToastActivationType.Foreground, toastArguments.ToString())
                     .Show(toast =>
