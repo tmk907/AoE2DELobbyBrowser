@@ -54,7 +54,7 @@
                         SpinButtonPlacementMode="Inline"
                         ValueChanged="newLobbyNumberBox_ValueChanged" />
 
-                    <RadioButtons Margin="0,20,0,0" Header="Choose type of link to join a game">
+                    <!--<RadioButtons Margin="0,20,0,0" Header="Choose type of link to join a game">
                         <RadioButtons.Items>
                             <RadioButton
                                 Checked="Aoe2de_RadioButton_Checked"
@@ -65,7 +65,7 @@
                                 Content="steam://"
                                 IsChecked="{x:Bind IsSteamLink}" />
                         </RadioButtons.Items>
-                    </RadioButtons>
+                    </RadioButtons>-->
 
                     <TextBlock
                         Margin="0,40,0,0"

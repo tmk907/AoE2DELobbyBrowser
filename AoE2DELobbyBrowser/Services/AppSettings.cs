@@ -37,11 +37,14 @@ namespace AoE2DELobbyBrowser.Services
         {
             get
             {
-                if (_joinLinkType is null)
-                {
-                    _joinLinkType = (JoinLink)(_localSettings.Values[nameof(JoinLinkType)] ?? 0);
-                }
-                return _joinLinkType.Value;
+                // aoe2insights doesn't have steamId
+                return JoinLink.Aoe2de;
+
+                //if (_joinLinkType is null)
+                //{
+                //    _joinLinkType = (JoinLink)(_localSettings.Values[nameof(JoinLinkType)] ?? 0);
+                //}
+                //return _joinLinkType.Value;
             }
             set
             {
