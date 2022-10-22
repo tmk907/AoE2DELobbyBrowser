@@ -17,7 +17,7 @@ namespace AoE2DELobbyBrowser.Api
         //private const string getLobbiesUrl = "https://localhost:7214/api/v2/lobbies";
 
         private readonly HttpClient _httpClient;
-        private readonly SourceCache<Lobby, string> _items = new SourceCache<Lobby, string>(x => x.LobbyId);
+        private readonly SourceCache<Lobby, string> _items = new SourceCache<Lobby, string>(x => x.MatchId);
 
         public Aoe2ApiClient()
         {
@@ -35,7 +35,12 @@ namespace AoE2DELobbyBrowser.Api
 
             var lobbies = results.Select(dto => Lobby.Create(dto));
             var keysToDelete = _items.Keys.ToHashSet();
-            keysToDelete.ExceptWith(lobbies.Select(x => x.LobbyId).ToList());
+            keysToDelete.ExceptWith(lobbies.Select(x => x.MatchId).ToList());
+            var fvdLobbies = lobbies.Where(x => x.Name.ToLower().Contains("f") && x.GameType == "Scenario");
+            foreach(var l in fvdLobbies)
+            {
+                Log.Information($"ApiClient f found {l.Name}");
+            }
             _items.Edit(updater =>
             {
                 updater.RemoveKeys(keysToDelete);
