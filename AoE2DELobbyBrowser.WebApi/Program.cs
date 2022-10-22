@@ -1,7 +1,7 @@
 using AoE2DELobbyBrowser.WebApi;
+using AoE2DELobbyBrowser.WebApi.Aoe2InsightsApi;
 using Serilog;
 using System.Net.Mime;
-using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient();
@@ -13,9 +13,10 @@ var logger = new LoggerConfiguration()
     .CreateLogger();
 builder.Logging.AddSerilog(logger);
 builder.Services.AddSingleton<ApiCache>();
+builder.Services.AddHttpClient();
 builder.Services.AddSingleton<LobbiesRepository>();
 
-builder.Services.AddHostedService<MyBackgroundService>();
+//builder.Services.AddHostedService<MyBackgroundService>();
 
 var app = builder.Build();
 
@@ -31,9 +32,9 @@ app.MapGet("/api", () =>
     return Results.Content(html, contentType: MediaTypeNames.Text.Html);
 });
 
-app.MapGet("/api/v2/lobbies", (LobbiesRepository lobbiesRepository) =>
+app.MapGet("/api/v2/lobbies", async (LobbiesRepository lobbiesRepository) =>
 {
-    var lobbies = lobbiesRepository.GetLobbies();
+    var lobbies = await lobbiesRepository.GetLobbiesAsync();
     return Results.Json(lobbies);
 });
 

@@ -150,6 +150,8 @@
             { 172, "Land Madness" },
             { 173, "Sacred Springs" },
             { 174, "Wade"},
+            { 175, "Morass"},
+            { 176, "Shoals"},
         };
 
         public static string ToName(int? mapType)

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace AoE2DELobbyBrowser.WebApi
+namespace AoE2DELobbyBrowser.WebApi.Dto
 {
     public class PlayerDto
     {
