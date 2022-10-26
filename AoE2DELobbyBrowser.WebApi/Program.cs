@@ -1,5 +1,5 @@
 using AoE2DELobbyBrowser.WebApi;
-using AoE2DELobbyBrowser.WebApi.Aoe2InsightsApi;
+using AoE2DELobbyBrowser.WebApi.Reliclink;
 using Serilog;
 using System.Net.Mime;
 
@@ -13,7 +13,6 @@ var logger = new LoggerConfiguration()
     .CreateLogger();
 builder.Logging.AddSerilog(logger);
 builder.Services.AddSingleton<ApiCache>();
-builder.Services.AddHttpClient();
 builder.Services.AddSingleton<LobbiesRepository>();
 
 //builder.Services.AddHostedService<MyBackgroundService>();
