@@ -13,7 +13,9 @@ var logger = new LoggerConfiguration()
     .CreateLogger();
 builder.Logging.AddSerilog(logger);
 builder.Services.AddSingleton<ApiCache>();
+builder.Services.AddSingleton<AoE2DELobbyBrowser.WebApi.v2.Reliclink.LobbiesRepository>();
 builder.Services.AddSingleton<LobbiesRepository>();
+
 
 //builder.Services.AddHostedService<MyBackgroundService>();
 
@@ -31,7 +33,13 @@ app.MapGet("/api", () =>
     return Results.Content(html, contentType: MediaTypeNames.Text.Html);
 });
 
-app.MapGet("/api/v2/lobbies", async (LobbiesRepository lobbiesRepository) =>
+app.MapGet("/api/v2/lobbies", async (AoE2DELobbyBrowser.WebApi.v2.Reliclink.LobbiesRepository lobbiesRepository) =>
+{
+    var lobbies = await lobbiesRepository.GetLobbiesAsync();
+    return Results.Json(lobbies);
+});
+
+app.MapGet("/api/v3/lobbies", async (LobbiesRepository lobbiesRepository) =>
 {
     var lobbies = await lobbiesRepository.GetLobbiesAsync();
     return Results.Json(lobbies);

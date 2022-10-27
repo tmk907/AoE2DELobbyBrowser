@@ -5,14 +5,14 @@ namespace AoE2DELobbyBrowser.WebApi.Aoe2netWebsocket
     public class LobbiesRepository
     {
         private readonly ILogger<LobbiesRepository> _logger;
-        private readonly ConcurrentDictionary<string, Dto.LobbyDto> _lobbies;
+        private readonly ConcurrentDictionary<string, v2.Dto.LobbyDto> _lobbies;
 
         private static SemaphoreSlim _semaphore;
 
         public LobbiesRepository(ILogger<LobbiesRepository> logger)
         {
             _logger = logger;
-            _lobbies = new ConcurrentDictionary<string, Dto.LobbyDto>();
+            _lobbies = new ConcurrentDictionary<string, v2.Dto.LobbyDto>();
             _semaphore = new SemaphoreSlim(1, 1);
         }
 
@@ -50,14 +50,14 @@ namespace AoE2DELobbyBrowser.WebApi.Aoe2netWebsocket
                 }
                 foreach (var key in notActive)
                 {
-                    _lobbies.Remove(key, out Dto.LobbyDto _);
+                    _lobbies.Remove(key, out v2.Dto.LobbyDto _);
                 }
 
                 var full = _lobbies.Where(x => x.Value.NumSlots == x.Value.NumPlayers).Select(x => x.Key).ToList();
                 _logger.LogDebug($"Full lobbies {full.Count} ");
                 foreach (var key in full)
                 {
-                    _lobbies.Remove(key, out Dto.LobbyDto _);
+                    _lobbies.Remove(key, out v2.Dto.LobbyDto _);
                 }
 
                 var numSlotsZero = _lobbies.Where(x => x.Value.NumSlots == 0).Select(x => x.Key).ToList();
@@ -67,7 +67,7 @@ namespace AoE2DELobbyBrowser.WebApi.Aoe2netWebsocket
                 }
                 foreach (var key in numSlotsZero)
                 {
-                    _lobbies.Remove(key, out Dto.LobbyDto _);
+                    _lobbies.Remove(key, out v2.Dto.LobbyDto _);
                 }
 
                 _logger.LogInformation($"Total lobbies {_lobbies.Count}");
@@ -82,7 +82,7 @@ namespace AoE2DELobbyBrowser.WebApi.Aoe2netWebsocket
             }
         }
 
-        public IEnumerable<Dto.LobbyDto> GetLobbies()
+        public IEnumerable<v2.Dto.LobbyDto> GetLobbies()
         {
             _logger.LogInformation("GetLobbies");
             return _lobbies.Select(x => x.Value).ToList();
@@ -94,9 +94,9 @@ namespace AoE2DELobbyBrowser.WebApi.Aoe2netWebsocket
             _lobbies.Clear();
         }
 
-        private Dto.LobbyDto Create(LobbyDto dto)
+        private v2.Dto.LobbyDto Create(LobbyDto dto)
         {
-            return new Dto.LobbyDto
+            return new v2.Dto.LobbyDto
             {
                 GameType = dto.GameType,
                 LobbyId = dto.SteamLobbyId,
@@ -111,14 +111,14 @@ namespace AoE2DELobbyBrowser.WebApi.Aoe2netWebsocket
             };
         }
 
-        private string GetHostAndGameName(Dto.LobbyDto lobby)
+        private string GetHostAndGameName(v2.Dto.LobbyDto lobby)
         {
             return $"{lobby.Players.FirstOrDefault()?.Name ?? ""}~{lobby.Name}~{lobby.MapType}";
         }
 
-        private Dto.PlayerDto Create(PlayerDto dto)
+        private v2.Dto.PlayerDto Create(PlayerDto dto)
         {
-            return new Dto.PlayerDto
+            return new v2.Dto.PlayerDto
             {
                 //Avatar = dto.Avatar,
                 Country = dto.CountryCode,

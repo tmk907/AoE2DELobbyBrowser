@@ -16,13 +16,13 @@ namespace AoE2DELobbyBrowser.WebApi.Aoe2InsightsApi
             _apiCache = apiCache;
         }
 
-        public async Task<IEnumerable<Dto.LobbyDto>> GetLobbiesAsync()
+        public async Task<IEnumerable<v2.Dto.LobbyDto>> GetLobbiesAsync()
         {
             var lobbies = await _apiCache.GetOrCreateAsync("lobbies", GetLobbiesFromApiAsync);
             return lobbies;
         }
 
-        private async Task<List<Dto.LobbyDto>> GetLobbiesFromApiAsync()
+        private async Task<List<v2.Dto.LobbyDto>> GetLobbiesFromApiAsync()
         {
             var url = "https://www.aoe2insights.com/lobbies/api";
             var httpClient = _httpClientFactory.CreateClient();
@@ -41,13 +41,13 @@ namespace AoE2DELobbyBrowser.WebApi.Aoe2InsightsApi
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Get lobbies from aoe2insights");
-                return new List<Dto.LobbyDto>();
+                return new List<v2.Dto.LobbyDto>();
             }
         }
 
-        private Dto.LobbyDto Create(LobbyDto dto)
+        private v2.Dto.LobbyDto Create(LobbyDto dto)
         {
-            return new Dto.LobbyDto
+            return new v2.Dto.LobbyDto
             {
                 GameType = GameTypeConverter.ToName(dto.GameType),
                 LobbyId = "",
@@ -62,9 +62,9 @@ namespace AoE2DELobbyBrowser.WebApi.Aoe2InsightsApi
             };
         }
 
-        private Dto.PlayerDto Create(PlayerDto dto)
+        private v2.Dto.PlayerDto Create(PlayerDto dto)
         {
-            return new Dto.PlayerDto
+            return new v2.Dto.PlayerDto
             {
                 Country = "",
                 Drops = 0,
