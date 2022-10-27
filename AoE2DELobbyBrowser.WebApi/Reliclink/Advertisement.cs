@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace AoE2DELobbyBrowser.WebApi.v2.Reliclink
+namespace AoE2DELobbyBrowser.WebApi.Reliclink
 {
-    public class Advertisements
+    public class Advertisement
     {
         [JsonPropertyName("result")]
         public Result Result { get; set; }

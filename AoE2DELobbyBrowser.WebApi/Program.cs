@@ -13,8 +13,8 @@ var logger = new LoggerConfiguration()
     .CreateLogger();
 builder.Logging.AddSerilog(logger);
 builder.Services.AddSingleton<ApiCache>();
-builder.Services.AddSingleton<AoE2DELobbyBrowser.WebApi.v2.Reliclink.LobbiesRepository>();
-builder.Services.AddSingleton<LobbiesRepository>();
+builder.Services.AddTransient<AoE2DELobbyBrowser.WebApi.v2.Reliclink.LobbiesRepository>();
+builder.Services.AddTransient<LobbiesRepository>();
 
 
 //builder.Services.AddHostedService<MyBackgroundService>();

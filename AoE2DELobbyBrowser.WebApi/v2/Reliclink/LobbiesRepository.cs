@@ -18,12 +18,12 @@ namespace AoE2DELobbyBrowser.WebApi.v2.Reliclink
 
         public async Task<IEnumerable<LobbyDto>> GetLobbiesAsync()
         {
-            var lobbies = await _apiCache.GetOrCreateAsync("lobbies", GetLobbiesFromApiAsync);
-            //var lobbies = await GetLobbiesFromApiAsync();
+            var advertisement = await _apiCache.GetOrCreateAsync("advertisement", GetAdvertisementAsync);
+            var lobbies = GetLobbies(advertisement);
             return lobbies;
         }
 
-        private async Task<List<LobbyDto>> GetLobbiesFromApiAsync()
+        private async Task<Advertisement?> GetAdvertisementAsync()
         {
             var url = "https://aoe-api.reliclink.com/community/advertisement/findAdvertisements?title=age2";
             var httpClient = _httpClientFactory.CreateClient();
@@ -31,29 +31,36 @@ namespace AoE2DELobbyBrowser.WebApi.v2.Reliclink
             {
                 _logger.LogInformation("Get lobbies from reliclink");
 
-                var advertisements = await httpClient.GetFromJsonAsync<Advertisements>(url);
+                var advertisement = await httpClient.GetFromJsonAsync<Advertisement>(url);
 
-                _logger.LogInformation($"Total lobbies {advertisements.Matches.Count}");
+                _logger.LogInformation($"Total lobbies {advertisement?.Matches?.Count ?? 0}");
 
-                var result = new List<LobbyDto>();
-
-                foreach(var match in advertisements.Matches)
-                {
-                    try
-                    {
-                        var options = DecodedToDict(DecodeOptions(match.Options));
-                        result.Add(Create(match, options, advertisements.Avatars));
-                    }
-                    catch (Exception) { }
-                }
-
-                return result.Where(x => x.NumPlayers < x.NumSlots).ToList();
+                return advertisement;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Get lobbies from aoe2insights");
-                return new List<LobbyDto>();
+                return null;
             }
+        }
+
+        private List<LobbyDto> GetLobbies(Advertisement? advertisements)
+        {
+            var result = new List<LobbyDto>();
+
+            if (advertisements == null) return result;
+
+            foreach (var match in advertisements.Matches)
+            {
+                try
+                {
+                    var options = DecodedToDict(DecodeOptions(match.Options));
+                    result.Add(Create(match, options, advertisements.Avatars));
+                }
+                catch (Exception) { }
+            }
+
+            return result.Where(x => x.Players.Count < x.NumSlots).ToList();
         }
 
         private const int GameTypeKey = 6;
