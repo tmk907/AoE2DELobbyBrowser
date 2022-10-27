@@ -1,7 +1,7 @@
 # AoE2DE Lobby Browser
 
 <a href='https://www.microsoft.com/en-us/p/aoe2de-lobby-browser/9NTQFS6RCXL8?cid=badgegithub'>
-<img width='240' height='96'  src='https://getbadgecdn.azureedge.net/images/English_S.png' 
+<img width='240' height='96'  src='https://get.microsoft.com/images/en-us%20dark.svg' 
 alt='English badge'/></a>
 
 Lobby browser for Age of Empires II DE
