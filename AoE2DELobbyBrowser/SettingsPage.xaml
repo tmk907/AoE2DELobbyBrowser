@@ -83,13 +83,6 @@
                             <Run>Source code:</Run>
                             <Hyperlink NavigateUri="https://github.com/tmk907/AoE2DELobbyBrowser">GitHub</Hyperlink>
                         </Paragraph>
-
-                    </RichTextBlock>
-                    <RichTextBlock Margin="0,10,0,0" IsTextSelectionEnabled="True">
-                        <Paragraph>
-                            <Run>This application uses</Run>
-                            <Hyperlink NavigateUri="https://www.aoe2insights.com/lobbies/api">aoe2insights.com</Hyperlink>
-                            API</Paragraph>
                     </RichTextBlock>
                     <RichTextBlock Margin="0,10,0,0" IsTextSelectionEnabled="True">
                         <Paragraph>
@@ -97,7 +90,6 @@
                             <Hyperlink NavigateUri="https://www.flaticon.com/free-icons/roman">Roman icons created by Freepik - Flaticon</Hyperlink>
                         </Paragraph>
                     </RichTextBlock>
-
 
                     <TextBlock
                         Margin="0,40,0,0"

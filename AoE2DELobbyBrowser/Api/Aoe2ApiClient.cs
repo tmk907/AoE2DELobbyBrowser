@@ -13,8 +13,8 @@ namespace AoE2DELobbyBrowser.Api
 {
     internal class Aoe2ApiClient : IApiClient, IDisposable
     {
-        private const string getLobbiesUrl = "https://aoe2api.dryforest.net/api/v2/lobbies";
-        //private const string getLobbiesUrl = "https://localhost:7214/api/v2/lobbies";
+        //private const string getLobbiesUrl = "https://aoe2api.dryforest.net/api/v3/lobbies";
+        private const string getLobbiesUrl = "https://localhost:7214/api/v3/lobbies";
 
         private readonly HttpClient _httpClient;
         private readonly SourceCache<Lobby, string> _items = new SourceCache<Lobby, string>(x => x.MatchId);

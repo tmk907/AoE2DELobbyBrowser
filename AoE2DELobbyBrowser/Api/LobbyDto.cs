@@ -5,8 +5,8 @@ namespace AoE2DELobbyBrowser.Api
 {
     public class LobbyDto
     {
-        [JsonPropertyName("lobby_id")]
-        public string LobbyId { get; set; }
+        [JsonPropertyName("steam_lobby_id")]
+        public string SteamLobbyId { get; set; }
 
         [JsonPropertyName("match_id")]
         public string MatchId { get; set; }
@@ -14,26 +14,17 @@ namespace AoE2DELobbyBrowser.Api
         [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonPropertyName("num_players")]
-        public int NumPlayers { get; set; }
-
-        [JsonPropertyName("num_slots")]
-        public int NumSlots { get; set; }
-
         [JsonPropertyName("game_type")]
         public string GameType { get; set; }
 
         [JsonPropertyName("map_type")]
         public string MapType { get; set; }
-       
-        [JsonPropertyName("scenario")]
-        public string Scenario { get; set; }
 
         [JsonPropertyName("speed")]
         public string Speed { get; set; }
 
-        [JsonPropertyName("opened")]
-        public int? Opened { get; set; }
+        [JsonPropertyName("num_slots")]
+        public int NumSlots { get; set; }
 
         [JsonPropertyName("players")]
         public List<PlayerDto> Players { get; set; }

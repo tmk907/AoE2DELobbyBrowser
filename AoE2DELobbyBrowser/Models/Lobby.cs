@@ -20,7 +20,7 @@ namespace AoE2DELobbyBrowser.Models
             AddedAt = DateTime.Now;
         }
 
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         private int _numPlayers;
         public int NumPlayers
@@ -36,14 +36,12 @@ namespace AoE2DELobbyBrowser.Models
             set => SetAndRaise(ref _numSlots, value);
         }
 
-        public string LobbyId { get; set; }
-        public string MatchId { get; set; }
-        public string JoinLink { get; set; }
-        public string Speed { get; set; }
-        public string GameType { get; set; }
-        public string Map { get; set; }
-        public DateTime OpenedAt { get; set; }
-        public bool IsUnknownOpenedAt { get; set; }
+        public string SteamLobbyId { get; private set; }
+        public string MatchId { get; private set; }
+        public string JoinLink { get; private set; }
+        public string Speed { get; private set; }
+        public string GameType { get; private set; }
+        public string Map { get; private set; }
 
         public ReactiveCommand<Unit, Unit> JoinGameCommand { get; }
         public ReactiveCommand<Unit, Unit> CopyLobbyLinkCommand { get; }
@@ -76,16 +74,14 @@ namespace AoE2DELobbyBrowser.Models
         {
             var lobby = new Lobby()
             {
-                LobbyId = dto.LobbyId,
+                SteamLobbyId = dto.SteamLobbyId,
                 MatchId = dto.MatchId,
                 Name = dto.Name,
-                NumPlayers = dto.NumPlayers,
+                NumPlayers = dto.Players.Count,
                 NumSlots = dto.NumSlots,
                 Speed = dto.Speed,
                 GameType = dto.GameType,
                 Map = dto.MapType,
-                OpenedAt = DateTimeOffset.FromUnixTimeSeconds(dto.Opened ?? 0).ToLocalTime().DateTime,
-                IsUnknownOpenedAt = (dto.Opened ?? 0) == 0
             };
             lobby.Players.AddRange(dto.Players.OrderBy(x => x.Slot).Take(dto.NumSlots).Select(x => Player.Create(x)));
             if (AppSettings.JoinLinkType == AppSettings.JoinLink.Aoe2de)
@@ -94,7 +90,7 @@ namespace AoE2DELobbyBrowser.Models
             }
             else
             {
-                lobby.JoinLink = $"steam://joinlobby/813780/{lobby.LobbyId}";
+                lobby.JoinLink = $"steam://joinlobby/813780/{lobby.SteamLobbyId}";
             }
             return lobby;
         }
