@@ -86,6 +86,18 @@
                             Modifiers="Control" />
                     </TextBox.KeyboardAccelerators>
                 </TextBox>
+                <TextBox
+                    Width="180"
+                    KeyDown="ExcludeBox_KeyDown"
+                    PlaceholderText="exclude"
+                    Text="{x:Bind ViewModel.Excluded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.KeyboardAccelerators>
+                        <KeyboardAccelerator
+                            Key="G"
+                            Invoked="ExcludeBox_KeyboardAcceleratorInvoked"
+                            Modifiers="Control" />
+                    </TextBox.KeyboardAccelerators>
+                </TextBox>
                 <ComboBox
                     Width="180"
                     ItemsSource="{x:Bind ViewModel.GameTypes}"

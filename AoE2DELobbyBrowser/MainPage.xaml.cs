@@ -38,9 +38,27 @@ namespace AoE2DELobbyBrowser
             args.Handled = true;
         }
 
+        private void ExcludeBox_KeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            var textBox = args.Element as TextBox;
+            if (textBox != null)
+            {
+                textBox.Focus(FocusState.Programmatic);
+            }
+            args.Handled = true;
+        }
+
         private void SearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if(e.Key == Windows.System.VirtualKey.Escape || e.Key == Windows.System.VirtualKey.Enter)
+            {
+                this.Focus(FocusState.Programmatic);
+            }
+        }
+
+        private void ExcludeBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Escape || e.Key == Windows.System.VirtualKey.Enter)
             {
                 this.Focus(FocusState.Programmatic);
             }

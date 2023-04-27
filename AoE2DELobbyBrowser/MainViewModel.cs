@@ -33,6 +33,7 @@ namespace AoE2DELobbyBrowser
                 Interval = 10,
                 IsAutoRefreshEnabled = true,
                 Query = "",
+                Exclude = "",
                 SelectedGameSpeed = GameSpeeds.First(),
                 SelectedGameType = GameTypes.First(),
                 SelectedMapType = MapTypes.First(),
@@ -47,12 +48,14 @@ namespace AoE2DELobbyBrowser
             Interval = _lobbySettings.Interval;
             ShowNotifications = _lobbySettings.ShowNotifications;
             Query = _lobbySettings.Query;
+            Excluded = _lobbySettings.Exclude;
             IsAutoRefreshEnabled = _lobbySettings.IsAutoRefreshEnabled;
 
             this.WhenAnyPropertyChanged()
                 .Do(_ =>
                 {
                     _lobbySettings.Query = Query;
+                    _lobbySettings.Exclude = Excluded;
                     _lobbySettings.Interval = Interval;
                     _lobbySettings.IsAutoRefreshEnabled = IsAutoRefreshEnabled;
                     _lobbySettings.SelectedGameSpeed = SelectedGameSpeed;
@@ -67,6 +70,11 @@ namespace AoE2DELobbyBrowser
             Func<Lobby, bool> queryFilter = lobby =>
             {
                 return string.IsNullOrEmpty(Query) || lobby.Name.ToLower().Contains(Query.ToLower());
+            };
+
+            Func<Lobby, bool> excludeFilter = lobby =>
+            {
+                return string.IsNullOrEmpty(Excluded) || !lobby.Name.ToLower().Contains(Excluded.ToLower());
             };
 
             Func<Lobby, bool> gameTypeFilter = lobby =>
@@ -87,25 +95,31 @@ namespace AoE2DELobbyBrowser
 
             var filterQuery = this
                 .WhenAnyValue(x => x.Query)
-                .Do(x => Log.Debug($"Filter Query  {x}"))
+                .Do(x => Log.Debug($"Filter Query {x}"))
                 .DistinctUntilChanged()
                 .Select(_ => queryFilter);
 
+            var filterExclude = this
+                .WhenAnyValue(x => x.Excluded)
+                .Do(x => Log.Debug($"Filter Exclude {x}"))
+                .DistinctUntilChanged()
+                .Select(_ => excludeFilter);
+
             var filterGameType = this
                 .WhenAnyValue(x => x.SelectedGameType)
-                .Do(x => Log.Debug($"Filter SelectedGameType  {x}"))
+                .Do(x => Log.Debug($"Filter SelectedGameType {x}"))
                 .DistinctUntilChanged()
                 .Select(_ => gameTypeFilter);
 
             var filterGameSpeed = this
                 .WhenAnyValue(x => x.SelectedGameSpeed)
-                .Do(x => Log.Debug($"Filter SelectedGameSpeed  {x}"))
+                .Do(x => Log.Debug($"Filter SelectedGameSpeed {x}"))
                 .DistinctUntilChanged()
                 .Select(_ => gameSpeedFilter);
 
             var filterMapType = this
                 .WhenAnyValue(x => x.SelectedMapType)
-                .Do(x => Log.Debug($"Filter SelectedMapType  {x}"))
+                .Do(x => Log.Debug($"Filter SelectedMapType {x}"))
                 .DistinctUntilChanged()
                 .Select(_ => mapTypeFilter);
 
@@ -125,6 +139,7 @@ namespace AoE2DELobbyBrowser
                 .Filter(gameTypeFilter)
                 .Filter(mapTypeFilter)
                 .Filter(queryFilter)
+                .Filter(filterExclude)
                 .Select(changeSet => changeSet.Select(x => x.Current).ToList())
                 .Do(list => Log.Debug($"Notification: {list.Count} new lobbies"))
                 .Where(_ => ShowNotifications)
@@ -138,6 +153,7 @@ namespace AoE2DELobbyBrowser
                 .Filter(filterGameType)
                 .Filter(filterMapType)
                 .Filter(filterQuery)
+                .Filter(filterExclude)
                 .Sort(SortExpressionComparer<Lobby>.Ascending(t => t.Name))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out _lobbies, adaptor:myAdaptor)
@@ -188,6 +204,13 @@ namespace AoE2DELobbyBrowser
         {
             get => _query;
             set => this.RaiseAndSetIfChanged(ref _query, value);
+        }
+
+        private string _excluded;
+        public string Excluded
+        {
+            get => _excluded;
+            set => this.RaiseAndSetIfChanged(ref _excluded, value);
         }
 
         private int _interval;

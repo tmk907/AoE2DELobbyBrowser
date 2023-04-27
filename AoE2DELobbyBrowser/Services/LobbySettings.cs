@@ -3,6 +3,7 @@
     public class LobbySettings
     {
         public string Query { get; set; }
+        public string Exclude { get; set; }
         public bool IsAutoRefreshEnabled { get; set; }
         public int Interval { get; set; }
         public string SelectedGameType { get; set; }
