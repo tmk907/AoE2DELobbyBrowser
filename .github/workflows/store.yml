@@ -1,13 +1,13 @@
 # This workflow will build, sign, and package a WinUI 3 MSIX desktop application
 # built on .NET.
 
-name: Build packages
+name: Build Store packages
 
 on: 
   workflow_dispatch:
-  #push:
-  #  tags:
-  #    - '*'
+  push:
+    tags:
+      - '*'
 
 jobs:
 
@@ -15,20 +15,11 @@ jobs:
 
     strategy:
       matrix:
-        channel: [Prod_Sideload,Prod_Store]
+        channel: [Prod_Store]
         configuration: [Release]
         targetplatform: [x64]
         include:
           
-          # includes the following variables for the matrix leg matching Prod_Sideload
-          - channel: Prod_Sideload
-            Configuration: Release
-            ChannelName: Prod_Sideload
-            MsixPackageId: DryForest.AoE2DELobbyBrowser
-            MsixPublisherId: CN=DryForest
-            MsixPackageDisplayName: AoE2DE Lobby Browser
-            ToastActivatorCLSID: 126CBD31-FDF5-4652-BB2A-8624CEC6E7AD
-
           # includes the following variables for the matrix leg matching Prod_Store
           - channel: Prod_Store
             Configuration: Release
@@ -45,7 +36,6 @@ jobs:
       Solution_Name: AoE2DELobbyBrowser.sln
       Project_Path: AoE2DELobbyBrowser/AoE2DELobbyBrowser.csproj
       App_Version: 1.0.0
-      SigningCertificate: GitHubActionsWorkflow.pfx
       Project_Directory: AoE2DELobbyBrowser
       
     steps:
@@ -89,24 +79,6 @@ jobs:
       env:
         Configuration: ${{ matrix.configuration }}
 
-    # Decode the base 64 encoded pfx and save the Signing_Certificate
-    - name: Decode the pfx
-      run: |
-        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.BASE64_ENCODED_PFX }}")
-        $certificatePath = "$env:Project_Directory/GitHubActionsWorkflow.pfx"
-        [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
-
-    # Create the app package by building and packaging the project Prod_Sideload
-    - name: Create the app package by building and packaging the project for Prod_Sideload
-      run: msbuild $env:Project_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:AppxBundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:PackageCertificateKeyFile=$env:SigningCertificate 
-      if: matrix.ChannelName == 'Prod_Sideload'
-      env:
-        AppxBundle: Never
-        Appx_Package_Build_Mode: SideLoadOnly
-        Appx_Package_Dir: Packages\
-        Configuration: ${{ matrix.Configuration }}
-        TargetPlatform: ${{ matrix.targetplatform }}
-        
     # Create the app package by building and packaging the project for Prod_Store
     - name: Create the app package by building and packaging the project for Prod_Store
       run: msbuild $env:Project_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:AppxBundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=$env:AppxPackageSigningEnabled 
@@ -118,11 +90,6 @@ jobs:
         Appx_Package_Dir: Packages\
         Configuration: ${{ matrix.Configuration }}
         TargetPlatform: ${{ matrix.targetplatform }}
-
-    # Remove the pfx
-    - name: Remove the pfx
-      run: |
-        Remove-Item -path $env:Project_Directory/GitHubActionsWorkflow.pfx
 
     # Move package
     - name: Move package
@@ -138,15 +105,3 @@ jobs:
         path: |
           ./*.msix
           ./*.cer
-        
-    - name: Create a GitHub release
-      uses: ncipollo/release-action@v1
-      if: matrix.ChannelName == 'Prod_Sideload'
-      with:
-        tag: ${{ env.App_Version }}
-        name: Release ${{ env.App_Version }}
-        artifacts: "./*.msix,./*.cer"
-        generateReleaseNotes: true
-        allowUpdates: true
-        token: ${{ secrets.GITHUB_TOKEN }}
-
