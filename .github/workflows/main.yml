@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        channel: [Prod_Sideload,Prod_Store]
+        channel: [Prod_Store]
         configuration: [Release]
         targetplatform: [x64]
         include:
