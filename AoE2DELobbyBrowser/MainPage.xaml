@@ -141,7 +141,7 @@
                     KeyDown="FocusOnPage"
                     PlaceholderText="search"
                     Text="{x:Bind ViewModel.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    ToolTipService.ToolTip="Show lobbies whose name contains (Ctrl + F)">
+                    ToolTipService.ToolTip="Lobby name contains any word (Ctrl + F)">
                     <TextBox.KeyboardAccelerators>
                         <KeyboardAccelerator
                             Key="F"
@@ -156,7 +156,7 @@
                     KeyDown="FocusOnPage"
                     PlaceholderText="exclude"
                     Text="{x:Bind ViewModel.Excluded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    ToolTipService.ToolTip="Exclude lobbies whose name contains (Ctrl + G)">
+                    ToolTipService.ToolTip="None of the words appear in lobby name (Ctrl + G)">
                     <TextBox.KeyboardAccelerators>
                         <KeyboardAccelerator
                             Key="G"
