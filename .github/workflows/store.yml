@@ -101,7 +101,7 @@ jobs:
     - name: Upload MSIX package
       uses: actions/upload-artifact@v3
       with:
-        name: AoE2DELobbyBrowser-${{ matrix.platform }}-${{ matrix.ChannelName }}-${{ env.App_Version }}.zip
+        name: AoE2DELobbyBrowser-${{ matrix.targetplatform }}-${{ matrix.ChannelName }}-${{ env.App_Version }}
         path: |
           ./*.msix
           ./*.cer
