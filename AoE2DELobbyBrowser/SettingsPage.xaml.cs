@@ -18,6 +18,7 @@ namespace AoE2DELobbyBrowser
         {
             this.InitializeComponent();
             newLobbyNumberBox.Value = AppSettings.NewLobbyHighlightTime.TotalSeconds;
+            separatorTextBox.Text = AppSettings.Separator;
         }
 
         public bool IsAoe2deLink => AppSettings.JoinLinkType == AppSettings.JoinLink.Aoe2de;
@@ -52,6 +53,11 @@ namespace AoE2DELobbyBrowser
         private void Steam_RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             AppSettings.JoinLinkType = AppSettings.JoinLink.Steam;
+        }
+
+        private void separatorTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            AppSettings.Separator = separatorTextBox.Text;
         }
     }
 }

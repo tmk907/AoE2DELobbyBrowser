@@ -18,6 +18,21 @@
         <Style x:Key="ListItemTextBlock" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
+        <Style x:Key="LabelTextBlock" TargetType="TextBlock">
+            <Setter Property="Margin" Value="8,0,4,0" />
+            <Setter Property="MinWidth" Value="48" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{StaticResource ForegroundTextColor}" />
+        </Style>
+        <Style
+            x:Key="FirstLabelTextBlock"
+            BasedOn="{StaticResource LabelTextBlock}"
+            TargetType="TextBlock">
+            <Setter Property="Margin" Value="4,0,4,0" />
+            <Setter Property="MinWidth" Value="40" />
+            <Setter Property="Width" Value="40" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
     </Page.Resources>
     <Grid Background="{StaticResource BackgroundColor}">
         <Grid.RowDefinitions>
@@ -40,7 +55,10 @@
                         <KeyboardAccelerator Key="R" Modifiers="Control" />
                     </Button.KeyboardAccelerators>
                 </Button>
-                <CheckBox IsChecked="{x:Bind ViewModel.IsAutoRefreshEnabled, Mode=TwoWay}" ToolTipService.ToolTip="Auto refresh (Ctrl + T)">
+                <CheckBox
+                    Margin="8,0,4,0"
+                    IsChecked="{x:Bind ViewModel.IsAutoRefreshEnabled, Mode=TwoWay}"
+                    ToolTipService.ToolTip="Auto refresh (Ctrl + T)">
                     <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Auto refresh (sec)" />
                     <CheckBox.KeyboardAccelerators>
                         <KeyboardAccelerator Key="T" Modifiers="Control" />
@@ -52,7 +70,10 @@
                     SmallChange="5"
                     SpinButtonPlacementMode="Inline"
                     Value="{x:Bind ViewModel.Interval, Mode=TwoWay}" />
-                <CheckBox IsChecked="{x:Bind ViewModel.ShowNotifications, Mode=TwoWay}" ToolTipService.ToolTip="Show notifications (Ctrl + N)">
+                <CheckBox
+                    Margin="8,0,4,0"
+                    IsChecked="{x:Bind ViewModel.ShowNotifications, Mode=TwoWay}"
+                    ToolTipService.ToolTip="Show notifications (Ctrl + N)">
                     <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Notifications" />
                     <CheckBox.KeyboardAccelerators>
                         <KeyboardAccelerator Key="N" Modifiers="Control" />
@@ -74,30 +95,8 @@
                 IsTabStop="True"
                 Orientation="Horizontal"
                 Spacing="2">
-                <TextBox
-                    Width="180"
-                    KeyDown="SearchBox_KeyDown"
-                    PlaceholderText="search"
-                    Text="{x:Bind ViewModel.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.KeyboardAccelerators>
-                        <KeyboardAccelerator
-                            Key="F"
-                            Invoked="SearchBox_KeyboardAcceleratorInvoked"
-                            Modifiers="Control" />
-                    </TextBox.KeyboardAccelerators>
-                </TextBox>
-                <TextBox
-                    Width="180"
-                    KeyDown="ExcludeBox_KeyDown"
-                    PlaceholderText="exclude"
-                    Text="{x:Bind ViewModel.Excluded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.KeyboardAccelerators>
-                        <KeyboardAccelerator
-                            Key="G"
-                            Invoked="ExcludeBox_KeyboardAcceleratorInvoked"
-                            Modifiers="Control" />
-                    </TextBox.KeyboardAccelerators>
-                </TextBox>
+                <TextBlock Style="{StaticResource FirstLabelTextBlock}" Text="Game" />
+                <TextBlock Style="{StaticResource LabelTextBlock}" Text="Type" />
                 <ComboBox
                     Width="180"
                     ItemsSource="{x:Bind ViewModel.GameTypes}"
@@ -107,6 +106,7 @@
                         <KeyboardAccelerator Key="Q" Modifiers="Control" />
                     </ComboBox.KeyboardAccelerators>
                 </ComboBox>
+                <TextBlock Style="{StaticResource LabelTextBlock}" Text="Map" />
                 <ComboBox
                     Width="180"
                     ItemsSource="{x:Bind ViewModel.MapTypes}"
@@ -116,6 +116,7 @@
                         <KeyboardAccelerator Key="W" Modifiers="Control" />
                     </ComboBox.KeyboardAccelerators>
                 </ComboBox>
+                <TextBlock Style="{StaticResource LabelTextBlock}" Text="Speed" />
                 <ComboBox
                     Width="100"
                     ItemsSource="{x:Bind ViewModel.GameSpeeds}"
@@ -125,7 +126,69 @@
                         <KeyboardAccelerator Key="E" Modifiers="Control" />
                     </ComboBox.KeyboardAccelerators>
                 </ComboBox>
-
+            </StackPanel>
+            <StackPanel
+                Padding="2"
+                Background="{StaticResource DarkAccent}"
+                IsTabStop="True"
+                Orientation="Horizontal"
+                Spacing="2">
+                <TextBlock Style="{StaticResource FirstLabelTextBlock}" Text="Lobby" />
+                <TextBlock Style="{StaticResource LabelTextBlock}" Text="Include" />
+                <TextBox
+                    Width="180"
+                    IsSpellCheckEnabled="False"
+                    KeyDown="FocusOnPage"
+                    PlaceholderText="search"
+                    Text="{x:Bind ViewModel.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    ToolTipService.ToolTip="Show lobbies whose name contains (Ctrl + F)">
+                    <TextBox.KeyboardAccelerators>
+                        <KeyboardAccelerator
+                            Key="F"
+                            Invoked="FocusOnTextBox"
+                            Modifiers="Control" />
+                    </TextBox.KeyboardAccelerators>
+                </TextBox>
+                <TextBlock Style="{StaticResource LabelTextBlock}" Text="Exclude" />
+                <TextBox
+                    Width="180"
+                    IsSpellCheckEnabled="False"
+                    KeyDown="FocusOnPage"
+                    PlaceholderText="exclude"
+                    Text="{x:Bind ViewModel.Excluded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    ToolTipService.ToolTip="Exclude lobbies whose name contains (Ctrl + G)">
+                    <TextBox.KeyboardAccelerators>
+                        <KeyboardAccelerator
+                            Key="G"
+                            Invoked="FocusOnTextBox"
+                            Modifiers="Control" />
+                    </TextBox.KeyboardAccelerators>
+                </TextBox>
+                <TextBlock Style="{StaticResource LabelTextBlock}" Text="Players" />
+                <CheckBox
+                    Width="20"
+                    MinWidth="20"
+                    Margin="0,0,4,0"
+                    IsChecked="{x:Bind ViewModel.IsPlayerSearchEnabled, Mode=TwoWay}">
+                    <CheckBox.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="O" Modifiers="Control" />
+                    </CheckBox.KeyboardAccelerators>
+                </CheckBox>
+                <TextBox
+                    Width="180"
+                    IsEnabled="{x:Bind ViewModel.IsPlayerSearchEnabled, Mode=OneWay}"
+                    IsSpellCheckEnabled="False"
+                    KeyDown="FocusOnPage"
+                    PlaceholderText="player"
+                    Text="{x:Bind ViewModel.PlayerQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    ToolTipService.ToolTip="Only lobbies with player name or Steam id (Ctrl + P)">
+                    <TextBox.KeyboardAccelerators>
+                        <KeyboardAccelerator
+                            Key="P"
+                            Invoked="FocusOnTextBox"
+                            Modifiers="Control" />
+                    </TextBox.KeyboardAccelerators>
+                </TextBox>
             </StackPanel>
         </StackPanel>
         <ProgressRing

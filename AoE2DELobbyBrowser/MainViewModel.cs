@@ -34,6 +34,8 @@ namespace AoE2DELobbyBrowser
                 IsAutoRefreshEnabled = true,
                 Query = "",
                 Exclude = "",
+                PlayerQuery = "",
+                IsPlayerSearchEnabled = false,
                 SelectedGameSpeed = GameSpeeds.First(),
                 SelectedGameType = GameTypes.First(),
                 SelectedMapType = MapTypes.First(),
@@ -49,6 +51,8 @@ namespace AoE2DELobbyBrowser
             ShowNotifications = _lobbySettings.ShowNotifications;
             Query = _lobbySettings.Query;
             Excluded = _lobbySettings.Exclude;
+            PlayerQuery = _lobbySettings.PlayerQuery;
+            IsPlayerSearchEnabled =_lobbySettings.IsPlayerSearchEnabled;
             IsAutoRefreshEnabled = _lobbySettings.IsAutoRefreshEnabled;
 
             this.WhenAnyPropertyChanged()
@@ -56,6 +60,8 @@ namespace AoE2DELobbyBrowser
                 {
                     _lobbySettings.Query = Query;
                     _lobbySettings.Exclude = Excluded;
+                    _lobbySettings.PlayerQuery = PlayerQuery;
+                    _lobbySettings.IsPlayerSearchEnabled = IsPlayerSearchEnabled;
                     _lobbySettings.Interval = Interval;
                     _lobbySettings.IsAutoRefreshEnabled = IsAutoRefreshEnabled;
                     _lobbySettings.SelectedGameSpeed = SelectedGameSpeed;
@@ -67,61 +73,53 @@ namespace AoE2DELobbyBrowser
                 .Subscribe()
                 .DisposeWith(Disposal);
 
-            Func<Lobby, bool> queryFilter = lobby =>
+            Func<Lobby, bool> lobbyFilter = lobby =>
             {
-                return string.IsNullOrEmpty(Query) || lobby.Name.ToLower().Contains(Query.ToLower());
+                var isMatched = true;
+                if (!string.IsNullOrEmpty(Query))
+                {
+                    var queries = Query.Split(AppSettings.Separator, StringSplitOptions.RemoveEmptyEntries);
+                    isMatched = queries
+                    .Any(x => lobby.Name.ToLowerInvariant().Contains(x.ToLowerInvariant()));
+                }
+
+                var isExcluded = false;
+                if (!string.IsNullOrEmpty(Excluded))
+                {
+                    var exclusions = Excluded.Split(AppSettings.Separator, StringSplitOptions.RemoveEmptyEntries);
+                    isExcluded = exclusions
+                        .Any(x => lobby.Name.ToLowerInvariant().Contains(x.ToLowerInvariant()));
+                }
+
+                var hasPlayer = true;
+                if (IsPlayerSearchEnabled && !string.IsNullOrEmpty(PlayerQuery))
+                {
+                    var players = PlayerQuery.Split(AppSettings.Separator, StringSplitOptions.RemoveEmptyEntries);
+                    hasPlayer = players.Any(x => lobby.ContainsPlayer(x));
+                }
+
+                return isMatched && !isExcluded && hasPlayer;
             };
 
-            Func<Lobby, bool> excludeFilter = lobby =>
+            Func<Lobby, bool> gameFilter = lobby =>
             {
-                return string.IsNullOrEmpty(Excluded) || !lobby.Name.ToLower().Contains(Excluded.ToLower());
+                return (SelectedGameType == GameType.All || lobby.GameType == SelectedGameType)
+                    && (SelectedGameSpeed == GameType.All || lobby.Speed == SelectedGameSpeed)
+                    && (SelectedMapType == MapType.All || lobby.Map == SelectedMapType
+                        || SelectedGameType == GameType.Scenario);
             };
 
-            Func<Lobby, bool> gameTypeFilter = lobby =>
-            {
-                return SelectedGameType == GameType.All || lobby.GameType == SelectedGameType;
-            };
-
-            Func<Lobby, bool> gameSpeedFilter = lobby =>
-            {
-                return SelectedGameSpeed == GameType.All || lobby.Speed == SelectedGameSpeed;
-            };
-
-            Func<Lobby, bool> mapTypeFilter = lobby =>
-            {
-                return SelectedGameType == GameType.Scenario
-                || SelectedMapType == MapType.All || lobby.Map == SelectedMapType;
-            };
-
-            var filterQuery = this
-                .WhenAnyValue(x => x.Query)
-                .Do(x => Log.Debug($"Filter Query {x}"))
+            var lobbyObservableFilter = this
+                .WhenAnyValue(x => x.Query, x => x.Excluded, x => x.PlayerQuery, x => x.IsPlayerSearchEnabled)
+                .Do(x => Log.Debug($"Filter lobby {x}"))
                 .DistinctUntilChanged()
-                .Select(_ => queryFilter);
+                .Select(_ => lobbyFilter);
 
-            var filterExclude = this
-                .WhenAnyValue(x => x.Excluded)
-                .Do(x => Log.Debug($"Filter Exclude {x}"))
+            var gameObservableFilter = this
+                .WhenAnyValue(x => x.SelectedGameType, x => x.SelectedGameSpeed, x => x.SelectedMapType)
+                .Do(x => Log.Debug($"Filter game {x}"))
                 .DistinctUntilChanged()
-                .Select(_ => excludeFilter);
-
-            var filterGameType = this
-                .WhenAnyValue(x => x.SelectedGameType)
-                .Do(x => Log.Debug($"Filter SelectedGameType {x}"))
-                .DistinctUntilChanged()
-                .Select(_ => gameTypeFilter);
-
-            var filterGameSpeed = this
-                .WhenAnyValue(x => x.SelectedGameSpeed)
-                .Do(x => Log.Debug($"Filter SelectedGameSpeed {x}"))
-                .DistinctUntilChanged()
-                .Select(_ => gameSpeedFilter);
-
-            var filterMapType = this
-                .WhenAnyValue(x => x.SelectedMapType)
-                .Do(x => Log.Debug($"Filter SelectedMapType {x}"))
-                .DistinctUntilChanged()
-                .Select(_ => mapTypeFilter);
+                .Select(_ => gameFilter);
 
             var all = _apiClient
                 .Connect()
@@ -135,11 +133,8 @@ namespace AoE2DELobbyBrowser
                 .Skip(1)
                 .OnItemAdded(x => x.IsNew = true)
                 .WhereReasonsAre(ChangeReason.Add)
-                .Filter(gameSpeedFilter)
-                .Filter(gameTypeFilter)
-                .Filter(mapTypeFilter)
-                .Filter(queryFilter)
-                .Filter(filterExclude)
+                .Filter(gameObservableFilter)
+                .Filter(lobbyObservableFilter)
                 .Select(changeSet => changeSet.Select(x => x.Current).ToList())
                 .Do(list => Log.Debug($"Notification: {list.Count} new lobbies"))
                 .Where(_ => ShowNotifications)
@@ -149,11 +144,8 @@ namespace AoE2DELobbyBrowser
 
             var myAdaptor = new MySortedObservableCollectionAdaptor();
             var filtered = all
-                .Filter(filterGameSpeed)
-                .Filter(filterGameType)
-                .Filter(filterMapType)
-                .Filter(filterQuery)
-                .Filter(filterExclude)
+                .Filter(gameObservableFilter)
+                .Filter(lobbyObservableFilter)
                 .Sort(SortExpressionComparer<Lobby>.Ascending(t => t.Name))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out _lobbies, adaptor:myAdaptor)
@@ -211,6 +203,20 @@ namespace AoE2DELobbyBrowser
         {
             get => _excluded;
             set => this.RaiseAndSetIfChanged(ref _excluded, value);
+        }
+
+        private string _playerQuery;
+        public string PlayerQuery
+        {
+            get => _playerQuery;
+            set => this.RaiseAndSetIfChanged(ref _playerQuery, value);
+        }
+
+        private bool _isPlayerSearchEnabled;
+        public bool IsPlayerSearchEnabled
+        {
+            get => _isPlayerSearchEnabled;
+            set => this.RaiseAndSetIfChanged(ref _isPlayerSearchEnabled, value);
         }
 
         private int _interval;

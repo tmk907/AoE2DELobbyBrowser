@@ -49,5 +49,23 @@ namespace AoE2DELobbyBrowser.Services
                 _localSettings.Values[nameof(JoinLinkType)] = (int)value;
             }
         }
+
+        private static string _separator = null;
+        public static string Separator
+        {
+            get
+            {
+                if (_separator == null)
+                {
+                    _separator = (string)(_localSettings.Values[nameof(Separator)] ?? "/");
+                }
+                return _separator;
+            }
+            set
+            {
+                _separator = value;
+                _localSettings.Values[nameof(Separator)] = value;
+            }
+        }
     }
 }

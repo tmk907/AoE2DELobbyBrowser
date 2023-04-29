@@ -70,6 +70,13 @@ namespace AoE2DELobbyBrowser.Models
             Clipboard.SetContent(dataPackage);
         }
 
+        public bool ContainsPlayer(string playerQuery)
+        {
+            return Players.Any(x =>
+                x.Name.ToLowerInvariant() == playerQuery.ToLowerInvariant() ||
+                x.StreamProfileUrl.Split('/', StringSplitOptions.RemoveEmptyEntries).LastOrDefault() == playerQuery);
+        }
+
         public static Lobby Create(LobbyDto dto)
         {
             var lobby = new Lobby()

@@ -67,6 +67,14 @@
                         </RadioButtons.Items>
                     </RadioButtons>
 
+                    <TextBlock Margin="0,20,0,0" Text="Query separator" />
+                    <TextBox
+                        x:Name="separatorTextBox"
+                        Width="140"
+                        HorizontalAlignment="Left"
+                        Text=""
+                        TextChanged="separatorTextBox_TextChanged" />
+
                     <TextBlock
                         Margin="0,40,0,0"
                         Style="{StaticResource SubtitleTextBlockStyle}"
