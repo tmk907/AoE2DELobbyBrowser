@@ -5,9 +5,19 @@
     xmlns:local="using:AoE2DELobbyBrowser"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <Style
+            x:Key="SettingsSectionHeaderTextBlockStyle"
+            BasedOn="{StaticResource BodyStrongTextBlockStyle}"
+            TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Margin" Value="1,29,0,5" />
+            </Style.Setters>
+        </Style>
+    </Page.Resources>
     <Grid Background="{StaticResource BackgroundColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -15,9 +25,9 @@
         </Grid.RowDefinitions>
         <Button
             Grid.Row="0"
-            Width="44"
+            Width="48"
             Height="36"
-            Margin="4"
+            Margin="8"
             BorderBrush="{StaticResource DarkAccent}"
             Click="GoBack_Click">
             <SymbolIcon Foreground="{StaticResource DarkAccent}" Symbol="Back" />
@@ -27,113 +37,113 @@
         </Button>
         <TextBlock
             Grid.Row="0"
-            Margin="56,0,0,0"
+            Margin="72,8,0,0"
             Style="{StaticResource TitleTextBlockStyle}"
             Text="Settings" />
-        <Grid Grid.Row="1" Padding="56,0,0,0">
+        <Grid Grid.Row="1" Margin="36,0,0,0">
             <Grid.ChildrenTransitions>
                 <TransitionCollection>
                     <EntranceThemeTransition />
                 </TransitionCollection>
             </Grid.ChildrenTransitions>
-            <ScrollViewer IsTabStop="False">
-                <StackPanel HorizontalAlignment="Left">
+            <ScrollViewer
+                Padding="36,0,36,0"
+                IsTabStop="False"
+                UseSystemFocusVisuals="False"
+                VerticalScrollBarVisibility="Auto"
+                VerticalScrollMode="Auto">
+                <StackPanel Spacing="3">
 
-                    <TextBlock
-                        Margin="0,40,0,0"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="Browser" />
-                    <TextBlock Margin="0,10,0,0" Text="How many seconds new lobby should be highlighted" />
-                    <NumberBox
-                        x:Name="newLobbyNumberBox"
-                        Width="140"
-                        HorizontalAlignment="Left"
-                        Maximum="300"
-                        Minimum="5"
-                        SmallChange="5"
-                        SpinButtonPlacementMode="Inline"
-                        ValueChanged="newLobbyNumberBox_ValueChanged" />
+                    <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="Browser" />
+                    <labs:SettingsCard Description="How many seconds new lobby should be highlighted" Header="New lobby">
+                        <labs:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE916;" />
+                        </labs:SettingsCard.HeaderIcon>
+                        <NumberBox
+                            x:Name="newLobbyNumberBox"
+                            HorizontalAlignment="Left"
+                            Maximum="300"
+                            Minimum="5"
+                            SmallChange="5"
+                            SpinButtonPlacementMode="Inline"
+                            ValueChanged="newLobbyNumberBox_ValueChanged" />
+                    </labs:SettingsCard>
 
-                    <RadioButtons Margin="0,20,0,0" Header="Choose type of link to join a game">
-                        <RadioButtons.Items>
-                            <RadioButton
-                                Checked="Aoe2de_RadioButton_Checked"
-                                Content="aoe2de://"
-                                IsChecked="{x:Bind IsAoe2deLink}" />
-                            <RadioButton
-                                Checked="Steam_RadioButton_Checked"
-                                Content="steam://"
-                                IsChecked="{x:Bind IsSteamLink}" />
-                        </RadioButtons.Items>
-                    </RadioButtons>
+                    <labs:SettingsCard Header="Query separator">
+                        <labs:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE70F;" />
+                        </labs:SettingsCard.HeaderIcon>
+                        <TextBox
+                            x:Name="separatorTextBox"
+                            Width="100"
+                            HorizontalAlignment="Left"
+                            Text=""
+                            TextChanged="separatorTextBox_TextChanged" />
+                    </labs:SettingsCard>
 
-                    <TextBlock Margin="0,20,0,0" Text="Query separator" />
-                    <TextBox
-                        x:Name="separatorTextBox"
-                        Width="140"
-                        HorizontalAlignment="Left"
-                        Text=""
-                        TextChanged="separatorTextBox_TextChanged" />
+                    <labs:SettingsCard Description="Type of link used to join a game" Header="Game link">
+                        <labs:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE71B;" />
+                        </labs:SettingsCard.HeaderIcon>
+                        <RadioButtons>
+                            <RadioButtons.Items>
+                                <RadioButton
+                                    Checked="Aoe2de_RadioButton_Checked"
+                                    Content="aoe2de://"
+                                    IsChecked="{x:Bind IsAoe2deLink}" />
+                                <RadioButton
+                                    Checked="Steam_RadioButton_Checked"
+                                    Content="steam://"
+                                    IsChecked="{x:Bind IsSteamLink}" />
+                            </RadioButtons.Items>
+                        </RadioButtons>
+                    </labs:SettingsCard>
 
-                    <TextBlock
-                        Margin="0,40,0,0"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="About" />
-                    <TextBlock Margin="0,10,0,0" IsTextSelectionEnabled="True">
-                        <Run>Version:</Run>
-                        <Run FontWeight="Bold" Text="{x:Bind Version}" />
-                    </TextBlock>
-                    <RichTextBlock
-                        MaxWidth="840"
-                        Margin="0,10,0,0"
-                        IsTextSelectionEnabled="True">
-                        <Paragraph Margin="0,10,0,0">
-                            <Run>Source code:</Run>
-                            <Hyperlink NavigateUri="https://github.com/tmk907/AoE2DELobbyBrowser">GitHub</Hyperlink>
-                        </Paragraph>
-                    </RichTextBlock>
-                    <RichTextBlock Margin="0,10,0,0" IsTextSelectionEnabled="True">
-                        <Paragraph>
-                            <Run>Application icon:</Run>
-                            <Hyperlink NavigateUri="https://www.flaticon.com/free-icons/roman">Roman icons created by Freepik - Flaticon</Hyperlink>
-                        </Paragraph>
-                    </RichTextBlock>
-
-                    <TextBlock
-                        Margin="0,40,0,0"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="Dependencies" />
-                    <RichTextBlock
-                        MaxWidth="840"
-                        Margin="0,10,0,0"
-                        IsTextSelectionEnabled="True">
-                        <Paragraph Margin="0,10,0,10">
-                            <Hyperlink NavigateUri="https://aka.ms/winui">Windows UI Library</Hyperlink>
-                        </Paragraph>
-                        <Paragraph Margin="0,10,0,10">
-                            <Hyperlink NavigateUri="https://www.reactiveui.net/">ReactiveUI</Hyperlink>
-                        </Paragraph>
-                        <Paragraph Margin="0,10,0,10">
-                            <Hyperlink NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit">CommunityToolkit</Hyperlink>
-                        </Paragraph>
-                        <Paragraph Margin="0,10,0,10">
-                            <Hyperlink NavigateUri="https://github.com/serilog">Serilog</Hyperlink>
-                        </Paragraph>
-                    </RichTextBlock>
-
-                    <TextBlock
-                        Margin="0,40,0,0"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="Disclaimer" />
-                    <RichTextBlock
-                        MaxWidth="840"
-                        Margin="0,10,0,50"
-                        IsTextSelectionEnabled="True">
-                        <Paragraph>Age of Empires II: Definitive Edition © Microsoft Corporation. AoE2DE Lobby Browser was created under Microsoft's &quot;Game Content Usage Rules&quot; using assets from Age of Empires II: Definitive Edition, and it is not endorsed by or affiliated with Microsoft.</Paragraph>
-                        <Paragraph Margin="0,10,0,10">
-                            <Hyperlink NavigateUri="https://www.xbox.com/en-us/developers/rules">Game Content Usage Rules</Hyperlink>
-                        </Paragraph>
-                    </RichTextBlock>
+                    <!--  About  -->
+                    <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="About" />
+                    <labs:SettingsExpander Header="AoE2DE Lobby Browser">
+                        <labs:SettingsExpander.HeaderIcon>
+                            <BitmapIcon ShowAsMonochrome="False" UriSource="/Assets/Square44x44Logo.targetsize-48.png" />
+                        </labs:SettingsExpander.HeaderIcon>
+                        <TextBlock
+                            Margin="0,-2,0,0"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="True"
+                            Text="{x:Bind Version}" />
+                        <labs:SettingsExpander.Items>
+                            <labs:SettingsCard Header="Github">
+                                <HyperlinkButton Content="https://github.com/tmk907/AoE2DELobbyBrowser" NavigateUri="https://github.com/tmk907/AoE2DELobbyBrowser" />
+                            </labs:SettingsCard>
+                            <labs:SettingsCard Header="Application icon">
+                                <HyperlinkButton Content="Roman icons created by Freepik - Flaticon" NavigateUri="https://www.flaticon.com/free-icons/roman" />
+                            </labs:SettingsCard>
+                            <labs:SettingsCard
+                                HorizontalContentAlignment="Left"
+                                ContentAlignment="Vertical"
+                                Header="Dependencies &amp; references">
+                                <StackPanel Margin="-12,0,0,0" Orientation="Vertical">
+                                    <HyperlinkButton Content="Windows UI Library" NavigateUri="https://aka.ms/winui" />
+                                    <HyperlinkButton Content="ReactiveUI" NavigateUri="https://www.reactiveui.net/" />
+                                    <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit" />
+                                    <HyperlinkButton Content="Serilog" NavigateUri="https://github.com/serilog" />
+                                </StackPanel>
+                            </labs:SettingsCard>
+                            <labs:SettingsCard
+                                HorizontalContentAlignment="Left"
+                                ContentAlignment="Vertical"
+                                Header="Disclaimer">
+                                <RichTextBlock
+                                    MaxWidth="840"
+                                    Margin="0,10,0,50"
+                                    IsTextSelectionEnabled="True">
+                                    <Paragraph>Age of Empires II: Definitive Edition © Microsoft Corporation. AoE2DE Lobby Browser was created under Microsoft's &quot;Game Content Usage Rules&quot; using assets from Age of Empires II: Definitive Edition, and it is not endorsed by or affiliated with Microsoft.</Paragraph>
+                                    <Paragraph Margin="0,10,0,10">
+                                        <Hyperlink NavigateUri="https://www.xbox.com/en-us/developers/rules">Game Content Usage Rules</Hyperlink>
+                                    </Paragraph>
+                                </RichTextBlock>
+                            </labs:SettingsCard>
+                        </labs:SettingsExpander.Items>
+                    </labs:SettingsExpander>
 
                 </StackPanel>
             </ScrollViewer>
