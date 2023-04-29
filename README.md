@@ -6,6 +6,7 @@ alt='English badge'/></a>
 
 Lobby browser for Age of Empires II DE
 - Filter games by lobby name, game type, map type, speed
+- Filter lobbies by player name or Steam id
 - Show notifications for new games
 - Join game directy from app or notification
 - List players in lobby
@@ -13,6 +14,8 @@ Lobby browser for Age of Empires II DE
 - Auto refresh
 
 ![alt text](https://github.com/tmk907/AoE2DELobbyBrowser/blob/master/files/screenshots/browser-with-notification.png "Browser")
+![alt text](https://github.com/tmk907/AoE2DELobbyBrowser/blob/master/files/screenshots/list-players-in-lobby.png "Players list")
+![alt text](https://github.com/tmk907/AoE2DELobbyBrowser/blob/master/files/screenshots/filter-by-players.png "Filter by player")
 
 
 Age of Empires II: Definitive Edition © Microsoft Corporation. AoE2DE Lobby Browser was created under Microsoft's &quot;[Game Content Usage Rules](https://www.xbox.com/en-US/developers/rules)&quot; using assets from Age of Empires II: Definitive Edition, and it is not endorsed by or affiliated with Microsoft.
