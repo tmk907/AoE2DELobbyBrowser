@@ -15,7 +15,7 @@ namespace AoE2DELobbyBrowser
         {
             this.InitializeComponent();
             rootFrame.Navigate(typeof(MainPage));
-            Title = "AoE2DE Lobby Browser";
+            Title = Windows.ApplicationModel.Package.Current.DisplayName;//"AoE2DE Lobby Browser";
             WeakReferenceMessenger.Default.Register<NavigateToMessage>(this, (r, m) => NavigateTo(m));
             WeakReferenceMessenger.Default.Register<NavigateBackMessage>(this, (r, m) => GoBack());
 
