@@ -128,6 +128,14 @@
                                     <HyperlinkButton Content="Serilog" NavigateUri="https://github.com/serilog" />
                                 </StackPanel>
                             </labs:SettingsCard>
+                            <labs:SettingsCard Click="OpenLogsFolderClicked"
+                                               Description="Open folder with log files"
+                                               Header="Logs"
+                                               IsClickEnabled="True">
+                                <labs:SettingsCard.ActionIcon>
+                                    <FontIcon Glyph="&#xE8A7;" />
+                                </labs:SettingsCard.ActionIcon>
+                            </labs:SettingsCard>
                             <labs:SettingsCard
                                 HorizontalContentAlignment="Left"
                                 ContentAlignment="Vertical"

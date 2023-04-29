@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
 using AoE2DELobbyBrowser.Services;
+using Windows.System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -58,6 +59,11 @@ namespace AoE2DELobbyBrowser
         private void separatorTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             AppSettings.Separator = separatorTextBox.Text;
+        }
+
+        private async void OpenLogsFolderClicked(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchFolderPathAsync(App.LogsFolderPath);
         }
     }
 }

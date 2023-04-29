@@ -17,6 +17,8 @@ namespace AoE2DELobbyBrowser
     /// </summary>
     public partial class App : Application
     {
+        public static string LogsFolderPath = ApplicationData.Current.LocalFolder.Path;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -28,7 +30,7 @@ namespace AoE2DELobbyBrowser
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()
                .WriteTo.Debug()
-               .WriteTo.File(Path.Combine(ApplicationData.Current.LocalFolder.Path, "logs.txt"), rollingInterval: RollingInterval.Day)
+               .WriteTo.File(Path.Combine(LogsFolderPath, "logs.txt"), rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
             ToastNotificationManagerCompat.OnActivated += ToastNotificationManagerCompat_OnActivated;
