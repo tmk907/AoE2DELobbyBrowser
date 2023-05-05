@@ -1,5 +1,6 @@
-using AoE2DELobbyBrowser.WebApi;
+using AoE2DELobbyBrowser.WebApi.Dto;
 using AoE2DELobbyBrowser.WebApi.Reliclink;
+using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System.Net.Mime;
 
@@ -43,6 +44,21 @@ app.MapGet("/api/v3/lobbies", async (LobbiesRepository lobbiesRepository) =>
 {
     var lobbies = await lobbiesRepository.GetLobbiesAsync();
     return Results.Json(lobbies);
+});
+
+app.MapGet("/api/v3/players", async ([FromQuery] string ids, IConfiguration configuration, IHttpClientFactory httpClientFactory) =>
+{
+    var url = $"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={configuration["SteamWebApiKey"]}&steamids={ids}";
+    var httpClient = httpClientFactory.CreateClient();
+    var results = await httpClient.GetFromJsonAsync<SteamPlayerSummaries>(url);
+    return Results.Json(results.Response.Players.Select(x=> new SteamPlayerDto
+    {
+        Avatar = x.Avatar,
+        Loccountrycode = x.Loccountrycode,
+        Personaname = x.Personaname,
+        Profileurl = x.Profileurl,
+        Steamid = x.Steamid
+    }));
 });
 
 app.Logger.LogInformation("The application started");
