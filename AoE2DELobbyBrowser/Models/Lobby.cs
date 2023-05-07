@@ -74,7 +74,7 @@ namespace AoE2DELobbyBrowser.Models
         {
             return Players.Any(x =>
                 x.Name.ToLowerInvariant() == playerQuery.ToLowerInvariant() ||
-                x.StreamProfileUrl.Split('/', StringSplitOptions.RemoveEmptyEntries).LastOrDefault() == playerQuery);
+                x.SteamProfileId == playerQuery);
         }
 
         public static Lobby Create(LobbyDto dto)

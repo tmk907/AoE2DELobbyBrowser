@@ -24,7 +24,7 @@ namespace AoE2DELobbyBrowser
 
         public MainViewModel()
         {
-            _apiClient = new Aoe2ApiClient();
+            _apiClient = App.ApiClient;
             _notificationsService = new NotificationsService();
             _settingsService = new AppSettingsService();
 
@@ -177,6 +177,8 @@ namespace AoE2DELobbyBrowser
                 .Do(_ => Log.Debug("Refresh enabled"))
                 .InvokeCommand(this, x => x.RefreshCommand)
                 .DisposeWith(Disposal);
+
+            AddFriendCommand = ReactiveCommand.CreateFromTask<Player>(x => App.PlayersService.AddFriendAsync(x.SteamProfileId));
         }
 
         protected CompositeDisposable Disposal = new CompositeDisposable();
@@ -187,6 +189,8 @@ namespace AoE2DELobbyBrowser
         }
 
         public ReactiveCommand<Unit, Unit> RefreshCommand { get; }
+        public ReactiveCommand<Player, Unit> AddFriendCommand { get; }
+
 
         private readonly ReadOnlyObservableCollection<Lobby> _lobbies;
         public ReadOnlyObservableCollection<Lobby> Lobbies => _lobbies;

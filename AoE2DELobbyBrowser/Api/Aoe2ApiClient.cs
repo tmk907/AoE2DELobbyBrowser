@@ -14,8 +14,8 @@ namespace AoE2DELobbyBrowser.Api
     internal class Aoe2ApiClient : IApiClient, IDisposable
     {
 #if DEBUG
-        //private const string getLobbiesUrl = "https://aoe2api.dryforest.net/api/v3/lobbies";
-        private const string getLobbiesUrl = "https://localhost:7214/api/v3/lobbies";
+        private const string getLobbiesUrl = "https://aoe2api.dryforest.net/api/v3/lobbies";
+        //private const string getLobbiesUrl = "https://localhost:7214/api/v3/lobbies";
 #else
     private const string getLobbiesUrl = "https://aoe2api.dryforest.net/api/v3/lobbies";
 #endif
@@ -34,7 +34,7 @@ namespace AoE2DELobbyBrowser.Api
 
         public async Task Refresh(CancellationToken cancellationToken)
         {
-            Log.Information("Refresh");
+            Log.Debug("Refresh");
             var results = await GetAllLobbiesAsync(cancellationToken);
             if (results.Count == 0) return;
 
@@ -44,7 +44,7 @@ namespace AoE2DELobbyBrowser.Api
             var fvdLobbies = lobbies.Where(x => x.Name.ToLower().Contains("f") && x.GameType == "Scenario");
             foreach(var l in fvdLobbies)
             {
-                Log.Information($"ApiClient f found {l.Name}");
+                Log.Debug($"ApiClient f found {l.Name}");
             }
             _items.Edit(updater =>
             {
@@ -55,7 +55,7 @@ namespace AoE2DELobbyBrowser.Api
 
         public async Task<List<LobbyDto>> GetAllLobbiesAsync(CancellationToken cancellationToken)
         {
-            Log.Information("GetAllLobbiesAsync");
+            Log.Debug("GetAllLobbiesAsync");
             try
             {
                 var result = await _httpClient.GetFromJsonAsync<List<LobbyDto>>(getLobbiesUrl, cancellationToken);
