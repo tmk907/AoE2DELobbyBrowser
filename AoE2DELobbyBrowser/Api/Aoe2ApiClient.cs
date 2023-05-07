@@ -59,7 +59,7 @@ namespace AoE2DELobbyBrowser.Api
             try
             {
                 var result = await _httpClient.GetFromJsonAsync<List<LobbyDto>>(getLobbiesUrl, cancellationToken);
-                Log.Information($"Found {result.Count} lobbies");
+                Log.Debug($"Found {result.Count} lobbies");
                 return result;
             }
             catch (Exception ex)
