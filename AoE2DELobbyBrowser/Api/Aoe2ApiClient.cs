@@ -20,17 +20,20 @@ namespace AoE2DELobbyBrowser.Api
     private const string getLobbiesUrl = "https://aoe2api.dryforest.net/api/v3/lobbies";
 #endif
 
-
         private readonly HttpClient _httpClient;
-        private readonly SourceCache<Lobby, string> _items = new SourceCache<Lobby, string>(x => x.MatchId);
+        private readonly SourceCache<Lobby, string> _itemsCache;
+        private readonly IObservableCache<Lobby, string> _itemsObservableCache;
 
         public Aoe2ApiClient()
         {
             _httpClient = new HttpClient();
             _httpClient.Timeout = TimeSpan.FromSeconds(20);
+            _itemsCache = new SourceCache<Lobby, string>(x => x.MatchId);
+            _itemsObservableCache = _itemsCache.AsObservableCache();
         }
 
-        public IObservable<IChangeSet<Lobby, string>> Connect() => _items.Connect();
+        public IObservableCache<Lobby, string> Items => _itemsObservableCache;
+        public IObservable<IChangeSet<Lobby, string>> Connect() => _itemsCache.Connect().RefCount();
 
         public async Task Refresh(CancellationToken cancellationToken)
         {
@@ -39,14 +42,9 @@ namespace AoE2DELobbyBrowser.Api
             if (results.Count == 0) return;
 
             var lobbies = results.Select(dto => Lobby.Create(dto));
-            var keysToDelete = _items.Keys.ToHashSet();
+            var keysToDelete = _itemsCache.Keys.ToHashSet();
             keysToDelete.ExceptWith(lobbies.Select(x => x.MatchId).ToList());
-            var fvdLobbies = lobbies.Where(x => x.Name.ToLower().Contains("f") && x.GameType == "Scenario");
-            foreach(var l in fvdLobbies)
-            {
-                Log.Debug($"ApiClient f found {l.Name}");
-            }
-            _items.Edit(updater =>
+            _itemsCache.Edit(updater =>
             {
                 updater.RemoveKeys(keysToDelete);
                 updater.AddOrUpdate(lobbies);
@@ -68,10 +66,11 @@ namespace AoE2DELobbyBrowser.Api
                 return new List<LobbyDto>();
             }
         }
+
         public void Dispose()
         {
-            _items.Clear();
-            _items.Dispose();
+            _itemsCache.Clear();
+            _itemsCache.Dispose();
         }
     }
 }

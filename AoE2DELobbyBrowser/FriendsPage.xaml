@@ -86,7 +86,7 @@
                             </Hyperlink>
                         </TextBlock>
                         <Grid Grid.Column="2" Visibility="Visible">
-                            <TextBlock Text="{x:Bind Lobby.Name}" />
+                            <TextBlock Text="{x:Bind Lobby.Name, Mode=OneWay}" />
                         </Grid>
                         <Button
                             Grid.Column="3"

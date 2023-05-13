@@ -33,38 +33,20 @@ namespace AoE2DELobbyBrowser
             this.RefreshCommand = ReactiveCommand.CreateFromTask(ct => RefreshAsync(ct));
             this.DeleteFriendCommand = ReactiveCommand.CreateFromTask<Friend>(x => DeleteAsync(x));
 
-            var disposable = _playersService.Items
-                .Connect()
+            var allFriends = _playersService.Items.Connect()
                 .Transform(x => Friend.Create(x))
+                .Do(x => Log.Debug("allfriends"))
                 .Sort(SortExpressionComparer<Friend>.Ascending(x => x.Name))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out _friends)
                 .Subscribe()
                 .DisposeWith(Disposal);
 
-            _allLobbies = _apiClient.Connect()
-                .Filter(x => x.Name != "AUTOMATCH")
-                //.QueryWhenChanged()
-                .Do(_ => Log.Debug("api friends observable"));
-                //.Do(x =>
-                //{
-                //    foreach (var friend in Friends)
-                //    {
-                //        friend.Lobby = x.Items.FirstOrDefault(l => l.ContainsPlayer(friend.SteamId));
-                //    }
-                //});
-            _allLobbies.Subscribe()
-                .DisposeWith(Disposal);
-
             Observable
                 .FromAsync(_playersService.ReloadAsync)
+                .Do(x=>Log.Debug("test"))
                 .Subscribe()
                 .DisposeWith(Disposal);
-
-            //Observable
-            //    .FromAsync(ct => _apiClient.Refresh(ct))
-            //    .Subscribe()
-            //    .DisposeWith(Disposal);
         }
 
         protected CompositeDisposable Disposal = new CompositeDisposable();
@@ -78,8 +60,6 @@ namespace AoE2DELobbyBrowser
         public ReactiveCommand<Friend, Unit> DeleteFriendCommand { get; }
 
         private string _steamId;
-        private IObservable<IChangeSet<Lobby, string>> _allLobbies;
-
         public string SteamId
         {
             get => _steamId;
@@ -102,8 +82,13 @@ namespace AoE2DELobbyBrowser
 
         private async Task RefreshAsync(CancellationToken ct)
         {
-            //await _playersService.ReloadAsync();
+            await _playersService.ReloadAsync();
             await _apiClient.Refresh(ct);
+
+            foreach (var friend in Friends)
+            {
+                friend.Lobby = _apiClient.Items.Items.FirstOrDefault(l => l.ContainsPlayer(friend.SteamId));
+            }
         }
     }
 }

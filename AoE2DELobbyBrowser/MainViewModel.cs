@@ -154,6 +154,7 @@ namespace AoE2DELobbyBrowser
                 .DisposeWith(Disposal);
 
             this.RefreshCommand = ReactiveCommand.CreateFromTask(ct => _apiClient.Refresh(ct));
+            this.AddFriendCommand = ReactiveCommand.CreateFromTask<Player>(x => App.PlayersService.AddFriendAsync(x.SteamProfileId));
 
             this.WhenAnyObservable(x => x.RefreshCommand.IsExecuting)
                 .StartWith(false)
@@ -177,8 +178,6 @@ namespace AoE2DELobbyBrowser
                 .Do(_ => Log.Debug("Refresh enabled"))
                 .InvokeCommand(this, x => x.RefreshCommand)
                 .DisposeWith(Disposal);
-
-            AddFriendCommand = ReactiveCommand.CreateFromTask<Player>(x => App.PlayersService.AddFriendAsync(x.SteamProfileId));
         }
 
         protected CompositeDisposable Disposal = new CompositeDisposable();

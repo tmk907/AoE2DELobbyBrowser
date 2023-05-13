@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Helpers;
 using DynamicData;
@@ -49,9 +51,11 @@ namespace AoE2DELobbyBrowser.Services
 
         public async Task ReloadAsync()
         {
+            Log.Debug("ReloadAsync");
             var friends = await GetFriendsListAsync();
             _itemsSource.Clear();
             _itemsSource.AddOrUpdate(friends);
+            Log.Debug($"ReloadAsync {friends.Count}");
         }
 
         public async Task AddFriendAsync(string id)
