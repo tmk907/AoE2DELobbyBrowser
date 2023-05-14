@@ -17,14 +17,34 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
 
         public async Task<IEnumerable<LobbyDto>> GetLobbiesAsync()
         {
-            var advertisement = await _apiCache.GetOrCreateAsync("advertisement", GetAdvertisementAsync);
+            var advertisement = await _apiCache.GetOrCreateAsync("advertisement", GetAllAdvertisementsAsync);
             var lobbies = GetLobbies(advertisement);
             return lobbies;
         }
 
-        private async Task<Advertisement?> GetAdvertisementAsync()
+        private async Task<Advertisement> GetAllAdvertisementsAsync()
         {
-            var url = "https://aoe-api.reliclink.com/community/advertisement/findAdvertisements?title=age2";
+            var advertisement = new Advertisement() { Matches = new List<Match>(), Avatars = new List<Avatar>() };
+
+            var start = 0;
+            var adv = await GetAdvertisementAsync(start);
+            while ((adv?.Matches?.Count ?? 0) > 0)
+            {
+                if (adv?.Matches != null) advertisement.Matches.AddRange(adv.Matches);
+                if (adv?.Avatars != null) advertisement.Avatars.AddRange(adv.Avatars);
+                start += 100;
+                adv = await GetAdvertisementAsync(start);
+            }
+
+            advertisement.Matches = advertisement.Matches.DistinctBy(x=>x.Id).ToList();
+            advertisement.Avatars = advertisement.Avatars.DistinctBy(x=>x.ProfileId).ToList();
+
+            return advertisement;
+        }
+
+        private async Task<Advertisement?> GetAdvertisementAsync(int start)
+        {
+            var url = $"https://aoe-api.reliclink.com/community/advertisement/findAdvertisements?title=age2&start={start}";
             var httpClient = _httpClientFactory.CreateClient();
             try
             {
