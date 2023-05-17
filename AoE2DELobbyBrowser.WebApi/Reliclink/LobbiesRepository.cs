@@ -84,16 +84,19 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
  
         private LobbyDto Create(Match match, Dictionary<int, string> options, List<Avatar> avatars)
         {
+            var gameId = int.Parse(options.GetValueOrDefault(OptionsDecoder.GameTypeKey, "-1"));
+            var mapId = int.Parse(options.GetValueOrDefault(OptionsDecoder.MapTypeKey, "-1"));
+            var speedId = int.Parse(options.GetValueOrDefault(OptionsDecoder.GameSpeedKey, "-1"));
             return new LobbyDto
             {
-                GameType = GameTypeConverter.ToName(int.Parse(options[OptionsDecoder.GameTypeKey])),
+                GameType = GameTypeConverter.ToName(gameId),
                 SteamLobbyId = match.Steamlobbyid?.ToString() ?? "",
                 MatchId = match.Id.ToString(),
-                MapType = MapTypeConverter.ToName(int.Parse(options[OptionsDecoder.MapTypeKey])),
+                MapType = MapTypeConverter.ToName(mapId),
                 Name = match.Description,
                 NumSlots = match.Maxplayers,
                 Players = match.Matchmembers.Select((x, i) => Create(i, x, avatars)).ToList(),
-                Speed = GameSpeedConverter.ToName(int.Parse(options[OptionsDecoder.GameSpeedKey]))
+                Speed = GameSpeedConverter.ToName(speedId)
             };
         }
 
