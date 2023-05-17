@@ -65,7 +65,7 @@
                 </Button>
                 <CheckBox
                     Margin="8,0,4,0"
-                    IsChecked="{x:Bind ViewModel.IsAutoRefreshEnabled, Mode=TwoWay}"
+                    IsChecked="{x:Bind ViewModel.Settings.IsAutoRefreshEnabled, Mode=TwoWay}"
                     ToolTipService.ToolTip="Auto refresh (Ctrl + T)">
                     <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Auto refresh (sec)" />
                     <CheckBox.KeyboardAccelerators>
@@ -77,10 +77,10 @@
                     Minimum="5"
                     SmallChange="5"
                     SpinButtonPlacementMode="Inline"
-                    Value="{x:Bind ViewModel.Interval, Mode=TwoWay}" />
+                    Value="{x:Bind ViewModel.Settings.Interval, Mode=TwoWay}" />
                 <CheckBox
                     Margin="8,0,4,0"
-                    IsChecked="{x:Bind ViewModel.ShowNotifications, Mode=TwoWay}"
+                    IsChecked="{x:Bind ViewModel.Settings.ShowNotifications, Mode=TwoWay}"
                     ToolTipService.ToolTip="Show notifications (Ctrl + N)">
                     <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Notifications" />
                     <CheckBox.KeyboardAccelerators>
@@ -117,7 +117,7 @@
                 <ComboBox
                     Width="180"
                     ItemsSource="{x:Bind ViewModel.GameTypes}"
-                    SelectedItem="{x:Bind ViewModel.SelectedGameType, Mode=TwoWay}"
+                    SelectedItem="{x:Bind ViewModel.Settings.SelectedGameType, Mode=TwoWay}"
                     ToolTipService.ToolTip="Game type (Ctrl + Q)">
                     <ComboBox.KeyboardAccelerators>
                         <KeyboardAccelerator Key="Q" Modifiers="Control" />
@@ -127,7 +127,7 @@
                 <ComboBox
                     Width="180"
                     ItemsSource="{x:Bind ViewModel.MapTypes}"
-                    SelectedItem="{x:Bind ViewModel.SelectedMapType, Mode=TwoWay}"
+                    SelectedItem="{x:Bind ViewModel.Settings.SelectedMapType, Mode=TwoWay}"
                     ToolTipService.ToolTip="Map type (Ctrl + W)">
                     <ComboBox.KeyboardAccelerators>
                         <KeyboardAccelerator Key="W" Modifiers="Control" />
@@ -137,7 +137,7 @@
                 <ComboBox
                     Width="100"
                     ItemsSource="{x:Bind ViewModel.GameSpeeds}"
-                    SelectedItem="{x:Bind ViewModel.SelectedGameSpeed, Mode=TwoWay}"
+                    SelectedItem="{x:Bind ViewModel.Settings.SelectedGameSpeed, Mode=TwoWay}"
                     ToolTipService.ToolTip="Game speed (Ctrl + E)">
                     <ComboBox.KeyboardAccelerators>
                         <KeyboardAccelerator Key="E" Modifiers="Control" />
@@ -157,7 +157,7 @@
                     IsSpellCheckEnabled="False"
                     KeyDown="FocusOnPage"
                     PlaceholderText="search"
-                    Text="{x:Bind ViewModel.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Text="{x:Bind ViewModel.Settings.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     ToolTipService.ToolTip="Lobby name contains any word (Ctrl + F)">
                     <TextBox.KeyboardAccelerators>
                         <KeyboardAccelerator
@@ -172,7 +172,7 @@
                     IsSpellCheckEnabled="False"
                     KeyDown="FocusOnPage"
                     PlaceholderText="exclude"
-                    Text="{x:Bind ViewModel.Excluded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Text="{x:Bind ViewModel.Settings.Exclude, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     ToolTipService.ToolTip="None of the words appear in lobby name (Ctrl + G)">
                     <TextBox.KeyboardAccelerators>
                         <KeyboardAccelerator
@@ -268,7 +268,8 @@
                 Padding="10"
                 VerticalAlignment="Center"
                 Background="{StaticResource SystemControlChromeLowAcrylicElementBrush}"
-                CornerRadius="10">
+                CornerRadius="10"
+                Tapped="Grid_Tapped">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />

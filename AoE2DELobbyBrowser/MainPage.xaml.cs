@@ -68,5 +68,10 @@ namespace AoE2DELobbyBrowser
         {
             WeakReferenceMessenger.Default.Send(new NavigateToMessage { Destination = typeof(FriendsPage) });
         }
+
+        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }
