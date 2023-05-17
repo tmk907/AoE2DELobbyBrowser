@@ -8,8 +8,6 @@ namespace AoE2DELobbyBrowser.Api
 {
     public interface IApiClient
     {
-        IObservableCache<Lobby, string> Items { get; }
-
         IObservable<IChangeSet<Lobby, string>> Connect();
         void Dispose();
         Task Refresh(CancellationToken cancellationToken);

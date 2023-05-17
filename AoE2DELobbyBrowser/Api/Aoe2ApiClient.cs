@@ -22,22 +22,19 @@ namespace AoE2DELobbyBrowser.Api
 
         private readonly HttpClient _httpClient;
         private readonly SourceCache<Lobby, string> _itemsCache;
-        private readonly IObservableCache<Lobby, string> _itemsObservableCache;
 
         public Aoe2ApiClient()
         {
             _httpClient = new HttpClient();
             _httpClient.Timeout = TimeSpan.FromSeconds(20);
             _itemsCache = new SourceCache<Lobby, string>(x => x.MatchId);
-            _itemsObservableCache = _itemsCache.AsObservableCache();
         }
 
-        public IObservableCache<Lobby, string> Items => _itemsObservableCache;
         public IObservable<IChangeSet<Lobby, string>> Connect() => _itemsCache.Connect().RefCount();
 
         public async Task Refresh(CancellationToken cancellationToken)
         {
-            Log.Debug("Refresh");
+            Log.Debug("Aoe2ApiClient Refresh");
             var results = await GetAllLobbiesAsync(cancellationToken);
             if (results.Count == 0) return;
 

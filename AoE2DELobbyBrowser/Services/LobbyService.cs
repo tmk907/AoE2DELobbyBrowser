@@ -19,6 +19,7 @@ namespace AoE2DELobbyBrowser.Services
     {
         private readonly IApiClient _apiClient;
         private readonly NotificationsService _notificationsService;
+        //private readonly IPlayersService _playersService;
         private readonly AppSettingsService _settingsService;
 
         private ISubject<bool> _isLoadingSubject;
@@ -27,6 +28,7 @@ namespace AoE2DELobbyBrowser.Services
         {
             _apiClient = App.ApiClient;
             _notificationsService = new NotificationsService();
+            //_playersService = App.PlayersService;
             _settingsService = new AppSettingsService();
 
             _settings = _settingsService.GetLobbySettings();
@@ -133,10 +135,10 @@ namespace AoE2DELobbyBrowser.Services
                 .Where(x => x.Item2)
                 .Select(x => x.Item1)
                 .Throttle(TimeSpan.FromMilliseconds(500))
-                .Do(_ => Log.Debug("value changed"))
+                //.Do(_ => Log.Debug("value changed"))
                 .Select(interval =>
                     Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(interval), RxApp.TaskpoolScheduler)
-                        .Do(x => Log.Debug($"Inner observable interval {x}"))
+                        //.Do(x => Log.Debug($"Inner observable interval {x}"))
                         .Select(time => Unit.Default)
                     )
                 .Switch()
@@ -146,6 +148,47 @@ namespace AoE2DELobbyBrowser.Services
                 .Merge()
                 .Subscribe()
                 .DisposeWith(Disposal);
+
+            //_playersService.AllPlayerChanges
+            //    .Transform(x => Friend.Create(x))
+            //    .Bind(out _friends)
+            //    .Subscribe()
+            //    .DisposeWith(Disposal);
+
+            //AllLobbyChanges
+            //    .OnItemAdded(lobby =>
+            //    {
+            //        foreach (var friend in _friends)
+            //        {
+            //            if (lobby.ContainsPlayer(friend.SteamId))
+            //            {
+            //                friend.Lobby = lobby;
+            //            }
+            //        }
+            //    })
+            //    .OnItemUpdated((lobby, _) =>
+            //    {
+            //        foreach (var friend in _friends)
+            //        {
+            //            if (lobby.ContainsPlayer(friend.SteamId))
+            //            {
+            //                friend.Lobby = lobby;
+            //            }
+            //        }
+            //    })
+            //    .OnItemRemoved(lobby =>
+            //    {
+            //        foreach (var friend in _friends)
+            //        {
+            //            if (lobby.ContainsPlayer(friend.SteamId))
+            //            {
+            //                friend.Lobby = null;
+            //            }
+            //        }
+            //    })
+            //    .Subscribe()
+            //    .DisposeWith(Disposal);
+
         }
 
         protected CompositeDisposable Disposal = new CompositeDisposable();
@@ -156,7 +199,10 @@ namespace AoE2DELobbyBrowser.Services
         }
 
         private LobbySettings _settings;
-        
+        //private readonly ReadOnlyObservableCollection<Friend> _friends;
+
+        //public IObservable<IChangeSet<Friend, string>> FriendsChanges; 
+
         public IObservable<IChangeSet<Lobby,string>> AllLobbyChanges { get; private set; }
         public IObservable<IChangeSet<Lobby, string>> FilteredLobbyChanges { get; private set; }
 

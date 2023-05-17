@@ -1,4 +1,4 @@
-﻿using AoE2DELobbyBrowser.Services;
+﻿using AoE2DELobbyBrowser.Api;
 using DynamicData.Binding;
 
 namespace AoE2DELobbyBrowser.Models

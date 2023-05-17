@@ -1,5 +1,4 @@
-﻿using AoE2DELobbyBrowser.Api;
-using AoE2DELobbyBrowser.Models;
+﻿using AoE2DELobbyBrowser.Models;
 using AoE2DELobbyBrowser.Services;
 using DynamicData;
 using DynamicData.Binding;
@@ -20,31 +19,37 @@ namespace AoE2DELobbyBrowser
     public class FriendsViewModel : ReactiveObject
     {
         private readonly IPlayersService _playersService;
-        private readonly IApiClient _apiClient;
 
         public FriendsViewModel() 
         {
             _playersService = App.PlayersService;
-            _apiClient = App.ApiClient;
 
             var canExecuteAdd = this.WhenAnyValue(x => x.SteamId,
                 (id) => _playersService.IsValidId(id));
+
             this.AddFriendCommand = ReactiveCommand.CreateFromTask(AddFriendAsync, canExecuteAdd);
             this.RefreshCommand = ReactiveCommand.CreateFromTask(ct => RefreshAsync(ct));
             this.DeleteFriendCommand = ReactiveCommand.CreateFromTask<Friend>(x => DeleteAsync(x));
 
-            var allFriends = _playersService.Items.Connect()
+            var allFriends = _playersService.AllPlayerChanges
                 .Transform(x => Friend.Create(x))
-                .Do(x => Log.Debug("allfriends"))
                 .Sort(SortExpressionComparer<Friend>.Ascending(x => x.Name))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out _friends)
+                .DisposeMany()
+                .Subscribe()
+                .DisposeWith(Disposal);
+
+            App.LobbyService.AllLobbyChanges
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out _lobbies)
+                .DisposeMany()
                 .Subscribe()
                 .DisposeWith(Disposal);
 
             Observable
-                .FromAsync(_playersService.ReloadAsync)
-                .Do(x=>Log.Debug("test"))
+                .FromAsync(ct => RefreshAsync(ct))
+                .Do(x => Log.Debug("test"))
                 .Subscribe()
                 .DisposeWith(Disposal);
         }
@@ -66,6 +71,8 @@ namespace AoE2DELobbyBrowser
             set => this.RaiseAndSetIfChanged(ref _steamId, value);
         }
 
+        private readonly ReadOnlyObservableCollection<Lobby> _lobbies;
+
         private readonly ReadOnlyObservableCollection<Friend> _friends;
         public ReadOnlyObservableCollection<Friend> Friends => _friends;
 
@@ -83,11 +90,10 @@ namespace AoE2DELobbyBrowser
         private async Task RefreshAsync(CancellationToken ct)
         {
             await _playersService.ReloadAsync();
-            await _apiClient.Refresh(ct);
 
             foreach (var friend in Friends)
             {
-                friend.Lobby = _apiClient.Items.Items.FirstOrDefault(l => l.ContainsPlayer(friend.SteamId));
+                friend.Lobby = _lobbies.FirstOrDefault(l => l.ContainsPlayer(friend.SteamId));
             }
         }
     }

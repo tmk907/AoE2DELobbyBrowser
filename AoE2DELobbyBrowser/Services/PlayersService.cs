@@ -5,8 +5,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using AoE2DELobbyBrowser.Api;
 using CommunityToolkit.WinUI.Helpers;
 using DynamicData;
 using Serilog;
@@ -16,7 +16,7 @@ namespace AoE2DELobbyBrowser.Services
 {
     public interface IPlayersService
     {
-        IObservableCache<SteamPlayerDto, string> Items { get; }
+        IObservable<IChangeSet<SteamPlayerDto, string>> AllPlayerChanges { get; }
         Task AddFriendAsync(string id);
         bool IsValidId(string id);
         Task ReloadAsync();
@@ -36,10 +36,14 @@ namespace AoE2DELobbyBrowser.Services
             _httpClient = new HttpClient();
             _storageHelper = ApplicationDataStorageHelper.GetCurrent(new AppDataJsonSerializer());
             _itemsSource = new SourceCache<SteamPlayerDto, string>(x => x.SteamId);
-            Items = _itemsSource.AsObservableCache();
+
+            AllPlayerChanges = _itemsSource
+                .Connect()
+                .Do(_ => Log.Debug($"onNext {nameof(AllPlayerChanges)} "))
+                .Publish().RefCount();
         }
 
-        public IObservableCache<SteamPlayerDto, string> Items { get; }
+        public IObservable<IChangeSet<SteamPlayerDto, string>> AllPlayerChanges { get; private set; }
 
         public bool IsValidId(string id)
         {
@@ -66,8 +70,7 @@ namespace AoE2DELobbyBrowser.Services
             var player = savedPlayers.FirstOrDefault(x => x.SteamId == id);
             if (player == null)
             {
-                var url = $"https://aoe2api.dryforest.net/api/v3/players?ids={id}";
-                var players = await _httpClient.GetFromJsonAsync<List<SteamPlayerDto>>(url);
+                var players  = await GetSteamPlayersAsync(id);
                 player = players.FirstOrDefault();
                 if (player != null)
                 {
@@ -98,8 +101,7 @@ namespace AoE2DELobbyBrowser.Services
                 if (players.Count == 0) return;
 
                 var ids = string.Join(',', players.Select(x => x.SteamId));
-                var url = $"https://aoe2api.dryforest.net/api/v3/players?ids={ids}";
-                players = await _httpClient.GetFromJsonAsync<List<SteamPlayerDto>>(url);
+                players = await GetSteamPlayersAsync(ids);
                 
                 await SaveFriendsListAsync(players);
                 _itemsSource.Edit(u =>
@@ -112,6 +114,12 @@ namespace AoE2DELobbyBrowser.Services
             {
                 Log.Error(ex.ToString());
             }
+        }
+
+        private async Task<List<SteamPlayerDto>> GetSteamPlayersAsync(string ids)
+        {
+            var url = $"https://aoe2api.dryforest.net/api/v3/players?ids={ids}";
+            return await _httpClient.GetFromJsonAsync<List<SteamPlayerDto>>(url);
         }
 
         private async Task SaveFriendsListAsync(IEnumerable<SteamPlayerDto> players)
