@@ -50,6 +50,11 @@ namespace AoE2DELobbyBrowser
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToProperty(this, x => x.Loading, out _loading)
                 .DisposeWith(Disposal);
+
+            Observable
+                .FromAsync(ct => _lobbyService.RefreshAsync(ct))
+                .Subscribe()
+                .DisposeWith(Disposal);
         }
 
         protected CompositeDisposable Disposal = new CompositeDisposable();
