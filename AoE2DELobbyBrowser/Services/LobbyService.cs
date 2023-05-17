@@ -41,7 +41,7 @@ namespace AoE2DELobbyBrowser.Services
                 .DisposeWith(Disposal);
 
             _isLoadingSubject = new Subject<bool>();
-            IsLoading = _isLoadingSubject.StartWith(false).Publish().RefCount();
+            IsLoading = _isLoadingSubject.StartWith(false).Replay(1).AutoConnect();
 
             Func<Lobby, bool> lobbyFilter = lobby =>
             {
