@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using AoE2DELobbyBrowser.Api;
+using AoE2DELobbyBrowser.Models;
 using CommunityToolkit.WinUI.Helpers;
 using DynamicData;
 using Serilog;
@@ -18,6 +20,7 @@ namespace AoE2DELobbyBrowser.Services
     {
         IObservable<IChangeSet<SteamPlayerDto, string>> AllPlayerChanges { get; }
         Task AddFriendAsync(string id);
+        Task<List<SteamPlayerDto>> GetFriendsListAsync();
         bool IsValidId(string id);
         Task ReloadAsync();
         Task RemoveFriendAsync(string id);
@@ -41,6 +44,12 @@ namespace AoE2DELobbyBrowser.Services
                 .Connect()
                 .Do(_ => Log.Debug($"onNext {nameof(AllPlayerChanges)} "))
                 .Publish().RefCount();
+
+            Observable
+                .FromAsync(GetFriendsListAsync)
+                .Do(list => _itemsSource.AddOrUpdate(list))
+                .Do(_ => Log.Debug("GetFriendsListAsync loaded"))
+                .Subscribe();
         }
 
         public IObservable<IChangeSet<SteamPlayerDto, string>> AllPlayerChanges { get; private set; }
@@ -127,7 +136,7 @@ namespace AoE2DELobbyBrowser.Services
             await _storageHelper.CreateFileAsync("favoritePlayers.json", players);
         }
 
-        private async Task<List<SteamPlayerDto>> GetFriendsListAsync()
+        public async Task<List<SteamPlayerDto>> GetFriendsListAsync()
         {
             try
             {
