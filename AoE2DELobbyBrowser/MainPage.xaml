@@ -33,14 +33,14 @@
             <Setter Property="Width" Value="40" />
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
-        <XamlUICommand
+        <!--<XamlUICommand
             x:Key="AddFriendCommand"
             Command="{x:Bind ViewModel.AddFriendCommand}"
             Description="Add friend">
             <XamlUICommand.IconSource>
                 <SymbolIconSource Symbol="AddFriend" />
             </XamlUICommand.IconSource>
-        </XamlUICommand>
+        </XamlUICommand>-->
     </Page.Resources>
     <Grid Background="{StaticResource BackgroundColor}">
         <Grid.RowDefinitions>
@@ -87,7 +87,7 @@
                         <KeyboardAccelerator Key="N" Modifiers="Control" />
                     </CheckBox.KeyboardAccelerators>
                 </CheckBox>
-                <Button
+                <!--<Button
                     Background="Transparent"
                     Click="NavigateToFriends_Click"
                     ToolTipService.ToolTip="Settings (Ctrl + P)">
@@ -95,7 +95,7 @@
                     <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Key="P" Modifiers="Control" />
                     </Button.KeyboardAccelerators>
-                </Button>
+                </Button>-->
                 <Button
                     Background="Transparent"
                     Click="NavigateToSettigns_Click"
@@ -177,6 +177,31 @@
                     <TextBox.KeyboardAccelerators>
                         <KeyboardAccelerator
                             Key="G"
+                            Invoked="FocusOnTextBox"
+                            Modifiers="Control" />
+                    </TextBox.KeyboardAccelerators>
+                </TextBox>
+                <TextBlock Style="{StaticResource LabelTextBlock}" Text="Players" />
+                <CheckBox
+                    Width="20"
+                    MinWidth="20"
+                    Margin="0,0,4,0"
+                    IsChecked="{x:Bind ViewModel.Settings.IsPlayerSearchEnabled, Mode=TwoWay}">
+                    <CheckBox.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="O" Modifiers="Control" />
+                    </CheckBox.KeyboardAccelerators>
+                </CheckBox>
+                <TextBox
+                    Width="180"
+                    IsEnabled="{x:Bind ViewModel.Settings.IsPlayerSearchEnabled, Mode=OneWay}"
+                    IsSpellCheckEnabled="False"
+                    KeyDown="FocusOnPage"
+                    PlaceholderText="player"
+                    Text="{x:Bind ViewModel.Settings.PlayerQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    ToolTipService.ToolTip="Only lobbies with player name or Steam id (Ctrl + P)">
+                    <TextBox.KeyboardAccelerators>
+                        <KeyboardAccelerator
+                            Key="P"
                             Invoked="FocusOnTextBox"
                             Modifiers="Control" />
                     </TextBox.KeyboardAccelerators>
@@ -314,13 +339,13 @@
                                         <Run Text="{x:Bind Name}" />
                                     </Hyperlink>
                                 </TextBlock>
-                                <Button
+                                <!--<Button
                                     Grid.Column="2"
                                     Command="{StaticResource AddFriendCommand}"
                                     CommandParameter="{x:Bind}"
                                     Style="{StaticResource ListItemSmallButtonStyle}">
                                     <SymbolIcon Symbol="AddFriend" />
-                                </Button>
+                                </Button>-->
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

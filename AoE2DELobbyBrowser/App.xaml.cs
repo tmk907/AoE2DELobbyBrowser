@@ -37,12 +37,12 @@ namespace AoE2DELobbyBrowser
 
             ToastNotificationManagerCompat.OnActivated += ToastNotificationManagerCompat_OnActivated;
             ApiClient = new Aoe2ApiClient();
-            PlayersService = new PlayersService();
+            //PlayersService = new PlayersService();
             LobbyService = new LobbyService();
         }
 
         public static DispatcherQueue DispatcherQueue { get; private set; }
-        public static IPlayersService PlayersService { get; private set; }
+        //public static IPlayersService PlayersService { get; private set; }
         public static LobbyService LobbyService { get; private set; }
         public static IApiClient ApiClient { get; private set; }
 

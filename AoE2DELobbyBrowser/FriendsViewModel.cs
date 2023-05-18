@@ -24,7 +24,8 @@ namespace AoE2DELobbyBrowser
 
         public FriendsViewModel() 
         {
-            _playersService = App.PlayersService;
+            //_playersService = App.PlayersService;
+
             //_friendSource = new SourceCache<Friend, string>(x => x.SteamId);
 
             var canExecuteAdd = this.WhenAnyValue(x => x.SteamId,

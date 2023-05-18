@@ -150,35 +150,35 @@ namespace AoE2DELobbyBrowser.Services
                 .DisposeWith(Disposal);
 
             _friendSource = new SourceCache<Friend, string>(x => x.SteamId);
-            App.PlayersService.AllPlayerChanges
-                .Do(_=>Log.Debug("LobbyService AllPlayerChanges"))
-                .ToCollection()
-                .Do(list => 
-                {
-                    var keysToDelete = _friendSource.Keys.ToHashSet();
-                    keysToDelete.ExceptWith(list.Select(x => x.SteamId).ToList());
-                    _friendSource.Edit(updater =>
-                    {
-                        updater.RemoveKeys(keysToDelete);
-                        updater.AddOrUpdate(list.Select(x => Friend.Create(x)));
-                    });
-                })
-                .Subscribe()
-                .DisposeWith(Disposal);
+            //App.PlayersService.AllPlayerChanges
+            //    .Do(_=>Log.Debug("LobbyService AllPlayerChanges"))
+            //    .ToCollection()
+            //    .Do(list => 
+            //    {
+            //        var keysToDelete = _friendSource.Keys.ToHashSet();
+            //        keysToDelete.ExceptWith(list.Select(x => x.SteamId).ToList());
+            //        _friendSource.Edit(updater =>
+            //        {
+            //            updater.RemoveKeys(keysToDelete);
+            //            updater.AddOrUpdate(list.Select(x => Friend.Create(x)));
+            //        });
+            //    })
+            //    .Subscribe()
+            //    .DisposeWith(Disposal);
 
-            AllLobbyChanges
-                .ToCollection()
-                .Do(_ => Log.Debug("LobbyService AllLobbyChanges ToCollection"))
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Do(lobbies =>
-                {
-                    foreach (var friend in _friendSource.Items)
-                    {
-                        friend.Lobby = lobbies.FirstOrDefault(x => x.ContainsPlayer(friend.SteamId));
-                    }
-                })
-                .Subscribe()
-                .DisposeWith(Disposal);
+            //AllLobbyChanges
+            //    .ToCollection()
+            //    .Do(_ => Log.Debug("LobbyService AllLobbyChanges ToCollection"))
+            //    .ObserveOn(RxApp.MainThreadScheduler)
+            //    .Do(lobbies =>
+            //    {
+            //        foreach (var friend in _friendSource.Items)
+            //        {
+            //            friend.Lobby = lobbies.FirstOrDefault(x => x.ContainsPlayer(friend.SteamId));
+            //        }
+            //    })
+            //    .Subscribe()
+            //    .DisposeWith(Disposal);
 
             FriendsChanges = _friendSource.AsObservableCache();
         }
