@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using Microsoft.UI.Dispatching;
 using Windows.Storage;
 using System.IO;
+using AoE2DELobbyBrowser.Services;
+using AoE2DELobbyBrowser.Api;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -34,9 +36,16 @@ namespace AoE2DELobbyBrowser
                .CreateLogger();
 
             ToastNotificationManagerCompat.OnActivated += ToastNotificationManagerCompat_OnActivated;
+            ApiClient = new Aoe2ApiClient();
+            PlayersService = new PlayersService();
+            LobbyService = new LobbyService();
         }
 
         public static DispatcherQueue DispatcherQueue { get; private set; }
+        public static IPlayersService PlayersService { get; private set; }
+        public static LobbyService LobbyService { get; private set; }
+        public static IApiClient ApiClient { get; private set; }
+
         private Window m_window;
 
         /// <summary>

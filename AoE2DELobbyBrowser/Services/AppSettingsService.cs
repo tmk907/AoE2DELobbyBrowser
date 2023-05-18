@@ -1,4 +1,7 @@
-﻿using System.Text.Json;
+﻿using AoE2DELobbyBrowser.Models;
+using System;
+using System.Linq;
+using System.Text.Json;
 using Windows.Storage;
 
 namespace AoE2DELobbyBrowser.Services
@@ -12,7 +15,7 @@ namespace AoE2DELobbyBrowser.Services
             _localSettings = ApplicationData.Current.LocalSettings;
         }
 
-        public T Get<T>(string key, T defaultValue)
+        public T Get<T>(string key, Func<T> createDefaultValue)
         {
             if (_localSettings.Values.TryGetValue(key, out object serialized))
             {
@@ -21,6 +24,7 @@ namespace AoE2DELobbyBrowser.Services
             }
             else
             {
+                var defaultValue = createDefaultValue();
                 Save(key, defaultValue);
                 return defaultValue;
             }
@@ -30,6 +34,28 @@ namespace AoE2DELobbyBrowser.Services
         {
             var serialized = JsonSerializer.Serialize(data);
             _localSettings.Values[key] = serialized;
+        }
+
+        public LobbySettings GetLobbySettings()
+        {
+            return Get("lobby-settings", () => new LobbySettings
+            {
+                Interval = 10,
+                IsAutoRefreshEnabled = true,
+                Query = "",
+                Exclude = "",
+                PlayerQuery = "",
+                IsPlayerSearchEnabled = false,
+                SelectedGameSpeed = new GameSpeed().GetAll().First(),
+                SelectedGameType = new GameType().GetAll().First(),
+                SelectedMapType = new MapType().GetAll().First(),
+                ShowNotifications = false,
+            });
+        }
+
+        public void SaveLobbySettings(LobbySettings settings)
+        {
+            Save("lobby-settings", settings);
         }
     }
 }

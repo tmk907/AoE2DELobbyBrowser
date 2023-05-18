@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AoE2DELobbyBrowser.Api
 {
-    internal interface IApiClient
+    public interface IApiClient
     {
         IObservable<IChangeSet<Lobby, string>> Connect();
         void Dispose();

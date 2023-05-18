@@ -18,6 +18,20 @@
                     <Color x:Key="BackgroundColor">#ffeacd</Color>
                     <Color x:Key="AlternateRowColor">#fff0cd</Color>
 
+                    <Style
+                        x:Key="ListItemSmallButtonStyle"
+                        BasedOn="{StaticResource DefaultButtonStyle}"
+                        TargetType="Button">
+                        <Setter Property="Width" Value="32" />
+                        <Setter Property="Height" Value="32" />
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="Foreground" Value="{StaticResource DarkAccent}" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+                        <Setter Property="BorderThickness" Value="1" />
+                    </Style>
+
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Light">
                             <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource BackgroundColor}" />

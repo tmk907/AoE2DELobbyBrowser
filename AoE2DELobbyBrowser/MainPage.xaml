@@ -33,6 +33,14 @@
             <Setter Property="Width" Value="40" />
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
+        <XamlUICommand
+            x:Key="AddFriendCommand"
+            Command="{x:Bind ViewModel.AddFriendCommand}"
+            Description="Add friend">
+            <XamlUICommand.IconSource>
+                <SymbolIconSource Symbol="AddFriend" />
+            </XamlUICommand.IconSource>
+        </XamlUICommand>
     </Page.Resources>
     <Grid Background="{StaticResource BackgroundColor}">
         <Grid.RowDefinitions>
@@ -57,7 +65,7 @@
                 </Button>
                 <CheckBox
                     Margin="8,0,4,0"
-                    IsChecked="{x:Bind ViewModel.IsAutoRefreshEnabled, Mode=TwoWay}"
+                    IsChecked="{x:Bind ViewModel.Settings.IsAutoRefreshEnabled, Mode=TwoWay}"
                     ToolTipService.ToolTip="Auto refresh (Ctrl + T)">
                     <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Auto refresh (sec)" />
                     <CheckBox.KeyboardAccelerators>
@@ -69,16 +77,25 @@
                     Minimum="5"
                     SmallChange="5"
                     SpinButtonPlacementMode="Inline"
-                    Value="{x:Bind ViewModel.Interval, Mode=TwoWay}" />
+                    Value="{x:Bind ViewModel.Settings.Interval, Mode=TwoWay}" />
                 <CheckBox
                     Margin="8,0,4,0"
-                    IsChecked="{x:Bind ViewModel.ShowNotifications, Mode=TwoWay}"
+                    IsChecked="{x:Bind ViewModel.Settings.ShowNotifications, Mode=TwoWay}"
                     ToolTipService.ToolTip="Show notifications (Ctrl + N)">
                     <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Notifications" />
                     <CheckBox.KeyboardAccelerators>
                         <KeyboardAccelerator Key="N" Modifiers="Control" />
                     </CheckBox.KeyboardAccelerators>
                 </CheckBox>
+                <Button
+                    Background="Transparent"
+                    Click="NavigateToFriends_Click"
+                    ToolTipService.ToolTip="Settings (Ctrl + P)">
+                    <SymbolIcon Foreground="{StaticResource ForegroundTextColor}" Symbol="People" />
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="P" Modifiers="Control" />
+                    </Button.KeyboardAccelerators>
+                </Button>
                 <Button
                     Background="Transparent"
                     Click="NavigateToSettigns_Click"
@@ -100,7 +117,7 @@
                 <ComboBox
                     Width="180"
                     ItemsSource="{x:Bind ViewModel.GameTypes}"
-                    SelectedItem="{x:Bind ViewModel.SelectedGameType, Mode=TwoWay}"
+                    SelectedItem="{x:Bind ViewModel.Settings.SelectedGameType, Mode=TwoWay}"
                     ToolTipService.ToolTip="Game type (Ctrl + Q)">
                     <ComboBox.KeyboardAccelerators>
                         <KeyboardAccelerator Key="Q" Modifiers="Control" />
@@ -110,7 +127,7 @@
                 <ComboBox
                     Width="180"
                     ItemsSource="{x:Bind ViewModel.MapTypes}"
-                    SelectedItem="{x:Bind ViewModel.SelectedMapType, Mode=TwoWay}"
+                    SelectedItem="{x:Bind ViewModel.Settings.SelectedMapType, Mode=TwoWay}"
                     ToolTipService.ToolTip="Map type (Ctrl + W)">
                     <ComboBox.KeyboardAccelerators>
                         <KeyboardAccelerator Key="W" Modifiers="Control" />
@@ -120,7 +137,7 @@
                 <ComboBox
                     Width="100"
                     ItemsSource="{x:Bind ViewModel.GameSpeeds}"
-                    SelectedItem="{x:Bind ViewModel.SelectedGameSpeed, Mode=TwoWay}"
+                    SelectedItem="{x:Bind ViewModel.Settings.SelectedGameSpeed, Mode=TwoWay}"
                     ToolTipService.ToolTip="Game speed (Ctrl + E)">
                     <ComboBox.KeyboardAccelerators>
                         <KeyboardAccelerator Key="E" Modifiers="Control" />
@@ -140,7 +157,7 @@
                     IsSpellCheckEnabled="False"
                     KeyDown="FocusOnPage"
                     PlaceholderText="search"
-                    Text="{x:Bind ViewModel.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Text="{x:Bind ViewModel.Settings.Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     ToolTipService.ToolTip="Lobby name contains any word (Ctrl + F)">
                     <TextBox.KeyboardAccelerators>
                         <KeyboardAccelerator
@@ -155,36 +172,11 @@
                     IsSpellCheckEnabled="False"
                     KeyDown="FocusOnPage"
                     PlaceholderText="exclude"
-                    Text="{x:Bind ViewModel.Excluded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Text="{x:Bind ViewModel.Settings.Exclude, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     ToolTipService.ToolTip="None of the words appear in lobby name (Ctrl + G)">
                     <TextBox.KeyboardAccelerators>
                         <KeyboardAccelerator
                             Key="G"
-                            Invoked="FocusOnTextBox"
-                            Modifiers="Control" />
-                    </TextBox.KeyboardAccelerators>
-                </TextBox>
-                <TextBlock Style="{StaticResource LabelTextBlock}" Text="Players" />
-                <CheckBox
-                    Width="20"
-                    MinWidth="20"
-                    Margin="0,0,4,0"
-                    IsChecked="{x:Bind ViewModel.IsPlayerSearchEnabled, Mode=TwoWay}">
-                    <CheckBox.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="O" Modifiers="Control" />
-                    </CheckBox.KeyboardAccelerators>
-                </CheckBox>
-                <TextBox
-                    Width="180"
-                    IsEnabled="{x:Bind ViewModel.IsPlayerSearchEnabled, Mode=OneWay}"
-                    IsSpellCheckEnabled="False"
-                    KeyDown="FocusOnPage"
-                    PlaceholderText="player"
-                    Text="{x:Bind ViewModel.PlayerQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    ToolTipService.ToolTip="Only lobbies with player name or Steam id (Ctrl + P)">
-                    <TextBox.KeyboardAccelerators>
-                        <KeyboardAccelerator
-                            Key="P"
                             Invoked="FocusOnTextBox"
                             Modifiers="Control" />
                     </TextBox.KeyboardAccelerators>
@@ -272,11 +264,12 @@
             Tapped="ClosePlayersPopup"
             Visibility="Collapsed">
             <Grid
-                Width="300"
+                Width="348"
                 Padding="10"
                 VerticalAlignment="Center"
                 Background="{StaticResource SystemControlChromeLowAcrylicElementBrush}"
-                CornerRadius="10">
+                CornerRadius="10"
+                Tapped="Grid_Tapped">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -301,7 +294,7 @@
                 <ListView Grid.Row="1" ItemsSource="{Binding ElementName=PlayersPopup, Path=DataContext.Players}">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
-                            <Setter Property="Padding" Value="8" />
+                            <Setter Property="Padding" Value="8,0,8,0" />
                         </Style>
                     </ListView.ItemContainerStyle>
                     <ListView.ItemTemplate>
@@ -309,14 +302,25 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="60" />
-                                    <ColumnDefinition Width="240" />
+                                    <ColumnDefinition Width="220" />
+                                    <ColumnDefinition Width="32" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{x:Bind Country}" />
-                                <TextBlock Grid.Column="1">
-                                    <Hyperlink NavigateUri="{x:Bind StreamProfileUrl}">
+                                <TextBlock
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    Text="{x:Bind Country}" />
+                                <TextBlock Grid.Column="1" VerticalAlignment="Center">
+                                    <Hyperlink NavigateUri="{x:Bind SteamProfileUrl}">
                                         <Run Text="{x:Bind Name}" />
                                     </Hyperlink>
                                 </TextBlock>
+                                <Button
+                                    Grid.Column="2"
+                                    Command="{StaticResource AddFriendCommand}"
+                                    CommandParameter="{x:Bind}"
+                                    Style="{StaticResource ListItemSmallButtonStyle}">
+                                    <SymbolIcon Symbol="AddFriend" />
+                                </Button>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
