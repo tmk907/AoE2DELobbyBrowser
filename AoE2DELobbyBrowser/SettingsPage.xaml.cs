@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using System;
 using AoE2DELobbyBrowser.Services;
 using Windows.System;
+using System.IO;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -63,6 +64,11 @@ namespace AoE2DELobbyBrowser
 
         private async void OpenLogsFolderClicked(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                Directory.CreateDirectory(App.LogsFolderPath);
+            }
+            catch (Exception) { }
             await Launcher.LaunchFolderPathAsync(App.LogsFolderPath);
         }
     }

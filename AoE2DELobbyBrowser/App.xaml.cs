@@ -19,7 +19,7 @@ namespace AoE2DELobbyBrowser
     /// </summary>
     public partial class App : Application
     {
-        public static string LogsFolderPath = ApplicationData.Current.LocalFolder.Path;
+        public static string LogsFolderPath => Path.Combine(ApplicationData.Current.LocalFolder.Path, "logs");
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -30,8 +30,12 @@ namespace AoE2DELobbyBrowser
             this.InitializeComponent();
 
             Log.Logger = new LoggerConfiguration()
-               .MinimumLevel.Debug()
-               .WriteTo.Debug()
+#if DEBUG
+                .MinimumLevel.Debug()
+                .WriteTo.Debug()
+#else
+               .MinimumLevel.Information()
+#endif
                .WriteTo.File(Path.Combine(LogsFolderPath, "logs.txt"), rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
