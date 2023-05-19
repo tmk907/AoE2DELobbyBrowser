@@ -8,6 +8,8 @@ namespace AoE2DELobbyBrowser.Models
         public string Name { get; private set; }
         public string SteamProfileUrl { get; private set; }
         public string Country { get; private set; }
+        public string CountryName { get; private set; }
+
         public static Player Create(PlayerDto dto)
         {
             return new Player
@@ -16,6 +18,7 @@ namespace AoE2DELobbyBrowser.Models
                 SteamProfileId = dto.SteamProfileId,
                 SteamProfileUrl = $"https://steamcommunity.com/profiles/{dto.SteamProfileId}",
                 Country = dto.Country,
+                CountryName = App.CountryService.GetCountryName(dto.Country)
             };
         }
     }

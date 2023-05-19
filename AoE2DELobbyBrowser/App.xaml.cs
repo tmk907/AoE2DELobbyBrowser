@@ -43,12 +43,14 @@ namespace AoE2DELobbyBrowser
             ApiClient = new Aoe2ApiClient();
             //PlayersService = new PlayersService();
             LobbyService = new LobbyService();
+            CountryService = new CountryService();
         }
 
         public static DispatcherQueue DispatcherQueue { get; private set; }
         //public static IPlayersService PlayersService { get; private set; }
         public static LobbyService LobbyService { get; private set; }
         public static IApiClient ApiClient { get; private set; }
+        public static CountryService CountryService { get; private set; }
 
         private Window m_window;
 

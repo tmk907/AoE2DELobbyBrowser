@@ -333,7 +333,8 @@
                                 <TextBlock
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
-                                    Text="{x:Bind Country}" />
+                                    Text="{x:Bind Country}"
+                                    ToolTipService.ToolTip="{x:Bind CountryName}" />
                                 <TextBlock Grid.Column="1" VerticalAlignment="Center">
                                     <Hyperlink NavigateUri="{x:Bind SteamProfileUrl}">
                                         <Run Text="{x:Bind Name}" />
