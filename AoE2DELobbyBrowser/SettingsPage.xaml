@@ -111,6 +111,14 @@
                             IsTextSelectionEnabled="True"
                             Text="{x:Bind Version}" />
                         <labs:SettingsExpander.Items>
+                            <labs:SettingsCard
+                                Click="RateAppClicked"
+                                Header="Rate and review in Microsoft Store"
+                                IsClickEnabled="True">
+                                <labs:SettingsCard.ActionIcon>
+                                    <FontIcon Glyph="&#xE8A7;" />
+                                </labs:SettingsCard.ActionIcon>
+                            </labs:SettingsCard>
                             <labs:SettingsCard Header="Github">
                                 <HyperlinkButton Content="https://github.com/tmk907/AoE2DELobbyBrowser" NavigateUri="https://github.com/tmk907/AoE2DELobbyBrowser" />
                             </labs:SettingsCard>
@@ -128,10 +136,11 @@
                                     <HyperlinkButton Content="Serilog" NavigateUri="https://github.com/serilog" />
                                 </StackPanel>
                             </labs:SettingsCard>
-                            <labs:SettingsCard Click="OpenLogsFolderClicked"
-                                               Description="Open folder with log files"
-                                               Header="Logs"
-                                               IsClickEnabled="True">
+                            <labs:SettingsCard
+                                Click="OpenLogsFolderClicked"
+                                Description="Open folder with log files"
+                                Header="Logs"
+                                IsClickEnabled="True">
                                 <labs:SettingsCard.ActionIcon>
                                     <FontIcon Glyph="&#xE8A7;" />
                                 </labs:SettingsCard.ActionIcon>

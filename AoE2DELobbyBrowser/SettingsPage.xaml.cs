@@ -71,5 +71,11 @@ namespace AoE2DELobbyBrowser
             catch (Exception) { }
             await Launcher.LaunchFolderPathAsync(App.LogsFolderPath);
         }
+
+        private async void RateAppClicked(object sender, RoutedEventArgs e)
+        {
+            var productId = "9NTQFS6RCXL8";
+            bool result = await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://review/?ProductId={productId}"));
+        }
     }
 }
