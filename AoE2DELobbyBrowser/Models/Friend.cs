@@ -5,10 +5,14 @@ namespace AoE2DELobbyBrowser.Models
 {
     public class Friend : AbstractNotifyPropertyChanged
     {
-        public string SteamId { get; set; }
-        public string Name { get; private set; }
-        public string StreamProfileUrl => $"https://steamcommunity.com/profiles/{SteamId}";
-        public string Country { get; private set; }
+        public Player Player { get; set; }
+
+        private string _lobbyName;
+        public string LobbyName
+        {
+            get => _lobbyName;
+            set => SetAndRaise(ref _lobbyName, value);
+        }
 
         private Lobby _lobby;
         public Lobby Lobby
@@ -17,14 +21,14 @@ namespace AoE2DELobbyBrowser.Models
             set => SetAndRaise(ref _lobby, value);
         }
 
+        public Friend(string name, string profileId, string country)
+        {
+            Player = new Player(name, profileId, country);
+        }
+
         public static Friend Create(SteamPlayerDto dto)
         {
-            return new Friend
-            {
-                Country = dto.LocCountryCode,
-                Name = dto.PersonaName,
-                SteamId = dto.SteamId,
-            };
+            return new Friend(dto.PersonaName, dto.SteamId, dto.LocCountryCode);
         }
     }
 }

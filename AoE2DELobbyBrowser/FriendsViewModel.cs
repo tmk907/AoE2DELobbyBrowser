@@ -1,13 +1,11 @@
 ﻿using AoE2DELobbyBrowser.Models;
 using AoE2DELobbyBrowser.Services;
+using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
-using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -20,47 +18,25 @@ namespace AoE2DELobbyBrowser
     {
         private readonly IPlayersService _playersService;
 
-        //private readonly SourceCache<Friend, string> _friendSource;
-
         public FriendsViewModel() 
         {
-            //_playersService = App.PlayersService;
-
-            //_friendSource = new SourceCache<Friend, string>(x => x.SteamId);
+            _playersService = App.PlayersService;
 
             var canExecuteAdd = this.WhenAnyValue(x => x.SteamId,
                 (id) => _playersService.IsValidId(id));
 
             this.AddFriendCommand = ReactiveCommand.CreateFromTask(AddFriendAsync, canExecuteAdd);
             this.RefreshCommand = ReactiveCommand.CreateFromTask(ct => RefreshAsync(ct));
-            this.DeleteFriendCommand = ReactiveCommand.CreateFromTask<Friend>(x => DeleteAsync(x));
+            this.DeleteFriendCommand = new AsyncRelayCommand<Friend>(x=>DeleteAsync(x));
 
             var allFriends = App.LobbyService.FriendsChanges
                 .Connect()
-                .Sort(SortExpressionComparer<Friend>.Ascending(x => x.Name))
+                .Sort(SortExpressionComparer<Friend>.Ascending(x => x.Player.Name))
+                .TreatMovesAsRemoveAdd()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out _friends)
                 .Subscribe()
                 .DisposeWith(Disposal);
-
-            //App.LobbyService.AllLobbyChanges
-            //    .ToCollection()
-            //    .ObserveOn(RxApp.MainThreadScheduler)
-            //    .Do(lobbies =>
-            //    {
-            //        foreach (var friend in _friendSource.Items)
-            //        {
-            //            friend.Lobby = lobbies.FirstOrDefault(x => x.ContainsPlayer(friend.SteamId));
-            //        }
-            //    })
-            //    .Subscribe()
-            //    .DisposeWith(Disposal);
-
-            //Observable
-            //    .FromAsync(ct => RefreshAsync(ct))
-            //    .Do(x => Log.Debug("test"))
-            //    .Subscribe()
-            //    .DisposeWith(Disposal);
         }
 
         protected CompositeDisposable Disposal = new CompositeDisposable();
@@ -71,7 +47,7 @@ namespace AoE2DELobbyBrowser
 
         public ReactiveCommand<Unit, Unit> AddFriendCommand { get; }
         public ReactiveCommand<Unit, Unit> RefreshCommand { get; }
-        public ReactiveCommand<Friend, Unit> DeleteFriendCommand { get; }
+        public IAsyncRelayCommand<Friend>  DeleteFriendCommand { get; }
 
         private string _steamId;
         public string SteamId
@@ -87,20 +63,17 @@ namespace AoE2DELobbyBrowser
         {
             await _playersService.AddFriendAsync(SteamId);
             SteamId = "";
-            //var list = await _playersService.GetFriendsListAsync();
-            //_friendSource.AddOrUpdate(list.Select(x => Friend.Create(x)));
         }
 
         private async Task DeleteAsync(Friend friend)
         {
-            //_friendSource.Remove(friend);
-            await _playersService.RemoveFriendAsync(friend.SteamId);
+            await _playersService.RemoveFriendAsync(friend.Player.SteamProfileId);
         }
 
         private async Task RefreshAsync(CancellationToken ct)
         {
-            var list = await _playersService.GetFriendsListAsync();
-            //_friendSource.AddOrUpdate(list.Select(x => Friend.Create(x)));
+            //await _playersService.UpdatePlayersFromSteamAsync();
+            await App.LobbyService.RefreshAsync(ct);
         }
     }
 }

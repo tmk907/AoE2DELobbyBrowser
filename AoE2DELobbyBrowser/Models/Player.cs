@@ -10,16 +10,24 @@ namespace AoE2DELobbyBrowser.Models
         public string Country { get; private set; }
         public string CountryName { get; private set; }
 
+        public Player(string name, string profileId, string countryCode)
+        {
+            Name = name;
+            SteamProfileId = profileId;
+            SteamProfileUrl = $"https://steamcommunity.com/profiles/{SteamProfileId}";
+            Country = countryCode;
+            CountryName = App.CountryService.GetCountryName(Country);
+        }
+
+        public void UpdateCountry(string country)
+        {
+            Country = country;
+            CountryName = App.CountryService.GetCountryName(Country);
+        }
+
         public static Player Create(PlayerDto dto)
         {
-            return new Player
-            {
-                Name = dto.Name,
-                SteamProfileId = dto.SteamProfileId,
-                SteamProfileUrl = $"https://steamcommunity.com/profiles/{dto.SteamProfileId}",
-                Country = dto.Country,
-                CountryName = App.CountryService.GetCountryName(dto.Country)
-            };
+            return new Player(dto.Name, dto.SteamProfileId, dto.Country);
         }
     }
 }

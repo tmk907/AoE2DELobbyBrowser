@@ -33,14 +33,14 @@
             <Setter Property="Width" Value="40" />
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
-        <!--<XamlUICommand
+        <XamlUICommand
             x:Key="AddFriendCommand"
             Command="{x:Bind ViewModel.AddFriendCommand}"
             Description="Add friend">
             <XamlUICommand.IconSource>
                 <SymbolIconSource Symbol="AddFriend" />
             </XamlUICommand.IconSource>
-        </XamlUICommand>-->
+        </XamlUICommand>
     </Page.Resources>
     <Grid Background="{StaticResource BackgroundColor}">
         <Grid.RowDefinitions>
@@ -87,7 +87,7 @@
                         <KeyboardAccelerator Key="N" Modifiers="Control" />
                     </CheckBox.KeyboardAccelerators>
                 </CheckBox>
-                <!--<Button
+                <Button
                     Background="Transparent"
                     Click="NavigateToFriends_Click"
                     ToolTipService.ToolTip="Settings (Ctrl + P)">
@@ -95,7 +95,7 @@
                     <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Key="P" Modifiers="Control" />
                     </Button.KeyboardAccelerators>
-                </Button>-->
+                </Button>
                 <Button
                     Background="Transparent"
                     Click="NavigateToSettigns_Click"
@@ -181,7 +181,7 @@
                             Modifiers="Control" />
                     </TextBox.KeyboardAccelerators>
                 </TextBox>
-                <TextBlock Style="{StaticResource LabelTextBlock}" Text="Players" />
+                <!--<TextBlock Style="{StaticResource LabelTextBlock}" Text="Players" />
                 <CheckBox
                     Width="20"
                     MinWidth="20"
@@ -205,7 +205,7 @@
                             Invoked="FocusOnTextBox"
                             Modifiers="Control" />
                     </TextBox.KeyboardAccelerators>
-                </TextBox>
+                </TextBox>-->
             </StackPanel>
         </StackPanel>
         <ProgressRing
@@ -241,7 +241,8 @@
                             Style="{StaticResource ListItemTextBlock}"
                             Tapped="ShowPlayersPopup">
                             <Run Text="{x:Bind NumPlayers, Mode=OneWay}" />
-                            /<Run Text="{x:Bind NumSlots, Mode=OneWay}" />
+                            <Run Text="/" />
+                            <Run Text="{x:Bind NumSlots, Mode=OneWay}" />
                         </TextBlock>
                         <TextBlock
                             Grid.Column="3"
@@ -340,13 +341,13 @@
                                         <Run Text="{x:Bind Name}" />
                                     </Hyperlink>
                                 </TextBlock>
-                                <!--<Button
+                                <Button
                                     Grid.Column="2"
                                     Command="{StaticResource AddFriendCommand}"
                                     CommandParameter="{x:Bind}"
                                     Style="{StaticResource ListItemSmallButtonStyle}">
                                     <SymbolIcon Symbol="AddFriend" />
-                                </Button>-->
+                                </Button>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

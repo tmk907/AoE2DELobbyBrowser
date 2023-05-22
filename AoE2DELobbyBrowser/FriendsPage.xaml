@@ -5,14 +5,19 @@
     xmlns:local="using:AoE2DELobbyBrowser"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:AoE2DELobbyBrowser.Converters"
     xmlns:models="using:AoE2DELobbyBrowser.Models"
     Name="Root"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
     <Page.Resources>
+        <converters:ObjectToVisibilityConverter x:Key="ObjectToVisibility" />
+        <Style x:Key="ListItemTextBlock" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
         <StandardUICommand
             x:Key="RemoveFriendCommand"
-            Command="{x:Bind ViewModel.DeleteFriendCommand}"
+            Command="{x:Bind ViewModel.DeleteFriendCommand, Mode=OneWay}"
             Description="Remove friend"
             Kind="Delete" />
     </Page.Resources>
@@ -79,18 +84,55 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="48" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{x:Bind Country}" />
-                        <TextBlock Grid.Column="1">
-                            <Hyperlink NavigateUri="{x:Bind StreamProfileUrl}">
-                                <Run Text="{x:Bind Name}" />
+                        <TextBlock
+                            Grid.Column="0"
+                            Style="{StaticResource ListItemTextBlock}"
+                            Text="{x:Bind Player.Country}"
+                            ToolTipService.ToolTip="{x:Bind Player.CountryName}" />
+                        <TextBlock Grid.Column="1" Style="{StaticResource ListItemTextBlock}">
+                            <Hyperlink NavigateUri="{x:Bind Player.SteamProfileUrl}">
+                                <Run Text="{x:Bind Player.Name}" />
                             </Hyperlink>
                         </TextBlock>
-                        <Grid Grid.Column="2" Visibility="Visible">
-                            <TextBlock Text="{x:Bind Lobby.Name, Mode=OneWay}" />
+                        <Grid Grid.Column="2" Visibility="{x:Bind Lobby, Mode=OneWay, Converter={StaticResource ObjectToVisibility}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="70" />
+                                <ColumnDefinition Width="140" />
+                                <ColumnDefinition Width="140" />
+                                <ColumnDefinition Width="80" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Style="{StaticResource ListItemTextBlock}"
+                                Text="{x:Bind Lobby.Name, Mode=OneWay}"
+                                TextTrimming="CharacterEllipsis" />
+                            <TextBlock Grid.Column="1" Style="{StaticResource ListItemTextBlock}">
+                                <Run Text="{x:Bind Lobby.NumPlayers, Mode=OneWay}" />
+                                <Run Text="/" />
+                                <Run Text="{x:Bind Lobby.NumSlots, Mode=OneWay}" />
+                            </TextBlock>
+                            <TextBlock
+                                Grid.Column="2"
+                                Style="{StaticResource ListItemTextBlock}"
+                                Text="{x:Bind Lobby.GameType, Mode=OneWay}" />
+                            <TextBlock
+                                Grid.Column="3"
+                                Style="{StaticResource ListItemTextBlock}"
+                                Text="{x:Bind Lobby.Map, Mode=OneWay}" />
+                            <Button
+                                Grid.Column="6"
+                                Width="80"
+                                Background="{StaticResource Accent}"
+                                BorderBrush="{StaticResource BorderColor}"
+                                BorderThickness="1"
+                                Command="{x:Bind Lobby.JoinGameCommand, Mode=OneWay}"
+                                Content="Join"
+                                Foreground="{StaticResource ForegroundTextColor}" />
                         </Grid>
                         <Button
                             Grid.Column="3"
-                            Background="Red"
+                            HorizontalAlignment="Center"
                             Command="{StaticResource RemoveFriendCommand}"
                             CommandParameter="{x:Bind}"
                             Style="{StaticResource ListItemSmallButtonStyle}">

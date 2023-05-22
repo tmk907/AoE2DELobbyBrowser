@@ -14,7 +14,7 @@ namespace AoE2DELobbyBrowser.Services
                 _countryCodes = LoadData();
             }
 
-            if (_countryCodes.TryGetValue(code, out var countryName)) 
+            if (code != null && _countryCodes.TryGetValue(code, out var countryName)) 
             {
                 return countryName;
             }

@@ -42,8 +42,8 @@ namespace AoE2DELobbyBrowser
             this.RefreshCommand = ReactiveCommand.CreateFromTask(
                 ct => _lobbyService.RefreshAsync(ct),
                 _lobbyService.IsLoading.Select(x => !x));
-            //this.AddFriendCommand = ReactiveCommand.CreateFromTask<Player>(
-            //    x => App.PlayersService.AddFriendAsync(x.SteamProfileId));
+            this.AddFriendCommand = ReactiveCommand.CreateFromTask<Player>(
+                x => App.PlayersService.AddFriendAsync(x.SteamProfileId));
 
             _lobbyService.IsLoading
                 .DistinctUntilChanged()

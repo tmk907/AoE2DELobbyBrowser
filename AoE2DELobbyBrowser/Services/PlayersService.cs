@@ -4,11 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using AoE2DELobbyBrowser.Api;
-using AoE2DELobbyBrowser.Models;
 using CommunityToolkit.WinUI.Helpers;
 using DynamicData;
 using Serilog;
@@ -18,7 +16,8 @@ namespace AoE2DELobbyBrowser.Services
 {
     public interface IPlayersService
     {
-        IObservable<IChangeSet<SteamPlayerDto, string>> AllPlayerChanges { get; }
+        IObservableCache<SteamPlayerDto, string> AllPlayers { get; }
+
         Task AddFriendAsync(string id);
         Task<List<SteamPlayerDto>> GetFriendsListAsync();
         bool IsValidId(string id);
@@ -40,10 +39,7 @@ namespace AoE2DELobbyBrowser.Services
             _storageHelper = ApplicationDataStorageHelper.GetCurrent(new AppDataJsonSerializer());
             _itemsSource = new SourceCache<SteamPlayerDto, string>(x => x.SteamId);
 
-            AllPlayerChanges = _itemsSource
-                .Connect()
-                .Do(_ => Log.Debug($"onNext {nameof(AllPlayerChanges)} "))
-                .Publish().RefCount();
+            AllPlayers = _itemsSource.AsObservableCache();
 
             Observable
                 .FromAsync(GetFriendsListAsync)
@@ -52,7 +48,7 @@ namespace AoE2DELobbyBrowser.Services
                 .Subscribe();
         }
 
-        public IObservable<IChangeSet<SteamPlayerDto, string>> AllPlayerChanges { get; private set; }
+        public IObservableCache<SteamPlayerDto,string> AllPlayers { get; }
 
         public bool IsValidId(string id)
         {
@@ -64,11 +60,11 @@ namespace AoE2DELobbyBrowser.Services
 
         public async Task ReloadAsync()
         {
-            Log.Debug("ReloadAsync");
+            Log.Debug("PlayersService ReloadAsync");
             var friends = await GetFriendsListAsync();
             _itemsSource.Clear();
             _itemsSource.AddOrUpdate(friends);
-            Log.Debug($"ReloadAsync {friends.Count}");
+            Log.Debug($"PlayersService ReloadAsync {friends.Count}");
         }
 
         public async Task AddFriendAsync(string id)
