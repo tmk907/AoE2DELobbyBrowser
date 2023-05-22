@@ -44,8 +44,6 @@ namespace AoE2DELobbyBrowser.Services
                 IsAutoRefreshEnabled = true,
                 Query = "",
                 Exclude = "",
-                PlayerQuery = "",
-                IsPlayerSearchEnabled = false,
                 SelectedGameSpeed = new GameSpeed().GetAll().First(),
                 SelectedGameType = new GameType().GetAll().First(),
                 SelectedMapType = new MapType().GetAll().First(),

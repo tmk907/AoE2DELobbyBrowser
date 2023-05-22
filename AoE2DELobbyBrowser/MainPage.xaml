@@ -181,31 +181,6 @@
                             Modifiers="Control" />
                     </TextBox.KeyboardAccelerators>
                 </TextBox>
-                <!--<TextBlock Style="{StaticResource LabelTextBlock}" Text="Players" />
-                <CheckBox
-                    Width="20"
-                    MinWidth="20"
-                    Margin="0,0,4,0"
-                    IsChecked="{x:Bind ViewModel.Settings.IsPlayerSearchEnabled, Mode=TwoWay}">
-                    <CheckBox.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="O" Modifiers="Control" />
-                    </CheckBox.KeyboardAccelerators>
-                </CheckBox>
-                <TextBox
-                    Width="180"
-                    IsEnabled="{x:Bind ViewModel.Settings.IsPlayerSearchEnabled, Mode=OneWay}"
-                    IsSpellCheckEnabled="False"
-                    KeyDown="FocusOnPage"
-                    PlaceholderText="player"
-                    Text="{x:Bind ViewModel.Settings.PlayerQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    ToolTipService.ToolTip="Only lobbies with player name or Steam id (Ctrl + P)">
-                    <TextBox.KeyboardAccelerators>
-                        <KeyboardAccelerator
-                            Key="P"
-                            Invoked="FocusOnTextBox"
-                            Modifiers="Control" />
-                    </TextBox.KeyboardAccelerators>
-                </TextBox>-->
             </StackPanel>
         </StackPanel>
         <ProgressRing

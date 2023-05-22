@@ -64,14 +64,7 @@ namespace AoE2DELobbyBrowser.Services
                         .Any(x => lobby.Name.ToLowerInvariant().Contains(x.ToLowerInvariant()));
                 }
 
-                var hasPlayer = true;
-                if (_settings.IsPlayerSearchEnabled && !string.IsNullOrEmpty(_settings.PlayerQuery))
-                {
-                    var players = _settings.PlayerQuery.Split(AppSettings.Separator, StringSplitOptions.RemoveEmptyEntries);
-                    hasPlayer = players.Any(x => lobby.ContainsPlayer(x));
-                }
-
-                return isMatched && !isExcluded && hasPlayer;
+                return isMatched && !isExcluded;
             };
 
             Func<Lobby, bool> gameFilter = lobby =>
@@ -83,7 +76,7 @@ namespace AoE2DELobbyBrowser.Services
             };
 
             var lobbyObservableFilter = this
-                .WhenAnyValue(x => x._settings.Query, x => x._settings.Exclude, x => x._settings.PlayerQuery, x => x._settings.IsPlayerSearchEnabled)
+                .WhenAnyValue(x => x._settings.Query, x => x._settings.Exclude)
                 .Do(x => Log.Debug($"Filter lobby {x}"))
                 .DistinctUntilChanged()
                 .Select(_ => lobbyFilter);
