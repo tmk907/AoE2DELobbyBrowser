@@ -25,7 +25,9 @@ namespace AoE2DELobbyBrowser
             var canExecuteAdd = this.WhenAnyValue(x => x.SteamId,
                 (id) => _playersService.IsValidId(id));
 
-            this.AddFriendCommand = ReactiveCommand.CreateFromTask(AddFriendAsync, canExecuteAdd);
+            this.AddFriendFromIdCommand = ReactiveCommand.CreateFromTask(AddFriendAsync, canExecuteAdd);
+            this.AddFriendCommand = ReactiveCommand.CreateFromTask<Player>(
+                x => App.PlayersService.AddFriendAsync(x.SteamProfileId));
             this.RefreshCommand = ReactiveCommand.CreateFromTask(ct => RefreshAsync(ct));
             this.DeleteFriendCommand = new AsyncRelayCommand<Friend>(x=>DeleteAsync(x));
 
@@ -45,7 +47,9 @@ namespace AoE2DELobbyBrowser
             Disposal.Dispose();
         }
 
-        public ReactiveCommand<Unit, Unit> AddFriendCommand { get; }
+        public ReactiveCommand<Unit, Unit> AddFriendFromIdCommand { get; }
+        public ReactiveCommand<Player, Unit> AddFriendCommand { get; }
+
         public ReactiveCommand<Unit, Unit> RefreshCommand { get; }
         public IAsyncRelayCommand<Friend>  DeleteFriendCommand { get; }
 

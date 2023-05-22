@@ -8,6 +8,7 @@
     xmlns:converters="using:AoE2DELobbyBrowser.Converters"
     xmlns:models="using:AoE2DELobbyBrowser.Models"
     xmlns:toolkitConverters="using:CommunityToolkit.WinUI.UI.Converters"
+    x:Name="rootPage"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -33,14 +34,6 @@
             <Setter Property="Width" Value="40" />
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
-        <XamlUICommand
-            x:Key="AddFriendCommand"
-            Command="{x:Bind ViewModel.AddFriendCommand}"
-            Description="Add friend">
-            <XamlUICommand.IconSource>
-                <SymbolIconSource Symbol="AddFriend" />
-            </XamlUICommand.IconSource>
-        </XamlUICommand>
     </Page.Resources>
     <Grid Background="{StaticResource BackgroundColor}">
         <Grid.RowDefinitions>
@@ -273,70 +266,7 @@
             Background="Transparent"
             Tapped="ClosePlayersPopup"
             Visibility="Collapsed">
-            <Grid
-                Width="348"
-                Padding="10"
-                VerticalAlignment="Center"
-                Background="{StaticResource SystemControlChromeLowAcrylicElementBrush}"
-                CornerRadius="10"
-                Tapped="Grid_Tapped">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid
-                    Grid.Row="0"
-                    Margin="0,4,0,0"
-                    Padding="8,0,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="60" />
-                        <ColumnDefinition Width="240" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock
-                        Grid.Column="0"
-                        FontWeight="SemiBold"
-                        Text="Country" />
-                    <TextBlock
-                        Grid.Column="1"
-                        FontWeight="SemiBold"
-                        Text="Name" />
-                </Grid>
-                <ListView Grid.Row="1" ItemsSource="{Binding ElementName=PlayersPopup, Path=DataContext.Players}">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Padding" Value="8,0,8,0" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="models:Player">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60" />
-                                    <ColumnDefinition Width="220" />
-                                    <ColumnDefinition Width="32" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Grid.Column="0"
-                                    VerticalAlignment="Center"
-                                    Text="{x:Bind Country}"
-                                    ToolTipService.ToolTip="{x:Bind CountryName}" />
-                                <TextBlock Grid.Column="1" VerticalAlignment="Center">
-                                    <Hyperlink NavigateUri="{x:Bind SteamProfileUrl}">
-                                        <Run Text="{x:Bind Name}" />
-                                    </Hyperlink>
-                                </TextBlock>
-                                <Button
-                                    Grid.Column="2"
-                                    Command="{StaticResource AddFriendCommand}"
-                                    CommandParameter="{x:Bind}"
-                                    Style="{StaticResource ListItemSmallButtonStyle}">
-                                    <SymbolIcon Symbol="AddFriend" />
-                                </Button>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Grid>
+            <local:PlayersPopupControl AddFriendCommand="{Binding ElementName=rootPage, Path=ViewModel.AddFriendCommand}" DataContext="{Binding ElementName=PlayersPopup, Path=DataContext.Players}" />
         </Grid>
     </Grid>
 </Page>

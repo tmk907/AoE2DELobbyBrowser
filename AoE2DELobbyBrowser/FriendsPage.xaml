@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:AoE2DELobbyBrowser.Converters"
     xmlns:models="using:AoE2DELobbyBrowser.Models"
-    Name="Root"
+    x:Name="rootPage"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -54,7 +54,7 @@
             </TextBox>
             <Button
                 Width="80"
-                Command="{x:Bind ViewModel.AddFriendCommand}"
+                Command="{x:Bind ViewModel.AddFriendFromIdCommand}"
                 Content="Add"
                 ToolTipService.ToolTip="Add (Ctrl + A)">
                 <Button.KeyboardAccelerators>
@@ -107,7 +107,10 @@
                                 Style="{StaticResource ListItemTextBlock}"
                                 Text="{x:Bind Lobby.Name, Mode=OneWay}"
                                 TextTrimming="CharacterEllipsis" />
-                            <TextBlock Grid.Column="1" Style="{StaticResource ListItemTextBlock}">
+                            <TextBlock
+                                Grid.Column="1"
+                                Style="{StaticResource ListItemTextBlock}"
+                                Tapped="ShowPlayersPopup">
                                 <Run Text="{x:Bind Lobby.NumPlayers, Mode=OneWay}" />
                                 <Run Text="/" />
                                 <Run Text="{x:Bind Lobby.NumSlots, Mode=OneWay}" />
@@ -143,5 +146,13 @@
             </ListView.ItemTemplate>
 
         </ListView>
+        <Grid
+            x:Name="PlayersPopup"
+            Grid.Row="1"
+            Background="Transparent"
+            Tapped="ClosePlayersPopup"
+            Visibility="Collapsed">
+            <local:PlayersPopupControl AddFriendCommand="{Binding ElementName=rootPage, Path=ViewModel.AddFriendCommand}" DataContext="{Binding ElementName=PlayersPopup, Path=DataContext.Players}" />
+        </Grid>
     </Grid>
 </Page>
