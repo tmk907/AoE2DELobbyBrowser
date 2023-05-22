@@ -56,10 +56,11 @@ app.MapGet("/api/v3/players", async ([FromQuery] string ids, IConfiguration conf
         var players = results.Response.Players.Select(x => new SteamPlayerDto
         {
             Avatar = x.Avatar,
-            Loccountrycode = x.Loccountrycode,
-            Personaname = x.Personaname,
-            Profileurl = x.Profileurl,
-            Steamid = x.Steamid
+            CountryCode = x.Loccountrycode,
+            Name = x.Personaname,
+            ProfileUrl = x.Profileurl,
+            Steamid = x.Steamid,
+            Status = x.Personastate
         });
         return Results.Json(players);
     }

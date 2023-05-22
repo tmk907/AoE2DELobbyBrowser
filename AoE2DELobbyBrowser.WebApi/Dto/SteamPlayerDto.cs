@@ -8,15 +8,17 @@ namespace AoE2DELobbyBrowser.WebApi.Dto
         public string Steamid { get; set; }
 
         [JsonPropertyName("personaname")]
-        public string Personaname { get; set; }
+        public string Name { get; set; }
 
         [JsonPropertyName("profileurl")]
-        public string Profileurl { get; set; }
+        public string ProfileUrl { get; set; }
 
         [JsonPropertyName("avatar")]
         public string Avatar { get; set; }
 
         [JsonPropertyName("loccountrycode")]
-        public string Loccountrycode { get; set; }
+        public string CountryCode { get; set; }
+        [JsonPropertyName("personastate")]
+        public int Status { get; set; }
     }
 }
