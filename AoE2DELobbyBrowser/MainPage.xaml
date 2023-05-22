@@ -47,56 +47,67 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Vertical">
-            <StackPanel
-                Padding="2"
-                Background="{StaticResource DarkAccent}"
-                IsTabStop="True"
-                Orientation="Horizontal"
-                Spacing="2">
+        <StackPanel
+            Grid.Row="0"
+            Background="{StaticResource DarkAccent}"
+            Orientation="Vertical">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel
+                    Grid.Column="0"
+                    Padding="2"
+                    Background="{StaticResource DarkAccent}"
+                    IsTabStop="True"
+                    Orientation="Horizontal"
+                    Spacing="2">
+                    <Button
+                        Width="80"
+                        Command="{x:Bind ViewModel.RefreshCommand}"
+                        Content="Refresh"
+                        ToolTipService.ToolTip="Refresh (Ctrl + R)">
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="R" Modifiers="Control" />
+                        </Button.KeyboardAccelerators>
+                    </Button>
+                    <CheckBox
+                        Margin="8,0,4,0"
+                        IsChecked="{x:Bind ViewModel.Settings.IsAutoRefreshEnabled, Mode=TwoWay}"
+                        ToolTipService.ToolTip="Auto refresh (Ctrl + T)">
+                        <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Auto refresh (sec)" />
+                        <CheckBox.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="T" Modifiers="Control" />
+                        </CheckBox.KeyboardAccelerators>
+                    </CheckBox>
+                    <NumberBox
+                        Maximum="120"
+                        Minimum="5"
+                        SmallChange="5"
+                        SpinButtonPlacementMode="Inline"
+                        Value="{x:Bind ViewModel.Settings.Interval, Mode=TwoWay}" />
+                    <CheckBox
+                        Margin="8,0,4,0"
+                        IsChecked="{x:Bind ViewModel.Settings.ShowNotifications, Mode=TwoWay}"
+                        ToolTipService.ToolTip="Show notifications (Ctrl + N)">
+                        <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Notifications" />
+                        <CheckBox.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="N" Modifiers="Control" />
+                        </CheckBox.KeyboardAccelerators>
+                    </CheckBox>
+                    <Button
+                        Background="Transparent"
+                        Click="NavigateToFriends_Click"
+                        ToolTipService.ToolTip="Friends (Ctrl + P)">
+                        <SymbolIcon Foreground="{StaticResource ForegroundTextColor}" Symbol="People" />
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="P" Modifiers="Control" />
+                        </Button.KeyboardAccelerators>
+                    </Button>
+                </StackPanel>
                 <Button
-                    Width="80"
-                    Command="{x:Bind ViewModel.RefreshCommand}"
-                    Content="Refresh"
-                    ToolTipService.ToolTip="Refresh (Ctrl + R)">
-                    <Button.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="R" Modifiers="Control" />
-                    </Button.KeyboardAccelerators>
-                </Button>
-                <CheckBox
-                    Margin="8,0,4,0"
-                    IsChecked="{x:Bind ViewModel.Settings.IsAutoRefreshEnabled, Mode=TwoWay}"
-                    ToolTipService.ToolTip="Auto refresh (Ctrl + T)">
-                    <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Auto refresh (sec)" />
-                    <CheckBox.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="T" Modifiers="Control" />
-                    </CheckBox.KeyboardAccelerators>
-                </CheckBox>
-                <NumberBox
-                    Maximum="120"
-                    Minimum="5"
-                    SmallChange="5"
-                    SpinButtonPlacementMode="Inline"
-                    Value="{x:Bind ViewModel.Settings.Interval, Mode=TwoWay}" />
-                <CheckBox
-                    Margin="8,0,4,0"
-                    IsChecked="{x:Bind ViewModel.Settings.ShowNotifications, Mode=TwoWay}"
-                    ToolTipService.ToolTip="Show notifications (Ctrl + N)">
-                    <TextBlock Foreground="{StaticResource ForegroundTextColor}" Text="Notifications" />
-                    <CheckBox.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="N" Modifiers="Control" />
-                    </CheckBox.KeyboardAccelerators>
-                </CheckBox>
-                <Button
-                    Background="Transparent"
-                    Click="NavigateToFriends_Click"
-                    ToolTipService.ToolTip="Settings (Ctrl + P)">
-                    <SymbolIcon Foreground="{StaticResource ForegroundTextColor}" Symbol="People" />
-                    <Button.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="P" Modifiers="Control" />
-                    </Button.KeyboardAccelerators>
-                </Button>
-                <Button
+                    Grid.Column="1"
                     Background="Transparent"
                     Click="NavigateToSettigns_Click"
                     ToolTipService.ToolTip="Settings (Ctrl + I)">
@@ -105,10 +116,9 @@
                         <KeyboardAccelerator Key="I" Modifiers="Control" />
                     </Button.KeyboardAccelerators>
                 </Button>
-            </StackPanel>
+            </Grid>
             <StackPanel
                 Padding="2"
-                Background="{StaticResource DarkAccent}"
                 IsTabStop="True"
                 Orientation="Horizontal"
                 Spacing="2">
@@ -146,7 +156,6 @@
             </StackPanel>
             <StackPanel
                 Padding="2"
-                Background="{StaticResource DarkAccent}"
                 IsTabStop="True"
                 Orientation="Horizontal"
                 Spacing="2">
