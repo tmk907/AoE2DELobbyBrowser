@@ -7,11 +7,18 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:AoE2DELobbyBrowser.Converters"
     xmlns:models="using:AoE2DELobbyBrowser.Models"
+    xmlns:toolkitconverters="using:CommunityToolkit.WinUI.UI.Converters"
     x:Name="rootPage"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <converters:ObjectToVisibilityConverter x:Key="ObjectToVisibility" />
+        <SolidColorBrush x:Key="IsOfflineBrush" Color="Red" />
+        <SolidColorBrush x:Key="IsOnlineBrush" Color="Green" />
+        <toolkitconverters:BoolToObjectConverter
+            x:Key="IsOnlineConverter"
+            FalseValue="{StaticResource IsOfflineBrush}"
+            TrueValue="{StaticResource IsOnlineBrush}" />
         <Style x:Key="ListItemTextBlock" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
@@ -79,22 +86,31 @@
                 <DataTemplate x:DataType="models:Friend">
                     <Grid>
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="16" />
                             <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="240" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="48" />
                         </Grid.ColumnDefinitions>
+                        <Ellipse
+                            Width="8"
+                            Height="8"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Fill="{x:Bind IsOnline, Converter={StaticResource IsOnlineConverter}, Mode=OneWay}"
+                            StrokeThickness="0"
+                            ToolTipService.ToolTip="Status" />
                         <TextBlock
-                            Grid.Column="0"
+                            Grid.Column="1"
                             Style="{StaticResource ListItemTextBlock}"
-                            Text="{x:Bind Player.Country}"
-                            ToolTipService.ToolTip="{x:Bind Player.CountryName}" />
-                        <TextBlock Grid.Column="1" Style="{StaticResource ListItemTextBlock}">
+                            Text="{x:Bind Player.Country, Mode=OneWay}"
+                            ToolTipService.ToolTip="{x:Bind Player.CountryName, Mode=OneWay}" />
+                        <TextBlock Grid.Column="2" Style="{StaticResource ListItemTextBlock}">
                             <Hyperlink NavigateUri="{x:Bind Player.SteamProfileUrl}">
                                 <Run Text="{x:Bind Player.Name}" />
                             </Hyperlink>
                         </TextBlock>
-                        <Grid Grid.Column="2" Visibility="{x:Bind Lobby, Mode=OneWay, Converter={StaticResource ObjectToVisibility}}">
+                        <Grid Grid.Column="3" Visibility="{x:Bind Lobby, Mode=OneWay, Converter={StaticResource ObjectToVisibility}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="70" />
@@ -134,7 +150,7 @@
                                 Foreground="{StaticResource ForegroundTextColor}" />
                         </Grid>
                         <Button
-                            Grid.Column="3"
+                            Grid.Column="4"
                             HorizontalAlignment="Center"
                             Command="{StaticResource RemoveFriendCommand}"
                             CommandParameter="{x:Bind}"

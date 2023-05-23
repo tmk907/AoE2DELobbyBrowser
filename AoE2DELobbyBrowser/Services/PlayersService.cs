@@ -111,7 +111,6 @@ namespace AoE2DELobbyBrowser.Services
                 await SaveFriendsListAsync(players);
                 _itemsSource.Edit(u =>
                 {
-                    u.Clear();
                     u.AddOrUpdate(players);
                 });
             }
@@ -123,7 +122,7 @@ namespace AoE2DELobbyBrowser.Services
 
         private async Task<List<SteamPlayerDto>> GetSteamPlayersAsync(string ids)
         {
-            var url = $"https://aoe2api.dryforest.net/api/v3/players?ids={ids}";
+            var url = $"https://{Aoe2ApiClient.BaseUrl}/api/v3/players?ids={ids}";
             return await _httpClient.GetFromJsonAsync<List<SteamPlayerDto>>(url);
         }
 

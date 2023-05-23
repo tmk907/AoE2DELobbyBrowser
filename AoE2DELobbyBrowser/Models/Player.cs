@@ -1,8 +1,9 @@
 ﻿using AoE2DELobbyBrowser.Api;
+using DynamicData.Binding;
 
 namespace AoE2DELobbyBrowser.Models
 {
-    public class Player
+    public class Player : AbstractNotifyPropertyChanged
     {
         public string SteamProfileId { get; private set; }
         public string Name { get; private set; }
@@ -21,8 +22,11 @@ namespace AoE2DELobbyBrowser.Models
 
         public void UpdateCountry(string country)
         {
+            if (country == null) return;
             Country = country;
             CountryName = App.CountryService.GetCountryName(Country);
+            OnPropertyChanged(nameof(Country));
+            OnPropertyChanged(nameof(CountryName));
         }
 
         public static Player Create(PlayerDto dto)

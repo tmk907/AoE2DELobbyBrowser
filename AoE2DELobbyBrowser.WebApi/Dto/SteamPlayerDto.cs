@@ -18,6 +18,7 @@ namespace AoE2DELobbyBrowser.WebApi.Dto
 
         [JsonPropertyName("loccountrycode")]
         public string CountryCode { get; set; }
+
         [JsonPropertyName("personastate")]
         public int Status { get; set; }
     }

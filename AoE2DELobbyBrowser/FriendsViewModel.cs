@@ -39,6 +39,11 @@ namespace AoE2DELobbyBrowser
                 .Bind(out _friends)
                 .Subscribe()
                 .DisposeWith(Disposal);
+
+            Observable
+                .FromAsync(_playersService.UpdatePlayersFromSteamAsync)
+                .Subscribe()
+                .DisposeWith(Disposal);
         }
 
         protected CompositeDisposable Disposal = new CompositeDisposable();
@@ -76,7 +81,7 @@ namespace AoE2DELobbyBrowser
 
         private async Task RefreshAsync(CancellationToken ct)
         {
-            //await _playersService.UpdatePlayersFromSteamAsync();
+            await _playersService.UpdatePlayersFromSteamAsync();
             await App.LobbyService.RefreshAsync(ct);
         }
     }

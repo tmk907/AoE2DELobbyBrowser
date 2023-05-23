@@ -18,5 +18,8 @@ namespace AoE2DELobbyBrowser.Api
 
         [JsonPropertyName("loccountrycode")]
         public string LocCountryCode { get; set; }
+
+        [JsonPropertyName("personastate")]
+        public int Status { get; set; }
     }
 }

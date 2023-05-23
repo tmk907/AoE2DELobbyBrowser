@@ -14,12 +14,13 @@ namespace AoE2DELobbyBrowser.Api
     internal class Aoe2ApiClient : IApiClient, IDisposable
     {
 #if DEBUG
-        private const string getLobbiesUrl = "https://aoe2api.dryforest.net/api/v3/lobbies";
-        //private const string getLobbiesUrl = "https://localhost:7214/api/v3/lobbies";
+        //public const string BaseUrl = "localhost:7214";
+        public const string BaseUrl = "aoe2api.dryforest.net";
 #else
-    private const string getLobbiesUrl = "https://aoe2api.dryforest.net/api/v3/lobbies";
+    public const string BaseUrl = "aoe2api.dryforest.net";
 #endif
 
+        private const string getLobbiesUrl = $"https://{BaseUrl}/api/v3/lobbies";
         private readonly HttpClient _httpClient;
         private readonly SourceCache<Lobby, string> _itemsCache;
 

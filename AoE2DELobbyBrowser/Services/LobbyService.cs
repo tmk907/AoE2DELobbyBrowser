@@ -155,7 +155,8 @@ namespace AoE2DELobbyBrowser.Services
                 .OnItemAdded(x =>
                 {
                     var friend = Friend.Create(x);
-                    friend.Lobby = _allLobbies.FirstOrDefault(x => x.ContainsPlayer(friend.Player.SteamProfileId));
+                    friend.UpdateStatus(x.Status);
+                    friend.UpdateLobby(_allLobbies.FirstOrDefault(x => x.ContainsPlayer(friend.Player.SteamProfileId)));
                     _friendSource.AddOrUpdate(friend);
                 })
                 .OnItemRemoved(x=>
@@ -168,6 +169,7 @@ namespace AoE2DELobbyBrowser.Services
                     if (friend.HasValue)
                     {
                         friend.Value.Player.UpdateCountry(current.LocCountryCode);
+                        friend.Value.UpdateStatus(current.Status);
                     }
                 })
                 .Subscribe()
@@ -180,7 +182,8 @@ namespace AoE2DELobbyBrowser.Services
                 {
                     foreach (var friend in _friendSource.Items)
                     {
-                        friend.Lobby = _allLobbies.FirstOrDefault(x => x.ContainsPlayer(friend.Player.SteamProfileId));
+                        friend.UpdateLobby(_allLobbies.FirstOrDefault(x => x.ContainsPlayer(friend.Player.SteamProfileId)));
+                        friend.Player.UpdateCountry(friend?.Lobby?.Players?.FirstOrDefault()?.Country);
                     }
                 })
                 .Subscribe()
