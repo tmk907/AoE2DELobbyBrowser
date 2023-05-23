@@ -75,13 +75,20 @@ namespace AoE2DELobbyBrowser.Services
             var player = savedPlayers.FirstOrDefault(x => x.SteamId == id);
             if (player == null)
             {
-                var players  = await GetSteamPlayersAsync(id);
-                player = players.FirstOrDefault();
-                if (player != null)
+                try
                 {
-                    savedPlayers.Add(player);
-                    await SaveFriendsListAsync(savedPlayers);
-                    _itemsSource.AddOrUpdate(player);
+                    var players = await GetSteamPlayersAsync(id);
+                    player = players.FirstOrDefault();
+                    if (player != null)
+                    {
+                        savedPlayers.Add(player);
+                        await SaveFriendsListAsync(savedPlayers);
+                        _itemsSource.AddOrUpdate(player);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
                 }
             }
         }
