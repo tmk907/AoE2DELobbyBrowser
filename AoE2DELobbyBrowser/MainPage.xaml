@@ -89,15 +89,22 @@
                             <KeyboardAccelerator Key="N" Modifiers="Control" />
                         </CheckBox.KeyboardAccelerators>
                     </CheckBox>
-                    <Button
-                        Background="Transparent"
-                        Click="NavigateToFriends_Click"
-                        ToolTipService.ToolTip="Friends (Ctrl + P)">
-                        <SymbolIcon Foreground="{StaticResource ForegroundTextColor}" Symbol="People" />
-                        <Button.KeyboardAccelerators>
-                            <KeyboardAccelerator Key="P" Modifiers="Control" />
-                        </Button.KeyboardAccelerators>
-                    </Button>
+                    <Grid>
+                        <Button
+                            Background="Transparent"
+                            Click="NavigateToFriends_Click"
+                            ToolTipService.ToolTip="Friends (Ctrl + P)">
+                            <SymbolIcon Foreground="{StaticResource ForegroundTextColor}" Symbol="People" />
+                            <Button.KeyboardAccelerators>
+                                <KeyboardAccelerator Key="P" Modifiers="Control" />
+                            </Button.KeyboardAccelerators>
+                        </Button>
+                        <InfoBadge
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Style="{StaticResource InformationalValueInfoBadgeStyle}"
+                            Value="{x:Bind ViewModel.OnlineCount, Mode=OneWay}" />
+                    </Grid>
                 </StackPanel>
                 <Button
                     Grid.Column="1"

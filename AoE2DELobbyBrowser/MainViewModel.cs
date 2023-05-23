@@ -51,6 +51,17 @@ namespace AoE2DELobbyBrowser
                 .ToProperty(this, x => x.Loading, out _loading)
                 .DisposeWith(Disposal);
 
+            _lobbyService.FriendsChanges
+                .Connect()
+                .CombineLatest(_lobbyService.AllLobbyChanges)
+                .Select(_ => _lobbyService.FriendsChanges.AsObservableCache().Items
+                    .Where(x => x.Lobby != null)
+                    .Count())
+                .DistinctUntilChanged()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .ToProperty(this, x => x.OnlineCount, out _onlineCount)
+                .DisposeWith(Disposal);
+
             Observable
                 .FromAsync(ct => _lobbyService.RefreshAsync(ct))
                 .Subscribe()
@@ -75,6 +86,9 @@ namespace AoE2DELobbyBrowser
 
         private readonly ObservableAsPropertyHelper<bool> _loading;
         public bool Loading => _loading.Value;
+
+        private readonly ObservableAsPropertyHelper<int> _onlineCount;
+        public int OnlineCount => _onlineCount.Value;
 
         public List<string> GameTypes { get; } = new GameType().GetAll();
         public List<string> GameSpeeds { get; } = new GameSpeed().GetAll();
