@@ -53,9 +53,8 @@ namespace AoE2DELobbyBrowser
 
         private void ShowPlayersPopup(object sender, TappedRoutedEventArgs e)
         {
-            PlayersPopup.Visibility = Visibility.Visible;
             var lobby = (e.OriginalSource as FrameworkElement).DataContext as Lobby;
-            PlayersPopup.DataContext = lobby;
+            ShowPlayersPopup(lobby);
         }
 
         private void ClosePlayersPopup(object sender, TappedRoutedEventArgs e)
@@ -67,6 +66,17 @@ namespace AoE2DELobbyBrowser
         private void NavigateToFriends_Click(object sender, RoutedEventArgs e)
         {
             WeakReferenceMessenger.Default.Send(new NavigateToMessage { Destination = typeof(FriendsPage) });
+        }
+
+        private void ShowPlayersPopup(Lobby lobby)
+        {
+            PlayersPopup.Visibility = Visibility.Visible;
+            PlayersPopup.DataContext = lobby;
+        }
+
+        private void OnNumPlayersTapped(object sender, Lobby lobby)
+        {
+            ShowPlayersPopup(lobby);
         }
     }
 }

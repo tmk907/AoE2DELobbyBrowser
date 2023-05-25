@@ -41,7 +41,7 @@ namespace AoE2DELobbyBrowser
 
             ToastNotificationManagerCompat.OnActivated += ToastNotificationManagerCompat_OnActivated;
             ApiClient = new Aoe2ApiClient();
-            PlayersService = new PlayersService();
+            PlayersService = new PlayersService(ApiClient);
             LobbyService = new LobbyService();
             CountryService = new CountryService();
         }

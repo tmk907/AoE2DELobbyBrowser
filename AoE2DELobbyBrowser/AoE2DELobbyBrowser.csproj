@@ -20,6 +20,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="FriendsPage.xaml" />
+    <None Remove="LobbyListControl.xaml" />
     <None Remove="MainPage.xaml" />
     <None Remove="PlayersPopupControl.xaml" />
     <None Remove="SettingsPage.xaml" />
@@ -70,6 +71,11 @@
     <Content Update="Assets\countries.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="LobbyListControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="PlayersPopupControl.xaml">

@@ -6,7 +6,6 @@ using ReactiveUI;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -30,14 +29,7 @@ namespace AoE2DELobbyBrowser
                 .Subscribe()
                 .DisposeWith(Disposal);
 
-            var myAdaptor = new MySortedObservableCollectionAdaptor();
-            var filtered = _lobbyService.FilteredLobbyChanges
-                .Sort(SortExpressionComparer<Lobby>.Ascending(t => t.Name))
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out _lobbies, adaptor:myAdaptor)
-                .DisposeMany()
-                .Subscribe()
-                .DisposeWith(Disposal);
+            LobbyListViewModel = new LobbyListViewModel();
 
             this.RefreshCommand = ReactiveCommand.CreateFromTask(
                 ct => _lobbyService.RefreshAsync(ct),
@@ -53,11 +45,14 @@ namespace AoE2DELobbyBrowser
 
             _lobbyService.FriendsChanges
                 .Connect()
-                .CombineLatest(_lobbyService.AllLobbyChanges)
-                .Select(_ => _lobbyService.FriendsChanges.AsObservableCache().Items
+                .Select(x => Unit.Default)
+                .Merge(_lobbyService.AllLobbyChanges.Select(x => Unit.Default))
+                .Do(_=>Log.Debug("FriendsChanges Merged"))
+                .Select(_ => _lobbyService.FriendsChanges.Items
                     .Where(x => x.Lobby != null)
                     .Count())
                 .DistinctUntilChanged()
+                .Do(x => Log.Debug($"FriendsChanges count changed {x}"))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToProperty(this, x => x.OnlineCount, out _onlineCount)
                 .DisposeWith(Disposal);
@@ -79,10 +74,7 @@ namespace AoE2DELobbyBrowser
 
         public LobbySettings Settings { get; private set; }
 
-
-        private readonly ReadOnlyObservableCollection<Lobby> _lobbies;
-        public ReadOnlyObservableCollection<Lobby> Lobbies => _lobbies;
-
+        public LobbyListViewModel LobbyListViewModel { get; }
 
         private readonly ObservableAsPropertyHelper<bool> _loading;
         public bool Loading => _loading.Value;

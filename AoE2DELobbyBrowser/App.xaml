@@ -18,6 +18,10 @@
                     <Color x:Key="BackgroundColor">#ffeacd</Color>
                     <Color x:Key="AlternateRowColor">#fff0cd</Color>
 
+                    <Style x:Key="ListItemTextBlock" TargetType="TextBlock">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                    </Style>
+
                     <Style
                         x:Key="ListItemSmallButtonStyle"
                         BasedOn="{StaticResource DefaultButtonStyle}"

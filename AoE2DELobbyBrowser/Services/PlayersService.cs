@@ -21,29 +21,29 @@ namespace AoE2DELobbyBrowser.Services
         Task AddFriendAsync(string id);
         Task<List<SteamPlayerDto>> GetFriendsListAsync();
         bool IsValidId(string id);
-        Task ReloadAsync();
         Task RemoveFriendAsync(string id);
         Task UpdatePlayersFromSteamAsync();
     }
 
     public class PlayersService : IPlayersService
     {
-        private HttpClient _httpClient;
+        private const string FileName = "favoritePlayers.json";
         private ApplicationDataStorageHelper _storageHelper;
 
-        private readonly SourceCache<SteamPlayerDto, string> _itemsSource;
+        private readonly SourceCache<SteamPlayerDto, string> _playersCache;
+        private readonly IApiClient _apiClient;
 
-        public PlayersService()
+        public PlayersService(IApiClient apiClient)
         {
-            _httpClient = new HttpClient();
+            _apiClient = apiClient;
             _storageHelper = ApplicationDataStorageHelper.GetCurrent(new AppDataJsonSerializer());
-            _itemsSource = new SourceCache<SteamPlayerDto, string>(x => x.SteamId);
+            _playersCache = new SourceCache<SteamPlayerDto, string>(x => x.SteamId);
 
-            AllPlayers = _itemsSource.AsObservableCache();
+            AllPlayers = _playersCache.AsObservableCache();
 
             Observable
                 .FromAsync(GetFriendsListAsync)
-                .Do(list => _itemsSource.AddOrUpdate(list))
+                .Do(list => _playersCache.AddOrUpdate(list))
                 .Do(_ => Log.Debug("GetFriendsListAsync loaded"))
                 .Subscribe();
         }
@@ -58,15 +58,6 @@ namespace AoE2DELobbyBrowser.Services
             return false;
         }
 
-        public async Task ReloadAsync()
-        {
-            Log.Debug("PlayersService ReloadAsync");
-            var friends = await GetFriendsListAsync();
-            _itemsSource.Clear();
-            _itemsSource.AddOrUpdate(friends);
-            Log.Debug($"PlayersService ReloadAsync {friends.Count}");
-        }
-
         public async Task AddFriendAsync(string id)
         {
             if (!IsValidId(id)) return;
@@ -77,13 +68,13 @@ namespace AoE2DELobbyBrowser.Services
             {
                 try
                 {
-                    var players = await GetSteamPlayersAsync(id);
+                    var players = await _apiClient.GetSteamPlayersAsync(id);
                     player = players.FirstOrDefault();
                     if (player != null)
                     {
                         savedPlayers.Add(player);
                         await SaveFriendsListAsync(savedPlayers);
-                        _itemsSource.AddOrUpdate(player);
+                        _playersCache.AddOrUpdate(player);
                     }
                 }
                 catch (Exception ex)
@@ -101,7 +92,7 @@ namespace AoE2DELobbyBrowser.Services
             {
                 savedPlayers.Remove(toRemove);
                 await SaveFriendsListAsync(savedPlayers);
-                _itemsSource.Remove(toRemove);
+                _playersCache.Remove(toRemove);
             }
         }
 
@@ -113,10 +104,10 @@ namespace AoE2DELobbyBrowser.Services
                 if (players.Count == 0) return;
 
                 var ids = string.Join(',', players.Select(x => x.SteamId));
-                players = await GetSteamPlayersAsync(ids);
+                players = await _apiClient.GetSteamPlayersAsync(ids);
                 
                 await SaveFriendsListAsync(players);
-                _itemsSource.Edit(u =>
+                _playersCache.Edit(u =>
                 {
                     u.AddOrUpdate(players);
                 });
@@ -127,26 +118,20 @@ namespace AoE2DELobbyBrowser.Services
             }
         }
 
-        private async Task<List<SteamPlayerDto>> GetSteamPlayersAsync(string ids)
-        {
-            var url = $"https://{Aoe2ApiClient.BaseUrl}/api/v3/players?ids={ids}";
-            return await _httpClient.GetFromJsonAsync<List<SteamPlayerDto>>(url);
-        }
-
         private async Task SaveFriendsListAsync(IEnumerable<SteamPlayerDto> players)
         {
-            await _storageHelper.CreateFileAsync("favoritePlayers.json", players);
+            await _storageHelper.CreateFileAsync(FileName, players);
         }
 
         public async Task<List<SteamPlayerDto>> GetFriendsListAsync()
         {
             try
             {
-                return await _storageHelper.ReadFileAsync("favoritePlayers.json", new List<SteamPlayerDto>());
+                return await _storageHelper.ReadFileAsync(FileName, new List<SteamPlayerDto>());
             }
             catch (FileNotFoundException)
             {
-                await _storageHelper.CreateFileAsync("favoritePlayers.json", new List<SteamPlayerDto>());
+                await _storageHelper.CreateFileAsync(FileName, new List<SteamPlayerDto>());
                 return new List<SteamPlayerDto>();
             }
         }

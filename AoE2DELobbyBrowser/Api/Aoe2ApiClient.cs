@@ -29,11 +29,12 @@ namespace AoE2DELobbyBrowser.Api
             _httpClient = new HttpClient();
             _httpClient.Timeout = TimeSpan.FromSeconds(20);
             _itemsCache = new SourceCache<Lobby, string>(x => x.MatchId);
+            LobbyChanges = _itemsCache.Connect().RefCount();
         }
 
-        public IObservable<IChangeSet<Lobby, string>> Connect() => _itemsCache.Connect().RefCount();
+        public IObservable<IChangeSet<Lobby, string>> LobbyChanges { get; }
 
-        public async Task Refresh(CancellationToken cancellationToken)
+        public async Task RefreshAllLobbiesAsync(CancellationToken cancellationToken)
         {
             Log.Debug("Aoe2ApiClient Refresh");
             var results = await GetAllLobbiesAsync(cancellationToken);
@@ -49,7 +50,7 @@ namespace AoE2DELobbyBrowser.Api
             });
         }
 
-        public async Task<List<LobbyDto>> GetAllLobbiesAsync(CancellationToken cancellationToken)
+        private async Task<List<LobbyDto>> GetAllLobbiesAsync(CancellationToken cancellationToken)
         {
             Log.Debug("GetAllLobbiesAsync");
             try
@@ -63,6 +64,12 @@ namespace AoE2DELobbyBrowser.Api
                 Log.Error(ex.ToString());
                 return new List<LobbyDto>();
             }
+        }
+
+        public async Task<List<SteamPlayerDto>> GetSteamPlayersAsync(string ids)
+        {
+            var url = $"https://{BaseUrl}/api/v3/players?ids={ids}";
+            return await _httpClient.GetFromJsonAsync<List<SteamPlayerDto>>(url);
         }
 
         public void Dispose()

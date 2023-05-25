@@ -88,7 +88,7 @@ namespace AoE2DELobbyBrowser.Services
                 .Select(_ => gameFilter);
 
             AllLobbyChanges = _apiClient
-                .Connect()
+                .LobbyChanges
                 .ObserveOn(RxApp.TaskpoolScheduler)
                 .Do(_ => Log.Debug($"onNext {nameof(AllLobbyChanges)} "))
                 .Filter(x => x.Name != "AUTOMATCH")
@@ -186,6 +186,7 @@ namespace AoE2DELobbyBrowser.Services
                         friend.Player.UpdateCountry(friend?.Lobby?.Players?.FirstOrDefault()?.Country);
                     }
                 })
+                .Do(_ => Log.Debug("LobbyService AllLobbyChanges ToCollection finished"))
                 .Subscribe()
                 .DisposeWith(Disposal);
 
@@ -219,7 +220,7 @@ namespace AoE2DELobbyBrowser.Services
         public async Task RefreshAsync(CancellationToken token)
         {
             _isLoadingSubject.OnNext(true);
-            await _apiClient.Refresh(token);
+            await _apiClient.RefreshAllLobbiesAsync(token);
             _isLoadingSubject?.OnNext(false);
         }
     }
