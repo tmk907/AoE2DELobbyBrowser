@@ -33,7 +33,7 @@ namespace AoE2DELobbyBrowser
 
             var allFriends = App.LobbyService.FriendsChanges
                 .Connect()
-                .Sort(SortExpressionComparer<Friend>.Ascending(x => x.Player.Name))
+                .Sort(SortExpressionComparer<Friend>.Ascending(x => x.IsOnline ? 0 : 1).ThenByAscending(x => x.Player.Name))
                 .TreatMovesAsRemoveAdd()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out _friends)
