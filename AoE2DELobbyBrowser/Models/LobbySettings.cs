@@ -1,9 +1,9 @@
 ﻿using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace AoE2DELobbyBrowser.Services
+namespace AoE2DELobbyBrowser.Models
 {
-    public class LobbySettings: ReactiveObject
+    public class LobbySettings : ReactiveObject
     {
         [Reactive]
         public string Query { get; set; }

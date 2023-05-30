@@ -129,7 +129,6 @@ namespace AoE2DELobbyBrowser.Services
                 .Where(x => x.Item2)
                 .Select(x => x.Item1)
                 .Throttle(TimeSpan.FromMilliseconds(500))
-                //.Do(_ => Log.Debug("value changed"))
                 .Select(interval =>
                     Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(interval), RxApp.TaskpoolScheduler)
                         //.Do(x => Log.Debug($"Inner observable interval {x}"))
