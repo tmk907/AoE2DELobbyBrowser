@@ -47,12 +47,10 @@ namespace AoE2DELobbyBrowser
                 .Connect()
                 .Select(x => Unit.Default)
                 .Merge(_lobbyService.AllLobbyChanges.Select(x => Unit.Default))
-                .Do(_=>Log.Debug("FriendsChanges Merged"))
                 .Select(_ => _lobbyService.FriendsChanges.Items
                     .Where(x => x.Lobby != null)
                     .Count())
                 .DistinctUntilChanged()
-                .Do(x => Log.Debug($"FriendsChanges count changed {x}"))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToProperty(this, x => x.OnlineCount, out _onlineCount)
                 .DisposeWith(Disposal);
@@ -66,6 +64,7 @@ namespace AoE2DELobbyBrowser
         protected CompositeDisposable Disposal = new CompositeDisposable();
         public void Dispose()
         {
+            Log.Debug("Dispose MainViewModel");
             Disposal.Dispose();
         }
 

@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
+using Serilog;
 using System;
 using System.Collections.ObjectModel;
 using System.Reactive;
@@ -31,9 +32,15 @@ namespace AoE2DELobbyBrowser
             this.RefreshCommand = ReactiveCommand.CreateFromTask(ct => RefreshAsync(ct));
             this.DeleteFriendCommand = new AsyncRelayCommand<Friend>(x=>DeleteAsync(x));
 
+            var isOnlineChanges = App.LobbyService.FriendsChanges.Connect()
+                .WhenPropertyChanged(x => x.IsOnline, false)
+                .Throttle(TimeSpan.FromMilliseconds(250))
+                .Select(_ => Unit.Default);
+            var comparer = SortExpressionComparer<Friend>.Ascending(x => x.IsOnline ? 0 : 1).ThenByAscending(x => x.Player.Name);
+
             var allFriends = App.LobbyService.FriendsChanges
                 .Connect()
-                .Sort(SortExpressionComparer<Friend>.Ascending(x => x.IsOnline ? 0 : 1).ThenByAscending(x => x.Player.Name))
+                .Sort(comparer, isOnlineChanges)
                 .TreatMovesAsRemoveAdd()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out _friends)
