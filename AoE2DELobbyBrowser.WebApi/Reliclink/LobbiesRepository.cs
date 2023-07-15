@@ -95,7 +95,10 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
                 MapType = MapTypeConverter.ToName(mapId),
                 Name = match.Description,
                 NumSlots = match.Maxplayers,
-                Players = match.Matchmembers.Select((x, i) => Create(i, x, avatars)).ToList(),
+                Players = match.Matchmembers
+                    .OrderBy(x => (x.ProfileId == match.HostProfileId) ? 0 : 1)
+                    .Select((x, i) => Create(i, x, avatars))
+                    .ToList(),
                 Speed = GameSpeedConverter.ToName(speedId)
             };
         }
