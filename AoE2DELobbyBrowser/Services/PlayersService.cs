@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using AoE2DELobbyBrowser.Api;
-using CommunityToolkit.WinUI.Helpers;
 using DynamicData;
 using Serilog;
-
 
 namespace AoE2DELobbyBrowser.Services
 {
@@ -36,7 +32,7 @@ namespace AoE2DELobbyBrowser.Services
         public PlayersService(IApiClient apiClient)
         {
             _apiClient = apiClient;
-            _storageHelper = ApplicationDataStorageHelper.GetCurrent(new AppDataJsonSerializer());
+            _storageHelper = new ApplicationDataStorageHelper(new AppDataJsonSerializer());
             _playersCache = new SourceCache<SteamPlayerDto, string>(x => x.SteamId);
 
             AllPlayers = _playersCache.AsObservableCache();

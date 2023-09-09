@@ -5,7 +5,7 @@
     xmlns:local="using:AoE2DELobbyBrowser"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -55,10 +55,10 @@
                 <StackPanel Spacing="3">
 
                     <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="Browser" />
-                    <labs:SettingsCard Description="How many seconds new lobby should be highlighted" Header="New lobby">
-                        <labs:SettingsCard.HeaderIcon>
+                    <controls:SettingsCard Description="How many seconds new lobby should be highlighted" Header="New lobby">
+                        <controls:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xE916;" />
-                        </labs:SettingsCard.HeaderIcon>
+                        </controls:SettingsCard.HeaderIcon>
                         <NumberBox
                             x:Name="newLobbyNumberBox"
                             HorizontalAlignment="Left"
@@ -67,24 +67,24 @@
                             SmallChange="5"
                             SpinButtonPlacementMode="Inline"
                             ValueChanged="newLobbyNumberBox_ValueChanged" />
-                    </labs:SettingsCard>
+                    </controls:SettingsCard>
 
-                    <labs:SettingsCard Header="Query separator">
-                        <labs:SettingsCard.HeaderIcon>
+                    <controls:SettingsCard Header="Query separator">
+                        <controls:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xE70F;" />
-                        </labs:SettingsCard.HeaderIcon>
+                        </controls:SettingsCard.HeaderIcon>
                         <TextBox
                             x:Name="separatorTextBox"
                             Width="100"
                             HorizontalAlignment="Left"
                             Text=""
                             TextChanged="separatorTextBox_TextChanged" />
-                    </labs:SettingsCard>
+                    </controls:SettingsCard>
 
-                    <labs:SettingsCard Description="Type of link used to join a game" Header="Game link">
-                        <labs:SettingsCard.HeaderIcon>
+                    <controls:SettingsCard Description="Type of link used to join a game" Header="Game link">
+                        <controls:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xE71B;" />
-                        </labs:SettingsCard.HeaderIcon>
+                        </controls:SettingsCard.HeaderIcon>
                         <RadioButtons>
                             <RadioButtons.Items>
                                 <RadioButton
@@ -97,35 +97,35 @@
                                     IsChecked="{x:Bind IsSteamLink}" />
                             </RadioButtons.Items>
                         </RadioButtons>
-                    </labs:SettingsCard>
+                    </controls:SettingsCard>
 
                     <!--  About  -->
                     <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="About" />
-                    <labs:SettingsExpander Header="AoE2DE Lobby Browser">
-                        <labs:SettingsExpander.HeaderIcon>
+                    <controls:SettingsExpander Header="AoE2DE Lobby Browser">
+                        <controls:SettingsExpander.HeaderIcon>
                             <BitmapIcon ShowAsMonochrome="False" UriSource="/Assets/Square44x44Logo.targetsize-48.png" />
-                        </labs:SettingsExpander.HeaderIcon>
+                        </controls:SettingsExpander.HeaderIcon>
                         <TextBlock
                             Margin="0,-2,0,0"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             IsTextSelectionEnabled="True"
                             Text="{x:Bind Version}" />
-                        <labs:SettingsExpander.Items>
-                            <labs:SettingsCard
+                        <controls:SettingsExpander.Items>
+                            <controls:SettingsCard
                                 Click="RateAppClicked"
                                 Header="Rate and review in Microsoft Store"
                                 IsClickEnabled="True">
-                                <labs:SettingsCard.ActionIcon>
+                                <controls:SettingsCard.ActionIcon>
                                     <FontIcon Glyph="&#xE8A7;" />
-                                </labs:SettingsCard.ActionIcon>
-                            </labs:SettingsCard>
-                            <labs:SettingsCard Header="Github">
+                                </controls:SettingsCard.ActionIcon>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="Github">
                                 <HyperlinkButton Content="https://github.com/tmk907/AoE2DELobbyBrowser" NavigateUri="https://github.com/tmk907/AoE2DELobbyBrowser" />
-                            </labs:SettingsCard>
-                            <labs:SettingsCard Header="Application icon">
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="Application icon">
                                 <HyperlinkButton Content="Roman icons created by Freepik - Flaticon" NavigateUri="https://www.flaticon.com/free-icons/roman" />
-                            </labs:SettingsCard>
-                            <labs:SettingsCard
+                            </controls:SettingsCard>
+                            <controls:SettingsCard
                                 HorizontalContentAlignment="Left"
                                 ContentAlignment="Vertical"
                                 Header="Dependencies &amp; references">
@@ -135,17 +135,17 @@
                                     <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit" />
                                     <HyperlinkButton Content="Serilog" NavigateUri="https://github.com/serilog" />
                                 </StackPanel>
-                            </labs:SettingsCard>
-                            <labs:SettingsCard
+                            </controls:SettingsCard>
+                            <controls:SettingsCard
                                 Click="OpenLogsFolderClicked"
                                 Description="Open folder with log files"
                                 Header="Logs"
                                 IsClickEnabled="True">
-                                <labs:SettingsCard.ActionIcon>
+                                <controls:SettingsCard.ActionIcon>
                                     <FontIcon Glyph="&#xE8A7;" />
-                                </labs:SettingsCard.ActionIcon>
-                            </labs:SettingsCard>
-                            <labs:SettingsCard
+                                </controls:SettingsCard.ActionIcon>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard
                                 HorizontalContentAlignment="Left"
                                 ContentAlignment="Vertical"
                                 Header="Disclaimer">
@@ -158,9 +158,9 @@
                                         <Hyperlink NavigateUri="https://www.xbox.com/en-us/developers/rules">Game Content Usage Rules</Hyperlink>
                                     </Paragraph>
                                 </RichTextBlock>
-                            </labs:SettingsCard>
-                        </labs:SettingsExpander.Items>
-                    </labs:SettingsExpander>
+                            </controls:SettingsCard>
+                        </controls:SettingsExpander.Items>
+                    </controls:SettingsExpander>
 
                 </StackPanel>
             </ScrollViewer>

@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:AoE2DELobbyBrowser.Converters"
     xmlns:models="using:AoE2DELobbyBrowser.Models"
-    xmlns:toolkitconverters="using:CommunityToolkit.WinUI.UI.Converters"
+    xmlns:toolkitconverters="using:CommunityToolkit.WinUI.Converters"
     x:Name="rootPage"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">

@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.WinUI.UI.Converters;
+﻿using CommunityToolkit.WinUI.Converters;
 using Microsoft.UI.Text;
 
 namespace AoE2DELobbyBrowser.Converters
