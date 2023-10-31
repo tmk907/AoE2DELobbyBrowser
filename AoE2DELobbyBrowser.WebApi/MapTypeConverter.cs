@@ -74,7 +74,7 @@
             { 301101, "MountainPass" },
             { 301102, "NileDelta" },
             { 301103, "Serengeti" },
-            { 301105, "Socotra" },
+            { 301104, "Socotra" },
             { 301105, "RealWorldAmazon" },
             { 301106, "RealWorldChina" },
             { 301107, "RealWorldHornOfAfrica" },
