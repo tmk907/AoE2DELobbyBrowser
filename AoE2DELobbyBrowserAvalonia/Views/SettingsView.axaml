@@ -1,0 +1,77 @@
+<UserControl
+    x:Class="AoE2DELobbyBrowserAvalonia.SettingsView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:FluentAvalonia.UI.Controls"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <Grid RowDefinitions="Auto, *">
+        <Button
+            Grid.Row="0"
+            Width="48"
+            Height="36"
+            Margin="8" />
+        <TextBlock
+            Grid.Row="0"
+            Margin="72,8,0,0"
+            Text="Settings" />
+        <Grid Grid.Row="1" Margin="36,0,0,0">
+            <ScrollViewer
+                Padding="36,0,36,0"
+                IsTabStop="False"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="3">
+                    <TextBlock Text="Browser" />
+                    <!--<ui:SettingsExpander Description="How many seconds new lobby should be highlighted" Header="New lobby">
+                        <ui:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE916;" />
+                        </ui:SettingsCard.HeaderIcon>
+                        <NumberBox
+                            x:Name="newLobbyNumberBox"
+                            HorizontalAlignment="Left"
+                            Maximum="300"
+                            Minimum="5"
+                            SmallChange="5"
+                            SpinButtonPlacementMode="Inline"
+                            ValueChanged="newLobbyNumberBox_ValueChanged" />
+                    </ui:SettingsExpander>-->
+
+                    <!--<ui:SettingsCard Header="Query separator">
+                        <ui:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE70F;" />
+                        </ui:SettingsCard.HeaderIcon>
+                        <TextBox
+                            x:Name="separatorTextBox"
+                            Width="100"
+                            HorizontalAlignment="Left"
+                            Text=""
+                            TextChanged="separatorTextBox_TextChanged" />
+                    </ui:SettingsCard>
+
+                    <ui:SettingsCard Description="Type of link used to join a game" Header="Game link">
+                        <ui:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE71B;" />
+                        </ui:SettingsCard.HeaderIcon>
+                        <RadioButtons>
+                            <RadioButtons.Items>
+                                <RadioButton
+                                    Checked="Aoe2de_RadioButton_Checked"
+                                    Content="aoe2de://"
+                                    IsChecked="{x:Bind IsAoe2deLink}" />
+                                <RadioButton
+                                    Checked="Steam_RadioButton_Checked"
+                                    Content="steam://"
+                                    IsChecked="{x:Bind IsSteamLink}" />
+                            </RadioButtons.Items>
+                        </RadioButtons>
+                    </ui:SettingsCard>-->
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

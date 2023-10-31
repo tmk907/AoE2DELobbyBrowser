@@ -1,0 +1,144 @@
+<UserControl
+    x:Class="AoE2DELobbyBrowserAvalonia.Views.MainView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:AoE2DELobbyBrowserAvalonia.Views"
+    xmlns:vm="using:AoE2DELobbyBrowserAvalonia.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:MainViewModel"
+    mc:Ignorable="d">
+    <Design.DataContext>
+        <vm:MainViewModel />
+    </Design.DataContext>
+    <UserControl.Styles>
+        <Style Selector="TextBlock.lightForeground">
+            <Setter Property="Foreground" Value="{StaticResource ForegroundTextColor}" />
+        </Style>
+
+        <Style Selector="TextBlock.labelTextBlock">
+            <Setter Property="Margin" Value="8,0,4,0" />
+            <Setter Property="MinWidth" Value="48" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{StaticResource ForegroundTextColor}" />
+        </Style>
+        <Style Selector="TextBlock.firstLabelTextBlock">
+            <Setter Property="Margin" Value="4,0,4,0" />
+            <Setter Property="MinWidth" Value="40" />
+            <Setter Property="Width" Value="40" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{StaticResource ForegroundTextColor}" />
+        </Style>
+    </UserControl.Styles>
+    <Grid Background="{StaticResource BackgroundColor}" RowDefinitions="Auto,*">
+        <controls:LobbyListControl />
+        <StackPanel
+            Grid.Row="0"
+            Background="{StaticResource DarkAccent}"
+            Orientation="Vertical">
+            <Grid Margin="2" ColumnDefinitions="*, Auto">
+                <StackPanel
+                    Grid.Column="0"
+                    Orientation="Horizontal"
+                    Spacing="2">
+                    <Button
+                        Width="80"
+                        Command="{Binding RefreshCommand}"
+                        Content="Refresh"
+                        HotKey="Ctrl+R"
+                        ToolTip.Tip="Refresh (Ctrl + R)" />
+                    <CheckBox
+                        Margin="8,0,4,0"
+                        HotKey="Ctrl+T"
+                        IsChecked="{Binding Settings.IsAutoRefreshEnabled, Mode=TwoWay}"
+                        ToolTip.Tip="Auto refresh (Ctrl + T)">
+                        <TextBlock Classes="lightForeground" Text="Auto refresh (sec)" />
+                    </CheckBox>
+                    <NumericUpDown
+                        Width="110"
+                        Increment="5"
+                        Maximum="120"
+                        Minimum="5"
+                        Value="{Binding Settings.Interval, Mode=TwoWay}" />
+                    <CheckBox
+                        Margin="8,0,4,0"
+                        HotKey="Ctrl+N"
+                        IsChecked="{Binding Settings.ShowNotifications, Mode=TwoWay}"
+                        ToolTip.Tip="Show notifications (Ctrl + N)">
+                        <TextBlock Classes="lightForeground" Text="Notifications" />
+                    </CheckBox>
+                </StackPanel>
+                <Button
+                    Grid.Column="1"
+                    Width="32"
+                    Height="32"
+                    Padding="0"
+                    Background="Transparent"
+                    HotKey="Ctrl+I"
+                    ToolTip.Tip="Settings (Ctrl + I)">
+                    <TextBlock
+                        Classes="lightForeground"
+                        FontFamily="{StaticResource SymbolFont}"
+                        FontSize="18"
+                        Text="{x:Static controls:SymbolIcons.Settings}" />
+                </Button>
+            </Grid>
+            <StackPanel
+                Margin="2"
+                Orientation="Horizontal"
+                Spacing="2">
+                <TextBlock Classes="firstLabelTextBlock" Text="Game" />
+                <TextBlock Classes="labelTextBlock" Text="Type" />
+                <ComboBox
+                    Name="gameTypesCombobox"
+                    Width="180"
+                    ItemsSource="{Binding GameTypes}"
+                    SelectedItem="{Binding Settings.SelectedGameType, Mode=TwoWay}"
+                    ToolTip.Tip="Game type (Ctrl + Q)" />
+                <TextBlock Classes="labelTextBlock" Text="Map" />
+                <ComboBox
+                    Width="180"
+                    ItemsSource="{Binding MapTypes}"
+                    SelectedItem="{Binding Settings.SelectedMapType, Mode=TwoWay}"
+                    ToolTip.Tip="Game type (Ctrl + W)" />
+                <TextBlock Classes="labelTextBlock" Text="Speed" />
+                <ComboBox
+                    Width="100"
+                    ItemsSource="{Binding GameSpeeds}"
+                    SelectedItem="{Binding Settings.SelectedGameSpeed, Mode=TwoWay}"
+                    ToolTip.Tip="Game type (Ctrl + E)" />
+            </StackPanel>
+            <StackPanel
+                Margin="2"
+                Orientation="Horizontal"
+                Spacing="2">
+                <TextBlock Classes="firstLabelTextBlock" Text="Lobby" />
+                <TextBlock Classes="labelTextBlock" Text="Include" />
+                <TextBox
+                    Name="searchTextBox"
+                    Width="180"
+                    KeyDown="UnFocusOnKeyDown"
+                    Text="{Binding Settings.Query, Mode=TwoWay}"
+                    ToolTip.Tip="Lobby name contains any word (Ctrl + F)"
+                    Watermark="search" />
+                <TextBlock Classes="labelTextBlock" Text="Exclude" />
+                <TextBox
+                    Name="excludeTextBox"
+                    Width="180"
+                    KeyDown="UnFocusOnKeyDown"
+                    Text="{Binding Settings.Exclude, Mode=TwoWay}"
+                    ToolTip.Tip="None of the words appear in lobby name (Ctrl + G)"
+                    Watermark="exclude" />
+            </StackPanel>
+        </StackPanel>
+        <controls:LobbyListControl Grid.Row="1" DataContext="{Binding LobbyListViewModel}" />
+        <ProgressBar
+            Grid.Row="1"
+            Foreground="Red"
+            IsIndeterminate="True"
+            IsVisible="{Binding Loading}" />
+    </Grid>
+</UserControl>

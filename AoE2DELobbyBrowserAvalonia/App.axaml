@@ -1,0 +1,24 @@
+<Application
+    x:Class="AoE2DELobbyBrowserAvalonia.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sty="using:FluentAvalonia.Styling"
+    RequestedThemeVariant="Default">
+    <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
+
+    <Application.Styles>
+        <sty:FluentAvaloniaTheme />
+        <Style Selector="TextBlock.listItemTextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </Application.Styles>
+    <Application.Resources>
+        <Color x:Key="DarkAccent">#92040a</Color>
+        <Color x:Key="Accent">#ba080e</Color>
+        <Color x:Key="BorderColor">#c3b880</Color>
+        <Color x:Key="ForegroundTextColor">#ffe1bf</Color>
+        <Color x:Key="BackgroundColor">#ffeacd</Color>
+        <Color x:Key="AlternateRowColor">#fff0cd</Color>
+        <FontFamily x:Key="SymbolFont">/Assets/Fonts/SegoeFluentIcons.ttf#Segoe Fluent Icons</FontFamily>
+    </Application.Resources>
+</Application>
