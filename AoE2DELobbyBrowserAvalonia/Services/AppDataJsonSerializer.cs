@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 
 
-namespace AoE2DELobbyBrowser.Services
+namespace AoE2DELobbyBrowserAvalonia.Services
 {
     public interface IObjectSerializer
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AoE2DELobbyBrowser
+namespace AoE2DELobbyBrowserAvalonia
 {
     public class NavigateToMessage
     {

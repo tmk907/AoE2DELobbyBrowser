@@ -1,5 +1,5 @@
-﻿using AoE2DELobbyBrowser.Models;
-using AoE2DELobbyBrowser.Services;
+﻿using AoE2DELobbyBrowser.Services;
+using AoE2DELobbyBrowserAvalonia.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;

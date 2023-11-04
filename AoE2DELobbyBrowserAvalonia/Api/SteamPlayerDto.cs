@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace AoE2DELobbyBrowser.Api
+namespace AoE2DELobbyBrowserAvalonia.Api
 {
     public class SteamPlayerDto
     {

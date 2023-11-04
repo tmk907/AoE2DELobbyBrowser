@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace AoE2DELobbyBrowser.Models
+namespace AoE2DELobbyBrowserAvalonia.Models
 {
     public class MapType
     {

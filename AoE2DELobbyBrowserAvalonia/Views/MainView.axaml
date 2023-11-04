@@ -34,7 +34,6 @@
         </Style>
     </UserControl.Styles>
     <Grid Background="{StaticResource BackgroundColor}" RowDefinitions="Auto,*">
-        <controls:LobbyListControl />
         <StackPanel
             Grid.Row="0"
             Background="{StaticResource DarkAccent}"

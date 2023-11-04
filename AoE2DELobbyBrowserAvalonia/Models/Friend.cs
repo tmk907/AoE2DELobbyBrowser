@@ -1,7 +1,7 @@
-﻿using AoE2DELobbyBrowser.Api;
+﻿using AoE2DELobbyBrowserAvalonia.Api;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace AoE2DELobbyBrowser.Models
+namespace AoE2DELobbyBrowserAvalonia.Models
 {
     public class Friend : ObservableObject
     {
@@ -31,7 +31,7 @@ namespace AoE2DELobbyBrowser.Models
                     break;
                 case 1:
                 case 6:
-                    IsOnline = true; 
+                    IsOnline = true;
                     break;
                 default:
                     IsOnline = false;

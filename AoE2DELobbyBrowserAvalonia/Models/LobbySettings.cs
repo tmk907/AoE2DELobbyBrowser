@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace AoE2DELobbyBrowser.Models
+namespace AoE2DELobbyBrowserAvalonia.Models
 {
     public partial class LobbySettings : ObservableObject
     {

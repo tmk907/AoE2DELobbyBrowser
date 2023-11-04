@@ -1,5 +1,5 @@
 using AoE2DELobbyBrowser;
-using AoE2DELobbyBrowser.Services;
+using AoE2DELobbyBrowserAvalonia.Services;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;

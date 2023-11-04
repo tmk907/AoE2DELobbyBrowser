@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:AoE2DELobbyBrowserAvalonia.Converters"
-    xmlns:models="using:AoE2DELobbyBrowser.Models"
+    xmlns:models="using:AoE2DELobbyBrowserAvalonia.Models"
     xmlns:views="using:AoE2DELobbyBrowserAvalonia.Views"
     xmlns:vm="using:AoE2DELobbyBrowserAvalonia.ViewModels"
     d:DesignHeight="450"

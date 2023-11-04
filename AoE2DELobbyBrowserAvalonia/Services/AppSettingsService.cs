@@ -1,4 +1,4 @@
-﻿using AoE2DELobbyBrowser.Models;
+﻿using AoE2DELobbyBrowserAvalonia.Models;
 using System;
 using System.Linq;
 using System.Text.Json;

@@ -1,4 +1,4 @@
-﻿using AoE2DELobbyBrowser.Models;
+﻿using AoE2DELobbyBrowserAvalonia.Models;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
 

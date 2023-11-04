@@ -1,10 +1,10 @@
-﻿using AoE2DELobbyBrowser.Models;
+﻿using AoE2DELobbyBrowserAvalonia.Models;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AoE2DELobbyBrowser.Services
+namespace AoE2DELobbyBrowserAvalonia.Services
 {
     internal class NotificationsService
     {

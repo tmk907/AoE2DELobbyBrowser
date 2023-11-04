@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AoE2DELobbyBrowser.Api
+namespace AoE2DELobbyBrowserAvalonia.Api
 {
     public interface IApiClient
     {

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using AoE2DELobbyBrowser.Api;
+using AoE2DELobbyBrowserAvalonia.Api;
+using AoE2DELobbyBrowserAvalonia.Services;
 using Serilog;
 
 namespace AoE2DELobbyBrowser.Services

@@ -1,12 +1,15 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:AoE2DELobbyBrowserAvalonia.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:AoE2DELobbyBrowserAvalonia.Views"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="AoE2DELobbyBrowserAvalonia.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="AoE2DELobbyBrowserAvalonia">
-        <views:MainView />
+<Window
+    x:Class="AoE2DELobbyBrowserAvalonia.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:AoE2DELobbyBrowserAvalonia.Views"
+    xmlns:vm="using:AoE2DELobbyBrowserAvalonia.ViewModels"
+    Title="AoE2DELobbyBrowserAvalonia"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Icon="/Assets/avalonia-logo.ico"
+    mc:Ignorable="d">
+    <views:MainView />
 </Window>

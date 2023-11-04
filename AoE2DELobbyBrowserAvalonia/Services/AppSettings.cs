@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AoE2DELobbyBrowser.Services
+namespace AoE2DELobbyBrowserAvalonia.Services
 {
     internal class AppSettings
     {

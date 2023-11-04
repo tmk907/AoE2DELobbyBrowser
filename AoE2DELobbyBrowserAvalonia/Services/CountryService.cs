@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace AoE2DELobbyBrowser.Services
+namespace AoE2DELobbyBrowserAvalonia.Services
 {
     public class CountryService
     {
@@ -14,14 +14,14 @@ namespace AoE2DELobbyBrowser.Services
                 _countryCodes = LoadData();
             }
 
-            if (code != null && _countryCodes.TryGetValue(code, out var countryName)) 
+            if (code != null && _countryCodes.TryGetValue(code, out var countryName))
             {
                 return countryName;
             }
             return "";
         }
 
-        private Dictionary<string,string> LoadData()
+        private Dictionary<string, string> LoadData()
         {
             //string fullPath = Windows.ApplicationModel.Package.Current.InstalledPath + "/Assets/countries.csv";
             //var lines = File.ReadAllLines(fullPath);

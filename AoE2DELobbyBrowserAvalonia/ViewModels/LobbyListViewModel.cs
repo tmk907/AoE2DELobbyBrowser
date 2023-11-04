@@ -1,4 +1,5 @@
-﻿using AoE2DELobbyBrowser.Models;
+﻿using AoE2DELobbyBrowserAvalonia.Api;
+using AoE2DELobbyBrowserAvalonia.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,10 +13,10 @@ public partial class LobbyListViewModel : ViewModelBase
     {
         Lobbies = new ReadOnlyObservableCollection<Lobby>(new ObservableCollection<Lobby>
         {
-            Lobby.Create(new AoE2DELobbyBrowser.Api.LobbyDto
+            Lobby.Create(new LobbyDto
             {
                 Name = "Lobby1",
-                Players = new List<AoE2DELobbyBrowser.Api.PlayerDto>(),
+                Players = new List<PlayerDto>(),
                 GameType = GameType.Unknown,
                 MapType = MapType.Unknown,
                 MatchId = "asd",
@@ -23,10 +24,10 @@ public partial class LobbyListViewModel : ViewModelBase
                 Speed = GameSpeed.Unknown,
                 SteamLobbyId = "asd"
             }),
-            Lobby.Create(new AoE2DELobbyBrowser.Api.LobbyDto
+            Lobby.Create(new LobbyDto
             {
                 Name = "Lobby2",
-                Players = new List<AoE2DELobbyBrowser.Api.PlayerDto>(),
+                Players = new List<PlayerDto>(),
                 GameType = GameType.Unknown,
                 MapType = MapType.Unknown,
                 MatchId = "asd",

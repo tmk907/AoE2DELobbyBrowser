@@ -1,6 +1,5 @@
-﻿using AoE2DELobbyBrowser.Api;
-using AoE2DELobbyBrowser.Services;
-using AoE2DELobbyBrowserAvalonia;
+﻿using AoE2DELobbyBrowserAvalonia.Api;
+using AoE2DELobbyBrowserAvalonia.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -10,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace AoE2DELobbyBrowser.Models
+namespace AoE2DELobbyBrowserAvalonia.Models
 {
     public partial class Lobby : ObservableObject
     {

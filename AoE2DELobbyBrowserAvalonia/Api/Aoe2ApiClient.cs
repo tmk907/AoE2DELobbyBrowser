@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AoE2DELobbyBrowser.Api
+namespace AoE2DELobbyBrowserAvalonia.Api
 {
     internal class Aoe2ApiClient : IApiClient
     {

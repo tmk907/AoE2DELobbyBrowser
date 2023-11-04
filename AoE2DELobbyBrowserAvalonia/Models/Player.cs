@@ -1,8 +1,7 @@
-﻿using AoE2DELobbyBrowser.Api;
-using AoE2DELobbyBrowserAvalonia;
+﻿using AoE2DELobbyBrowserAvalonia.Api;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace AoE2DELobbyBrowser.Models
+namespace AoE2DELobbyBrowserAvalonia.Models
 {
     public class Player : ObservableObject
     {
