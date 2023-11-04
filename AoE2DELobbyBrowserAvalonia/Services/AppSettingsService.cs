@@ -1,5 +1,5 @@
-﻿using AoE2DELobbyBrowserAvalonia.Models;
-using System;
+﻿using AoE2DELobbyBrowserAvalonia;
+using AoE2DELobbyBrowserAvalonia.Models;
 using System.Linq;
 using System.Text.Json;
 
@@ -7,52 +7,35 @@ namespace AoE2DELobbyBrowser.Services
 {
     internal class AppSettingsService
     {
-        //private ApplicationDataContainer _localSettings;
+        private readonly IAppSettings _appSettings;
 
-        public AppSettingsService()
+        public AppSettingsService(IAppSettings appSettings)
         {
-            //_localSettings = ApplicationData.Current.LocalSettings;
-        }
-
-        public T Get<T>(string key, Func<T> createDefaultValue)
-        {
-            //if (_localSettings.Values.TryGetValue(key, out object serialized))
-            //{
-            //    var data = JsonSerializer.Deserialize<T>(serialized as string);
-            //    return data;
-            //}
-            //else
-            //{
-                var defaultValue = createDefaultValue();
-                Save(key, defaultValue);
-                return defaultValue;
-            //}
-        }
-
-        public void Save<T>(string key, T data)
-        {
-            var serialized = JsonSerializer.Serialize(data);
-            //_localSettings.Values[key] = serialized;
+            _appSettings = appSettings;
         }
 
         public LobbySettings GetLobbySettings()
         {
-            return Get("lobby-settings", () => new LobbySettings
+            if (_appSettings.LobbySettings == null)
             {
-                Interval = 10,
-                IsAutoRefreshEnabled = true,
-                Query = "",
-                Exclude = "",
-                SelectedGameSpeed = new GameSpeed().GetAll().First(),
-                SelectedGameType = new GameType().GetAll().First(),
-                SelectedMapType = new MapType().GetAll().First(),
-                ShowNotifications = false,
-            });
+                _appSettings.LobbySettings = JsonSerializer.Serialize(new LobbySettings
+                {
+                    Interval = 10,
+                    IsAutoRefreshEnabled = true,
+                    Query = "",
+                    Exclude = "",
+                    SelectedGameSpeed = new GameSpeed().GetAll().First(),
+                    SelectedGameType = new GameType().GetAll().First(),
+                    SelectedMapType = new MapType().GetAll().First(),
+                    ShowNotifications = false,
+                });
+            }
+            return JsonSerializer.Deserialize<LobbySettings>(_appSettings.LobbySettings);
         }
 
         public void SaveLobbySettings(LobbySettings settings)
         {
-            Save("lobby-settings", settings);
+            _appSettings.LobbySettings = JsonSerializer.Serialize(settings);
         }
     }
 }

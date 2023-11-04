@@ -25,10 +25,10 @@ namespace AoE2DELobbyBrowser.Services
 
         private readonly IApiClient _apiClient;
 
-        public PlayersService(IApiClient apiClient)
+        public PlayersService(IApiClient apiClient, ApplicationDataStorageHelper applicationDataStorageHelper)
         {
             _apiClient = apiClient;
-            _storageHelper = new ApplicationDataStorageHelper(new AppDataJsonSerializer());
+            _storageHelper = applicationDataStorageHelper;
         }
 
         public bool IsValidId(string id)
@@ -111,7 +111,7 @@ namespace AoE2DELobbyBrowser.Services
         {
             try
             {
-                return await _storageHelper.ReadFileAsync(FileName, new List<SteamPlayerDto>());
+                return await _storageHelper.ReadFileAsync(FileName, () => new List<SteamPlayerDto>());
             }
             catch (FileNotFoundException)
             {

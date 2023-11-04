@@ -1,11 +1,16 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using System;
 
 namespace AoE2DELobbyBrowserAvalonia.Services
 {
+    public enum JoinLink
+    {
+        Aoe2de,
+        Steam
+    }
+
     internal class AppSettings
     {
-        //private static ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
-
         private static TimeSpan _newLobbyHighlightTime = TimeSpan.Zero;
         public static TimeSpan NewLobbyHighlightTime
         {
@@ -13,22 +18,16 @@ namespace AoE2DELobbyBrowserAvalonia.Services
             {
                 if (_newLobbyHighlightTime == TimeSpan.Zero)
                 {
-                    //var seconds = (int)(_localSettings.Values[nameof(NewLobbyHighlightTime)] ?? 30);
-                    //_newLobbyHighlightTime = TimeSpan.FromSeconds(seconds);
+                    var settings = Ioc.Default.GetRequiredService<IAppSettings>();
+                    _newLobbyHighlightTime = TimeSpan.FromSeconds(settings.NewLobbyHighlightTime ?? 30);
                 }
                 return _newLobbyHighlightTime;
             }
             set
             {
                 _newLobbyHighlightTime = value;
-                //_localSettings.Values[nameof(NewLobbyHighlightTime)] = (int)value.TotalSeconds;
+                Ioc.Default.GetRequiredService<IAppSettings>().NewLobbyHighlightTime = (int)value.TotalSeconds;
             }
-        }
-
-        public enum JoinLink
-        {
-            Aoe2de,
-            Steam
         }
 
         private static JoinLink? _joinLinkType = null;
@@ -38,15 +37,14 @@ namespace AoE2DELobbyBrowserAvalonia.Services
             {
                 if (_joinLinkType is null)
                 {
-                    _joinLinkType = JoinLink.Aoe2de;
-                    //_joinLinkType = (JoinLink)(_localSettings.Values[nameof(JoinLinkType)] ?? 0);
+                    _joinLinkType = Ioc.Default.GetRequiredService<IAppSettings>().JoinLinkType;
                 }
                 return _joinLinkType.Value;
             }
             set
             {
                 _joinLinkType = value;
-                //_localSettings.Values[nameof(JoinLinkType)] = (int)value;
+                Ioc.Default.GetRequiredService<IAppSettings>().JoinLinkType = value;
             }
         }
 
@@ -57,15 +55,14 @@ namespace AoE2DELobbyBrowserAvalonia.Services
             {
                 if (_separator == null)
                 {
-                    _separator = string.Empty;
-                    //_separator = (string)(_localSettings.Values[nameof(Separator)] ?? "/");
+                    _separator = Ioc.Default.GetRequiredService<IAppSettings>().Separator ?? "/";
                 }
                 return _separator;
             }
             set
             {
                 _separator = value;
-                //_localSettings.Values[nameof(Separator)] = value;
+                Ioc.Default.GetRequiredService<IAppSettings>().Separator = value;
             }
         }
     }

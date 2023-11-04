@@ -1,36 +1,36 @@
 ﻿using System;
+using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace AoE2DELobbyBrowserAvalonia.Services
 {
     public class ApplicationDataStorageHelper
     {
-        //private readonly StorageFolder _localFolder = ApplicationData.Current.LocalFolder;
-        private IObjectSerializer _objectSerializer;
+        private readonly string _localFolder;
 
-        public ApplicationDataStorageHelper(IObjectSerializer objectSerializer)
+        public ApplicationDataStorageHelper(IPlatformConfiguration configuration)
         {
-            _objectSerializer = objectSerializer;
+            _localFolder = configuration.AppDataFolder;
         }
 
         public async Task CreateFileAsync(string fileName, object data)
         {
-            //var file = await _localFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
-            //await FileIO.WriteTextAsync(file, _objectSerializer.Serialize(data));
+            var path = Path.Combine(_localFolder, fileName);
+            await File.WriteAllTextAsync(path, JsonSerializer.Serialize(data));
         }
 
-        public async Task<T> ReadFileAsync<T>(string fileName, T defaultValue)
+        public async Task<T> ReadFileAsync<T>(string fileName, Func<T> createDefaultValue)
         {
             try
             {
-                //var file = await _localFolder.GetFileAsync(fileName);
-                //var data = await FileIO.ReadTextAsync(file);
-                //return _objectSerializer.Deserialize<T>(data);
-                return defaultValue;
+                var path = Path.Combine(_localFolder, fileName);
+                var data = await File.ReadAllTextAsync(path);
+                return JsonSerializer.Deserialize<T>(data);
             }
             catch (Exception)
             {
-                return defaultValue;
+                return createDefaultValue();
             }
         }
     }

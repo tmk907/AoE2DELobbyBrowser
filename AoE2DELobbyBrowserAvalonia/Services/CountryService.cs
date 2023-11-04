@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Avalonia.Platform;
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace AoE2DELobbyBrowserAvalonia.Services
@@ -23,16 +25,23 @@ namespace AoE2DELobbyBrowserAvalonia.Services
 
         private Dictionary<string, string> LoadData()
         {
-            //string fullPath = Windows.ApplicationModel.Package.Current.InstalledPath + "/Assets/countries.csv";
-            //var lines = File.ReadAllLines(fullPath);
+            List<string> lines = new List<string>();
+
+            using var stream = AssetLoader.Open(new Uri("avares://AoE2DELobbyBrowserAvalonia/Assets/countries.csv"));
+            using var streamReader = new StreamReader(stream);
+            while (!streamReader.EndOfStream)
+            {
+                lines.Add(streamReader.ReadLine());
+            }
+
             var countryCodes = new Dictionary<string, string>();
-            //foreach(var line in lines )
-            //{
-            //    var i = line.LastIndexOf(',');
-            //    var country = line.Substring(0, i);
-            //    var code = line.Substring(i + 1);
-            //    countryCodes.Add(code, country);
-            //}
+            foreach (var line in lines)
+            {
+                var i = line.LastIndexOf(',');
+                var country = line.Substring(0, i);
+                var code = line.Substring(i + 1);
+                countryCodes.Add(code, country);
+            }
             return countryCodes;
         }
     }

@@ -1,10 +1,11 @@
 ﻿using AoE2DELobbyBrowserAvalonia.Api;
 using AoE2DELobbyBrowserAvalonia.Services;
+using Avalonia.Input.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -47,14 +48,14 @@ namespace AoE2DELobbyBrowserAvalonia.Models
 
         public async Task JoinGame()
         {
-            Process.Start("open", JoinLink);
-
-            //await Windows.System.Launcher.LaunchUriAsync(new Uri(JoinLink));
+            var launcher = Ioc.Default.GetRequiredService<ILauncherService>();
+            await launcher.LauchUriAsync(new Uri(JoinLink));
         }
 
         public async Task CopyJoinLinkToClipboard()
         {
-            await App.Clipboard.SetTextAsync(JoinLink);
+            var clipboard = Ioc.Default.GetRequiredService<IClipboard>();
+            await clipboard.SetTextAsync(JoinLink);
         }
 
         public bool ContainsPlayer(string playerQuery)
@@ -78,7 +79,7 @@ namespace AoE2DELobbyBrowserAvalonia.Models
                 Map = dto.MapType,
             };
             lobby.Players.AddRange(dto.Players.OrderBy(x => x.Slot).Take(dto.NumSlots).Select(x => Player.Create(x)));
-            if (AppSettings.JoinLinkType == AppSettings.JoinLink.Aoe2de)
+            if (AppSettings.JoinLinkType == Services.JoinLink.Aoe2de)
             {
                 lobby.JoinLink = $"aoe2de://0/{lobby.MatchId}";
             }

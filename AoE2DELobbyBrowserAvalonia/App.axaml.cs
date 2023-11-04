@@ -7,39 +7,19 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
-using Avalonia.Input.Platform;
 using Avalonia.Markup.Xaml;
 using CommunityToolkit.Mvvm.DependencyInjection;
 //using Live.Avalonia;
-using Microsoft.Extensions.DependencyInjection;
-using Serilog;
-using System;
 using System.Diagnostics;
 
 namespace AoE2DELobbyBrowserAvalonia;
 
-public interface IPlatformServices
-{
-    void Register(IServiceCollection services);
-}
-
 public partial class App : Application //, ILiveView
 {
-    private IPlatformServices? _platformServices;
-
-    public IServiceProvider Services { get; private set; }
-
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
     }
-    public static string LogsFolderPath { get; }
-
-    //public static IPlayersService PlayersService { get; private set; }
-    public static IApiClient ApiClient { get; private set; }
-    public static CountryService CountryService { get; private set; }
-
-    public static IClipboard Clipboard { get; private set; }
 
     public override void OnFrameworkInitializationCompleted()
     {
@@ -59,13 +39,13 @@ public partial class App : Application //, ILiveView
                     DataContext = new MainViewModel()
                 };
             }
-            else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
-            {
-                singleViewPlatform.MainView = new MainView
-                {
-                    DataContext = new MainViewModel()
-                };
-            }
+            //else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
+            //{
+            //    singleViewPlatform.MainView = new MainView
+            //    {
+            //        DataContext = new MainViewModel()
+            //    };
+            //}
         }
         else
         {
@@ -76,20 +56,6 @@ public partial class App : Application //, ILiveView
         }
 
         base.OnFrameworkInitializationCompleted();
-    }
-
-    public void AddPlatformServices(IPlatformServices platformServices)
-    {
-        _platformServices = platformServices;
-    }
-
-    private IServiceProvider ConfigureServices()
-    {
-        var services = new ServiceCollection();
-
-        _platformServices?.Register(services);
-
-        return services.BuildServiceProvider();
     }
 
     private static bool IsProduction()

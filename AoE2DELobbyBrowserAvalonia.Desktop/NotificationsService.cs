@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace AoE2DELobbyBrowserAvalonia.Services
 {
-    internal class NotificationsService
+    internal class NotificationsService : INotificationsService
     {
         public NotificationsService()
         {

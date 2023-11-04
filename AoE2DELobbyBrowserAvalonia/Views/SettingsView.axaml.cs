@@ -1,13 +1,11 @@
-using AoE2DELobbyBrowser;
 using AoE2DELobbyBrowserAvalonia.Services;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
 using FluentAvalonia.UI.Controls;
 using System;
 using System.Diagnostics;
-using System.IO;
 
 namespace AoE2DELobbyBrowserAvalonia;
 
@@ -18,8 +16,8 @@ public partial class SettingsView : UserControl
         InitializeComponent();
     }
 
-    public bool IsAoe2deLink => AppSettings.JoinLinkType == AppSettings.JoinLink.Aoe2de;
-    public bool IsSteamLink => AppSettings.JoinLinkType == AppSettings.JoinLink.Steam;
+    public bool IsAoe2deLink => AppSettings.JoinLinkType == JoinLink.Aoe2de;
+    public bool IsSteamLink => AppSettings.JoinLinkType == JoinLink.Steam;
 
     public string Version
     {
@@ -45,37 +43,26 @@ public partial class SettingsView : UserControl
 
     private void Aoe2de_RadioButton_Checked(object sender, RoutedEventArgs e)
     {
-        AppSettings.JoinLinkType = AppSettings.JoinLink.Aoe2de;
+        AppSettings.JoinLinkType = JoinLink.Aoe2de;
     }
 
     private void Steam_RadioButton_Checked(object sender, RoutedEventArgs e)
     {
-        AppSettings.JoinLinkType = AppSettings.JoinLink.Steam;
-    }
-
-    private void separatorTextBox_TextChanged(object sender, TextChangedEventArgs e)
-    {
-        //AppSettings.Separator = separatorTextBox.Text;
+        AppSettings.JoinLinkType = JoinLink.Steam;
     }
 
     private async void OpenLogsFolderClicked(object sender, RoutedEventArgs e)
     {
-        try
-        {
-            Directory.CreateDirectory(App.LogsFolderPath);
-        }
-        catch (Exception) { }
-
-        using var proc = new Process { StartInfo = { UseShellExecute = true, FileName = $"explorer", Arguments = App.LogsFolderPath } };
-        proc.Start();
-
-        //await Launcher.LaunchFolderPathAsync(App.LogsFolderPath);
+        var logsFolder = Ioc.Default.GetRequiredService<IPlatformConfiguration>().LogsFolder;
+        var launcher = Ioc.Default.GetRequiredService<ILauncherService>();
+        await launcher.OpenFolderAsync(logsFolder);
     }
 
     private async void RateAppClicked(object sender, RoutedEventArgs e)
     {
         var productId = "9NTQFS6RCXL8";
         Process.Start("open", $"ms-windows-store://review/?ProductId={productId}");
-        //bool result = await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://review/?ProductId={productId}"));
+        var launcher = Ioc.Default.GetRequiredService<ILauncherService>();
+        await launcher.LauchUriAsync(new Uri($"ms-windows-store://review/?ProductId={productId}"));
     }
 }

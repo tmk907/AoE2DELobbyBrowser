@@ -1,5 +1,7 @@
 ﻿using AoE2DELobbyBrowserAvalonia.Api;
+using AoE2DELobbyBrowserAvalonia.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace AoE2DELobbyBrowserAvalonia.Models
 {
@@ -17,14 +19,14 @@ namespace AoE2DELobbyBrowserAvalonia.Models
             SteamProfileId = profileId;
             SteamProfileUrl = $"https://steamcommunity.com/profiles/{SteamProfileId}";
             Country = countryCode;
-            CountryName = App.CountryService.GetCountryName(Country);
+            CountryName = Ioc.Default.GetRequiredService<CountryService>().GetCountryName(Country);
         }
 
         public void UpdateCountry(string country)
         {
             if (country == null) return;
             Country = country;
-            CountryName = App.CountryService.GetCountryName(Country);
+            CountryName = Ioc.Default.GetRequiredService<CountryService>().GetCountryName(Country);
             OnPropertyChanged(nameof(Country));
             OnPropertyChanged(nameof(CountryName));
         }
