@@ -5,13 +5,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:AoE2DELobbyBrowserAvalonia.Views"
+    xmlns:design="using:AoE2DELobbyBrowserAvalonia.ViewModels.DesignData"
     xmlns:vm="using:AoE2DELobbyBrowserAvalonia.ViewModels"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    x:DataType="vm:MainViewModel"
+    x:DataType="vm:IMainViewModel"
     mc:Ignorable="d">
     <Design.DataContext>
-        <vm:MainViewModel />
+        <design:DesignMainViewModel />
     </Design.DataContext>
     <UserControl.Styles>
         <Style Selector="TextBlock.lightForeground">
@@ -64,6 +65,7 @@
                         Value="{Binding Settings.Interval, Mode=TwoWay}" />
                     <CheckBox
                         Margin="8,0,4,0"
+                        d:DataContext="true"
                         HotKey="Ctrl+N"
                         IsChecked="{Binding Settings.ShowNotifications, Mode=TwoWay}"
                         ToolTip.Tip="Show notifications (Ctrl + N)">

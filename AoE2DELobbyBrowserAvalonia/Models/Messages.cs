@@ -8,4 +8,6 @@ namespace AoE2DELobbyBrowserAvalonia
     }
 
     public class NavigateBackMessage { }
+
+    public sealed record KeyboardShortcutMessage(Avalonia.Input.Key Key, Avalonia.Input.KeyModifiers Modifier);
 }

@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Input;
 using CommunityToolkit.Mvvm.Input;
-using System.Linq;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace AoE2DELobbyBrowserAvalonia.Views;
 
@@ -9,20 +10,25 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        this.KeyBindings.Add(new Avalonia.Input.KeyBinding()
+        RegisterKeyBinding(Key.F, KeyModifiers.Control);
+        RegisterKeyBinding(Key.G, KeyModifiers.Control);
+        RegisterKeyBinding(Key.Q, KeyModifiers.Control);
+    }
+
+    private void RegisterKeyBinding(Key key, KeyModifiers keyModifiers)
+    {
+        this.KeyBindings.Add(new KeyBinding()
         {
-            Command = this.LogicalChildren.OfType<MainView>().First().FocusSearchCommand,
-            Gesture = new Avalonia.Input.KeyGesture(Avalonia.Input.Key.F, Avalonia.Input.KeyModifiers.Control)
+            Command = SendKeyboardShortcutMessageCommand,
+            CommandParameter = new KeyboardShortcutMessage(key, keyModifiers),
+            Gesture = new KeyGesture(key, keyModifiers)
         });
-        this.KeyBindings.Add(new Avalonia.Input.KeyBinding()
-        {
-            Command = this.LogicalChildren.OfType<MainView>().First().FocusExcludeCommand,
-            Gesture = new Avalonia.Input.KeyGesture(Avalonia.Input.Key.G, Avalonia.Input.KeyModifiers.Control)
-        });
-        this.KeyBindings.Add(new Avalonia.Input.KeyBinding()
-        {
-            Command = this.LogicalChildren.OfType<MainView>().First().FocusGameTypesCommand,
-            Gesture = new Avalonia.Input.KeyGesture(Avalonia.Input.Key.Q, Avalonia.Input.KeyModifiers.Control)
-        });
+    }
+
+    [RelayCommand]
+    private void SendKeyboardShortcutMessage(KeyboardShortcutMessage? message)
+    {
+        if (message == null) return;
+        WeakReferenceMessenger.Default.Send(message);
     }
 }

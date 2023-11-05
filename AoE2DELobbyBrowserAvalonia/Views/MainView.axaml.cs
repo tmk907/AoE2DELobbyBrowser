@@ -1,40 +1,40 @@
 ﻿using Avalonia.Controls;
-using CommunityToolkit.Mvvm.Input;
-using System.Linq;
-using System.Windows.Input;
+using Avalonia.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace AoE2DELobbyBrowserAvalonia.Views;
 
-public partial class MainView : UserControl
+public partial class MainView : UserControl, IRecipient<KeyboardShortcutMessage>
 {
-
     public MainView()
     {
         InitializeComponent();
+
+        WeakReferenceMessenger.Default.Register<KeyboardShortcutMessage>(this);
     }
 
-    [RelayCommand]
-    public void FocusSearch()
+    public void Receive(KeyboardShortcutMessage message)
     {
-        this.FindControl<TextBox>("searchTextBox")?.Focus(Avalonia.Input.NavigationMethod.Pointer);
+        switch(message)
+        {
+            case { Key: Key.F, Modifier: KeyModifiers.Control }:
+                this.FindControl<TextBox>("searchTextBox")?.Focus(NavigationMethod.Pointer);
+                break;
+            case { Key: Key.G, Modifier: KeyModifiers.Control }:
+                this.FindControl<TextBox>("excludeTextBox")?.Focus();
+                break;
+            case { Key: Key.Q, Modifier: KeyModifiers.Control }:
+                var c = this.FindControl<ComboBox>("gameTypesCombobox");
+                c?.Focus();
+                break;
+            default:
+                break;
+        }
     }
 
-    [RelayCommand]
-    private void FocusExclude()
+    private void UnFocusOnKeyDown(object? sender, KeyEventArgs e)
     {
-        this.FindControl<TextBox>("excludeTextBox")?.Focus();
-    }
-
-    [RelayCommand]
-    private void FocusGameTypes()
-    {
-        var c = this.FindControl<ComboBox>("gameTypesCombobox");
-        c?.Focus();
-    }
-
-    private void UnFocusOnKeyDown(object? sender, Avalonia.Input.KeyEventArgs e)
-    {
-        if (e.Key == Avalonia.Input.Key.Escape || e.Key == Avalonia.Input.Key.Enter) 
+        if (e.Key == Key.Escape || e.Key == Key.Enter) 
         {
             TopLevel.GetTopLevel(this)?.FocusManager?.ClearFocus();
         }
