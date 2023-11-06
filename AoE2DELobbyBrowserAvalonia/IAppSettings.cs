@@ -7,8 +7,8 @@ namespace AoE2DELobbyBrowserAvalonia
     {
         int? NewLobbyHighlightTime { get; set; }
 
-        [Option(DefaultValue = JoinLink.Aoe2de)]
-        JoinLink JoinLinkType { get; set; }
+        [Option(DefaultValue = JoinLinkEnum.Aoe2de)]
+        JoinLinkEnum JoinLinkType { get; set; }
 
         string? Separator { get; set; }
 

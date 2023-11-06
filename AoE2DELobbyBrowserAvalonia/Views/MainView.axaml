@@ -78,6 +78,7 @@
                     Height="32"
                     Padding="0"
                     Background="Transparent"
+                    Command="{Binding NavigateToSettingsCommand}"
                     HotKey="Ctrl+I"
                     ToolTip.Tip="Settings (Ctrl + I)">
                     <TextBlock

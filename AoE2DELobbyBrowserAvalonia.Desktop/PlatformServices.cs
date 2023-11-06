@@ -21,7 +21,7 @@ public class PlatformServices : IPlatformServices
            .Build();
         services.AddSingleton<IAppSettings>(appSettings);
 
-        services.AddSingleton<WindowsLauncherService>();
+        services.AddSingleton<ILauncherService, WindowsLauncherService>();
         services.AddSingleton<INotificationsService>(_=>new NotificationsService());
     }
 }

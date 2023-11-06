@@ -3,7 +3,7 @@ using System;
 
 namespace AoE2DELobbyBrowserAvalonia.Services
 {
-    public enum JoinLink
+    public enum JoinLinkEnum
     {
         Aoe2de,
         Steam
@@ -30,8 +30,8 @@ namespace AoE2DELobbyBrowserAvalonia.Services
             }
         }
 
-        private static JoinLink? _joinLinkType = null;
-        public static JoinLink JoinLinkType
+        private static JoinLinkEnum? _joinLinkType = null;
+        public static JoinLinkEnum JoinLinkType
         {
             get
             {

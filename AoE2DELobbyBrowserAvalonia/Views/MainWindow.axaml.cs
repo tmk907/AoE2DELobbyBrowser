@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using AoE2DELobbyBrowserAvalonia.ViewModels;
+using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -13,6 +14,8 @@ public partial class MainWindow : Window
         RegisterKeyBinding(Key.F, KeyModifiers.Control);
         RegisterKeyBinding(Key.G, KeyModifiers.Control);
         RegisterKeyBinding(Key.Q, KeyModifiers.Control);
+
+        DataContext = new MainWindowViewModel();
     }
 
     private void RegisterKeyBinding(Key key, KeyModifiers keyModifiers)

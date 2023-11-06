@@ -2,12 +2,9 @@
 
 namespace AoE2DELobbyBrowserAvalonia
 {
-    public class NavigateToMessage
-    {
-        public Type Destination { get; set; }
-    }
+    public sealed record NavigateToMessage(Type Destination);
 
-    public class NavigateBackMessage { }
+    public sealed record NavigateBackMessage();
 
     public sealed record KeyboardShortcutMessage(Avalonia.Input.Key Key, Avalonia.Input.KeyModifiers Modifier);
 }

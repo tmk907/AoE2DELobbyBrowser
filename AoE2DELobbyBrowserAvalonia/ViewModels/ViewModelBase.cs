@@ -2,6 +2,9 @@
 
 namespace AoE2DELobbyBrowserAvalonia.ViewModels;
 
-public class ViewModelBase : ObservableObject
+public interface INavigableViewModel { }
+
+
+public class ViewModelBase : ObservableObject, INavigableViewModel
 {
 }

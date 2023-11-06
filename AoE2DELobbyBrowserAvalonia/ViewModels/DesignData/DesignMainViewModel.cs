@@ -24,6 +24,8 @@ public class DesignMainViewModel : IMainViewModel
 
     public IAsyncRelayCommand<Player> AddFriendCommand { get; }
 
+    public IRelayCommand NavigateToSettingsCommand { get; }
+
     public LobbySettings Settings { get; }
 
     public ILobbyListViewModel LobbyListViewModel { get; }
