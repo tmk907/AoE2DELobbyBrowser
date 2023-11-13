@@ -1,10 +1,17 @@
-﻿using AoE2DELobbyBrowser.Services;
-using AoE2DELobbyBrowserAvalonia.Models;
+﻿using AoE2DELobbyBrowserAvalonia.Models;
 using AoE2DELobbyBrowserAvalonia.Services;
+using Avalonia.ReactiveUI;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using DynamicData.Binding;
+using Serilog;
+using System;
 using System.Collections.Generic;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AoE2DELobbyBrowserAvalonia.ViewModels;
@@ -31,43 +38,62 @@ public interface IMainViewModel
 public partial class MainViewModel : ViewModelBase, IMainViewModel
 {
     private readonly AppSettingsService _appSettingsService;
+    private readonly LobbyService _lobbyService;
+
     public MainViewModel()
     {
+        _lobbyService = Ioc.Default.GetRequiredService<LobbyService>();
         _appSettingsService = Ioc.Default.GetRequiredService<AppSettingsService>();
         Settings = _appSettingsService.GetLobbySettings();
-        Settings.PropertyChanged += Settings_PropertyChanged;
 
-        Loading = false;
+        Settings.WhenAnyPropertyChanged()
+                .Do(_ => Log.Debug($"{nameof(MainViewModel)} {nameof(Settings)} changed"))
+                .Do(x => _lobbyService.UpdateSettings(x))
+                .Subscribe()
+                .DisposeWith(Disposal);
+
         LobbyListViewModel = new LobbyListViewModel();
+
+        _lobbyService.IsLoading
+                .DistinctUntilChanged()
+                .ObserveOn(AvaloniaScheduler.Instance)
+                .Do(x => Loading = x)
+                .Subscribe()
+                .DisposeWith(Disposal);
     }
 
-    private void Settings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    protected CompositeDisposable Disposal = new CompositeDisposable();
+    public void Dispose()
     {
-        _appSettingsService.SaveLobbySettings(Settings);   
+        Log.Debug("Dispose MainViewModel");
+        Disposal.Dispose();
     }
 
     public LobbySettings Settings { get; }
 
     public ILobbyListViewModel LobbyListViewModel { get; }
 
-    public bool Loading { get; }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanRefresh))]
+    [NotifyCanExecuteChangedFor(nameof(RefreshCommand))]
+    private bool _loading;
     public int OnlineCount { get; }
 
     public List<string> GameTypes { get; } = new GameType().GetAll();
     public List<string> GameSpeeds { get; } = new GameSpeed().GetAll();
     public List<string> MapTypes { get; } = new MapType().GetAll();
 
+    public bool CanRefresh => !Loading;
 
-    [RelayCommand(AllowConcurrentExecutions =false)]
-    private async Task RefreshAsync()
+    [RelayCommand(AllowConcurrentExecutions = false, CanExecute = nameof(CanRefresh))]
+    private async Task RefreshAsync(CancellationToken ct)
     {
-
+        await _lobbyService.RefreshAsync(ct);
     }
 
     [RelayCommand]
     private async Task AddFriendAsync()
     {
-
     }
 
     [RelayCommand]

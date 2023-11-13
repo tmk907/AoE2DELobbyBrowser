@@ -16,63 +16,83 @@
     <Design.DataContext>
         <design:DesignLobbyListViewModel />
     </Design.DataContext>
-    <Grid Margin="12,0,12,0">
-        <ItemsControl ItemsSource="{Binding Lobbies}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="models:Lobby">
-                    <Grid ColumnDefinitions="*,0,70,140,140,80,80,44">
-                        <TextBlock
-                            Grid.Column="0"
-                            Classes="listItemTextBlock"
-                            FontWeight="{Binding IsNew, Mode=OneWay, Converter={x:Static converters:Converters.FontWeightConverter}}"
-                            Text="{Binding Name}"
-                            TextTrimming="CharacterEllipsis" />
-                        <TextBlock Grid.Column="2" Classes="listItemTextBlock">
-                            <Run Text="{Binding NumPlayers, Mode=OneWay}" />
-                            <Run Text="/" />
-                            <Run Text="{Binding NumSlots, Mode=OneWay}" />
-                        </TextBlock>
-                        <TextBlock
-                            Grid.Column="3"
-                            Classes="listItemTextBlock"
-                            Text="{Binding GameType}" />
-                        <TextBlock
-                            Grid.Column="4"
-                            Classes="listItemTextBlock"
-                            Text="{Binding Map}" />
-                        <TextBlock
-                            Grid.Column="5"
-                            Classes="listItemTextBlock"
-                            Text="{Binding Speed}" />
-                        <Button
-                            Grid.Column="6"
-                            Width="80"
-                            Background="{StaticResource Accent}"
-                            BorderBrush="{StaticResource BorderColor}"
-                            BorderThickness="1"
-                            Command="{Binding JoinGameCommand}"
-                            Content="Join"
-                            Foreground="{StaticResource ForegroundTextColor}" />
-                        <Button
-                            Grid.Column="7"
-                            Width="32"
-                            Height="32"
-                            Margin="12,0,0,0"
-                            Padding="0"
-                            Background="Transparent"
-                            BorderBrush="{StaticResource BorderColor}"
-                            BorderThickness="1"
-                            Command="{Binding CopyLobbyLinkCommand}"
-                            Foreground="{StaticResource DarkAccent}"
-                            ToolTip.Tip="{Binding JoinLink}">
-                            <TextBlock
-                                FontFamily="{StaticResource SymbolFont}"
-                                FontSize="18"
-                                Text="{x:Static views:SymbolIcons.Copy}" />
-                        </Button>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+    <UserControl.Styles>
+        <Style Selector="Button.hyperlinkButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+    </UserControl.Styles>
+    <UserControl.DataTemplates>
+        <DataTemplate DataType="models:Lobby">
+            <Grid Margin="4" ColumnDefinitions="*,0,70,140,140,80,80,44">
+                <TextBlock
+                    Grid.Column="0"
+                    Classes="listItemTextBlock"
+                    FontWeight="{Binding IsNew, Mode=OneWay, Converter={x:Static converters:Converters.FontWeightConverter}}"
+                    Text="{Binding Name}"
+                    TextTrimming="CharacterEllipsis" />
+                <Button
+                    Grid.Column="2"
+                    Classes="hyperlinkButton"
+                    Command="{Binding $parent[ItemsControl].((vm:ILobbyListViewModel)DataContext).SelectLobbyCommand}"
+                    CommandParameter="{Binding}">
+                    <TextBlock Classes="listItemTextBlock">
+                        <Run Text="{Binding NumPlayers, Mode=OneWay}" />
+                        <Run Text="/" />
+                        <Run Text="{Binding NumSlots, Mode=OneWay}" />
+                    </TextBlock>
+                </Button>
+                <TextBlock
+                    Grid.Column="3"
+                    Classes="listItemTextBlock"
+                    Text="{Binding GameType}" />
+                <TextBlock
+                    Grid.Column="4"
+                    Classes="listItemTextBlock"
+                    Text="{Binding Map}" />
+                <TextBlock
+                    Grid.Column="5"
+                    Classes="listItemTextBlock"
+                    Text="{Binding Speed}" />
+                <Button
+                    Grid.Column="6"
+                    Width="80"
+                    Background="{StaticResource Accent}"
+                    BorderBrush="{StaticResource BorderColor}"
+                    BorderThickness="1"
+                    Command="{Binding JoinGameCommand}"
+                    Content="Join"
+                    Foreground="{StaticResource ForegroundTextColor}" />
+                <Button
+                    Grid.Column="7"
+                    Width="32"
+                    Height="32"
+                    Margin="12,0,0,0"
+                    Padding="0"
+                    Background="Transparent"
+                    BorderBrush="{StaticResource BorderColor}"
+                    BorderThickness="1"
+                    Command="{Binding CopyLobbyLinkCommand}"
+                    Foreground="{StaticResource DarkAccent}"
+                    ToolTip.Tip="{Binding JoinLink}">
+                    <TextBlock
+                        FontFamily="{StaticResource SymbolFont}"
+                        FontSize="18"
+                        Text="{x:Static views:SymbolIcons.Copy}" />
+                </Button>
+            </Grid>
+        </DataTemplate>
+    </UserControl.DataTemplates>
+    <Grid>
+        <ScrollViewer>
+            <ItemsControl Margin="12,0,12,0" ItemsSource="{Binding Lobbies}" />
+        </ScrollViewer>
+        <Grid
+            x:Name="playersPopup"
+            Background="Transparent"
+            IsVisible="{Binding SelectedLobby, Converter={x:Static ObjectConverters.IsNotNull}}"
+            Tapped="Grid_Tapped">
+            <views:PlayersPopupControl DataContext="{Binding SelectedLobby}" />
+        </Grid>
     </Grid>
 </UserControl>

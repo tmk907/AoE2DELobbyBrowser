@@ -1,11 +1,10 @@
-﻿using AoE2DELobbyBrowserAvalonia;
-using AoE2DELobbyBrowserAvalonia.Models;
+﻿using AoE2DELobbyBrowserAvalonia.Models;
 using System.Linq;
 using System.Text.Json;
 
-namespace AoE2DELobbyBrowser.Services
+namespace AoE2DELobbyBrowserAvalonia.Services
 {
-    internal class AppSettingsService
+    public class AppSettingsService
     {
         private readonly IAppSettings _appSettings;
 

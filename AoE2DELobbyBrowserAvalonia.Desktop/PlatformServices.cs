@@ -14,7 +14,7 @@ public class PlatformServices : IPlatformServices
                .UseJsonFile(WindowsConfiguration.ConfigFileName)
                .Build();
         var platformConfig = new WindowsConfiguration(config);
-        services.AddSingleton<IPlatformConfiguration>(platformConfig);
+        services.AddSingleton<IConfiguration>(platformConfig);
 
         var appSettings = new ConfigurationBuilder<IAppSettings>()
            .UseJsonFile(Path.Combine(platformConfig.AppDataFolder, "settings.json"))

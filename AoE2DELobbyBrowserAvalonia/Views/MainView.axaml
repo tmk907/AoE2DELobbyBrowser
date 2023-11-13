@@ -139,7 +139,7 @@
         <controls:LobbyListControl Grid.Row="1" DataContext="{Binding LobbyListViewModel}" />
         <ProgressBar
             Grid.Row="1"
-            Foreground="Red"
+            Foreground="{StaticResource DarkAccent}"
             IsIndeterminate="True"
             IsVisible="{Binding Loading}" />
     </Grid>

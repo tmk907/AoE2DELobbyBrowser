@@ -17,11 +17,13 @@ namespace AoE2DELobbyBrowserAvalonia.Api
     public const string BaseUrl = "aoe2api.dryforest.net";
 #endif
 
-        private const string getLobbiesUrl = $"https://{BaseUrl}/api/v3/lobbies";
+        private readonly string _baseUrl;
+        private readonly string getLobbiesUrl = $"https://{BaseUrl}/api/v3/lobbies";
         private readonly HttpClient _httpClient;
 
-        public Aoe2ApiClient()
+        public Aoe2ApiClient(IConfiguration config)
         {
+            _baseUrl = config.AppConfig.ApiBaseUrl;
             _httpClient = new HttpClient();
             _httpClient.Timeout = TimeSpan.FromSeconds(20);
         }
@@ -32,8 +34,8 @@ namespace AoE2DELobbyBrowserAvalonia.Api
             try
             {
                 var result = await _httpClient.GetFromJsonAsync<List<LobbyDto>>(getLobbiesUrl, cancellationToken);
-                Log.Debug($"Found {result.Count} lobbies");
-                return result;
+                Log.Debug($"Found {result?.Count ?? 0} lobbies");
+                return result ?? new List<LobbyDto>();
             }
             catch (Exception ex)
             {

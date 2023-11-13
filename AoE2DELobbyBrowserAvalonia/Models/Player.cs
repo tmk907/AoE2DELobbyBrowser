@@ -2,10 +2,13 @@
 using AoE2DELobbyBrowserAvalonia.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
+using System.Threading.Tasks;
+using System;
 
 namespace AoE2DELobbyBrowserAvalonia.Models
 {
-    public class Player : ObservableObject
+    public partial class Player : ObservableObject
     {
         public string SteamProfileId { get; private set; }
         public string Name { get; private set; }
@@ -29,6 +32,13 @@ namespace AoE2DELobbyBrowserAvalonia.Models
             CountryName = Ioc.Default.GetRequiredService<CountryService>().GetCountryName(Country);
             OnPropertyChanged(nameof(Country));
             OnPropertyChanged(nameof(CountryName));
+        }
+
+        [RelayCommand]
+        private async Task OpenUrl(string url)
+        {
+            var launcher = Ioc.Default.GetRequiredService<ILauncherService>();
+            await launcher.LauchUriAsync(new Uri(url));
         }
 
         public static Player Create(PlayerDto dto)

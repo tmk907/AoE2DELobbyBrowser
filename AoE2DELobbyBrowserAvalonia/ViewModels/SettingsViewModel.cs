@@ -1,16 +1,11 @@
 ﻿using AoE2DELobbyBrowserAvalonia.Services;
-using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AoE2DELobbyBrowserAvalonia.ViewModels
@@ -77,7 +72,7 @@ namespace AoE2DELobbyBrowserAvalonia.ViewModels
         [RelayCommand]
         private async Task OpenLogsFolder()
         {
-            var logsFolder = Ioc.Default.GetRequiredService<IPlatformConfiguration>().LogsFolder;
+            var logsFolder = Ioc.Default.GetRequiredService<IConfiguration>().LogsFolder;
             Directory.CreateDirectory(logsFolder);
             var launcher = Ioc.Default.GetRequiredService<ILauncherService>();
             await launcher.OpenFolderAsync(logsFolder);

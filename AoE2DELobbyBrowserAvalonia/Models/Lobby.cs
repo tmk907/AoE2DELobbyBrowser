@@ -79,7 +79,7 @@ namespace AoE2DELobbyBrowserAvalonia.Models
                 Map = dto.MapType,
             };
             lobby.Players.AddRange(dto.Players.OrderBy(x => x.Slot).Take(dto.NumSlots).Select(x => Player.Create(x)));
-            if (AppSettings.JoinLinkType == Services.JoinLinkEnum.Aoe2de)
+            if (AppSettings.JoinLinkType == JoinLinkEnum.Aoe2de)
             {
                 lobby.JoinLink = $"aoe2de://0/{lobby.MatchId}";
             }

@@ -1,5 +1,6 @@
 ﻿using AoE2DELobbyBrowserAvalonia.Api;
 using AoE2DELobbyBrowserAvalonia.Models;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -36,7 +37,12 @@ public class DesignLobbyListViewModel : ILobbyListViewModel
             })
         });
         Lobbies.First().IsNew = true;
+        SelectedLobby = Lobbies.First();
     }
 
+    public Lobby? SelectedLobby { get; }
+
     public ReadOnlyObservableCollection<Lobby> Lobbies { get; }
+
+    public IRelayCommand<Lobby> SelectLobbyCommand => throw new System.NotImplementedException();
 }

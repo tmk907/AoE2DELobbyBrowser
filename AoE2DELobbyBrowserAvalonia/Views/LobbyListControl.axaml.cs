@@ -1,3 +1,4 @@
+using AoE2DELobbyBrowserAvalonia.ViewModels;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -9,5 +10,11 @@ public partial class LobbyListControl : UserControl
     public LobbyListControl()
     {
         InitializeComponent();
+    }
+
+    private void Grid_Tapped(object? sender, Avalonia.Input.TappedEventArgs e)
+    {
+        var vm = (DataContext as LobbyListViewModel);
+        vm.SelectedLobby = null;
     }
 }

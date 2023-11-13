@@ -31,11 +31,13 @@ namespace AoE2DELobbyBrowserAvalonia
                 }
                 return null;
             });
-            services.AddSingleton<IApiClient>(_ => new Aoe2ApiClient());
+
+            services.AddSingleton<IApiClient,Aoe2ApiClient>();
             services.AddSingleton<AppSettingsService>();
             services.AddSingleton<ApplicationDataStorageHelper>();
             services.AddSingleton<PlayersService>();
             services.AddSingleton<CountryService>();
+            services.AddSingleton<LobbyService>();
 
             _platformServices?.Register(services);
 

@@ -9,7 +9,7 @@ namespace AoE2DELobbyBrowserAvalonia.Services
     {
         private readonly string _localFolder;
 
-        public ApplicationDataStorageHelper(IPlatformConfiguration configuration)
+        public ApplicationDataStorageHelper(IConfiguration configuration)
         {
             _localFolder = configuration.AppDataFolder;
         }
