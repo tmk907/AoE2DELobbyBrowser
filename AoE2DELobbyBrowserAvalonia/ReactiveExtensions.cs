@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reactive.Disposables;
 
-namespace AoE2DELobbyBrowserAvalonia.Services
+namespace AoE2DELobbyBrowserAvalonia
 {
     public static class ReactiveExtensions
     {

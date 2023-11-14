@@ -25,14 +25,14 @@ namespace AoE2DELobbyBrowserAvalonia.Services
         private ISubject<bool> _isLoadingSubject;
 
         protected CompositeDisposable Disposal = new CompositeDisposable();
-        private readonly SourceCache<Lobby, string> _itemsCache;
+        private readonly SourceCache<LobbyVM, string> _itemsCache;
 
         public LobbyService(IApiClient apiClient, AppSettingsService appSettingsService)
         {
             _apiClient = apiClient;
             _appSettingsService = appSettingsService;
             _settings = appSettingsService.GetLobbySettings();
-            _itemsCache = new SourceCache<Lobby, string>(x => x.MatchId);
+            _itemsCache = new SourceCache<LobbyVM, string>(x => x.MatchId);
             _isLoadingSubject = new Subject<bool>();
             
             IsLoading = _isLoadingSubject.StartWith(false).Replay(1).AutoConnect();
@@ -79,7 +79,7 @@ namespace AoE2DELobbyBrowserAvalonia.Services
                 .Subscribe()
                 .DisposeWith(Disposal);
 
-            Func<Lobby, bool> lobbyFilter = lobby =>
+            Func<LobbyVM, bool> lobbyFilter = lobby =>
             {
                 var isMatched = true;
                 if (!string.IsNullOrEmpty(_settings.Query))
@@ -100,7 +100,7 @@ namespace AoE2DELobbyBrowserAvalonia.Services
                 return isMatched && !isExcluded;
             };
 
-            Func<Lobby, bool> gameFilter = lobby =>
+            Func<LobbyVM, bool> gameFilter = lobby =>
             {
                 return (_settings.SelectedGameType == GameType.All || lobby.GameType == _settings.SelectedGameType)
                     && (_settings.SelectedGameSpeed == GameType.All || lobby.Speed == _settings.SelectedGameSpeed)
@@ -132,8 +132,8 @@ namespace AoE2DELobbyBrowserAvalonia.Services
         }
 
         public IObservable<bool> IsLoading { get; private set; }
-        public IObservable<IChangeSet<Lobby, string>> AllLobbyChanges { get; private set; }
-        public IObservable<IChangeSet<Lobby, string>> FilteredLobbyChanges { get; private set; }
+        public IObservable<IChangeSet<LobbyVM, string>> AllLobbyChanges { get; private set; }
+        public IObservable<IChangeSet<LobbyVM, string>> FilteredLobbyChanges { get; private set; }
 
         public void Dispose()
         {
@@ -150,7 +150,7 @@ namespace AoE2DELobbyBrowserAvalonia.Services
             _isLoadingSubject.OnNext(true);
 
             var results = await _apiClient.GetAllLobbiesAsync(token);
-            var lobbies = results.Select(dto => Lobby.Create(dto));
+            var lobbies = results.Select(dto => LobbyVM.Create(dto));
             var keysToDelete = _itemsCache.Keys.ToHashSet();
             keysToDelete.ExceptWith(lobbies.Select(x => x.MatchId).ToList());
             _itemsCache.Edit(updater =>

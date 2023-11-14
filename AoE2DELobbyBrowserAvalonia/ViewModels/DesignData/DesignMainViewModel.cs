@@ -22,7 +22,7 @@ public class DesignMainViewModel : IMainViewModel
 
     public IAsyncRelayCommand RefreshCommand { get; }
 
-    public IAsyncRelayCommand<Player> AddFriendCommand { get; }
+    public IAsyncRelayCommand<PlayerVM> AddFriendCommand { get; }
 
     public IRelayCommand NavigateToSettingsCommand { get; }
 

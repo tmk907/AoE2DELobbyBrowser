@@ -3,20 +3,20 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace AoE2DELobbyBrowserAvalonia.Models
 {
-    public class Friend : ObservableObject
+    public class FriendVM : ObservableObject
     {
-        public Player Player { get; set; }
+        public PlayerVM Player { get; set; }
 
         public bool IsOnline { get; private set; }
 
-        public Lobby Lobby { get; private set; }
+        public LobbyVM Lobby { get; private set; }
 
-        public Friend(string name, string profileId, string country)
+        public FriendVM(string name, string profileId, string country)
         {
-            Player = new Player(name, profileId, country);
+            Player = new PlayerVM(name, profileId, country);
         }
 
-        public void UpdateLobby(Lobby lobby)
+        public void UpdateLobby(LobbyVM lobby)
         {
             Lobby = lobby;
             OnPropertyChanged(nameof(Lobby));
@@ -42,9 +42,9 @@ namespace AoE2DELobbyBrowserAvalonia.Models
             OnPropertyChanged(nameof(IsOnline));
         }
 
-        public static Friend Create(SteamPlayerDto dto)
+        public static FriendVM Create(SteamPlayerDto dto)
         {
-            return new Friend(dto.PersonaName, dto.SteamId, dto.LocCountryCode);
+            return new FriendVM(dto.PersonaName, dto.SteamId, dto.LocCountryCode);
         }
     }
 }

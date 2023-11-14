@@ -12,7 +12,7 @@ namespace AoE2DELobbyBrowserAvalonia.Services
         {
         }
 
-        public void ShowNotifications(IEnumerable<Lobby> lobbies)
+        public void ShowNotifications(IEnumerable<LobbyVM> lobbies)
         {
             //Log.Debug($"Show notifications");
             //foreach(var lobby in lobbies)
@@ -33,7 +33,7 @@ namespace AoE2DELobbyBrowserAvalonia.Services
             }
         }
 
-        public void ShowNotificationForGroup(IEnumerable<Lobby> lobbies)
+        public void ShowNotificationForGroup(IEnumerable<LobbyVM> lobbies)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace AoE2DELobbyBrowserAvalonia.Services
             }
         }
 
-        public void ShowNotification(Lobby lobby)
+        public void ShowNotification(LobbyVM lobby)
         {
             try
             {

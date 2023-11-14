@@ -8,7 +8,7 @@ using System.Reactive.Linq;
 
 namespace AoE2DELobbyBrowserAvalonia
 {
-    public class MySortedObservableCollectionAdaptor : ISortedObservableCollectionAdaptor<Lobby, string>
+    public class MySortedObservableCollectionAdaptor : ISortedObservableCollectionAdaptor<LobbyVM, string>
     {
         private TimeSpan _newLobbyHighlightTime;
         public MySortedObservableCollectionAdaptor()
@@ -16,7 +16,7 @@ namespace AoE2DELobbyBrowserAvalonia
             _newLobbyHighlightTime = AppSettings.NewLobbyHighlightTime;
         }
 
-        public void Adapt(ISortedChangeSet<Lobby, string> changes, IObservableCollection<Lobby> collection)
+        public void Adapt(ISortedChangeSet<LobbyVM, string> changes, IObservableCollection<LobbyVM> collection)
         {
             if (changes is null)
             {
@@ -61,7 +61,7 @@ namespace AoE2DELobbyBrowserAvalonia
             }
         }
 
-        private void DoUpdate(ISortedChangeSet<Lobby, string> updates, IObservableCollection<Lobby> list)
+        private void DoUpdate(ISortedChangeSet<LobbyVM, string> updates, IObservableCollection<LobbyVM> list)
         {
             foreach (var update in updates)
             {

@@ -23,7 +23,7 @@
         </Style>
     </UserControl.Styles>
     <UserControl.DataTemplates>
-        <DataTemplate DataType="models:Lobby">
+        <DataTemplate DataType="models:LobbyVM">
             <Grid Margin="4" ColumnDefinitions="*,0,70,140,140,80,80,44">
                 <TextBlock
                     Grid.Column="0"

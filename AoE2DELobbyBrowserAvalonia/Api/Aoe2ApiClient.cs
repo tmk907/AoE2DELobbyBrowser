@@ -10,20 +10,14 @@ namespace AoE2DELobbyBrowserAvalonia.Api
 {
     internal class Aoe2ApiClient : IApiClient
     {
-#if DEBUG
-        //public const string BaseUrl = "localhost:7214";
-        public const string BaseUrl = "aoe2api.dryforest.net";
-#else
-    public const string BaseUrl = "aoe2api.dryforest.net";
-#endif
-
         private readonly string _baseUrl;
-        private readonly string getLobbiesUrl = $"https://{BaseUrl}/api/v3/lobbies";
+        private readonly string getLobbiesUrl;
         private readonly HttpClient _httpClient;
 
         public Aoe2ApiClient(IConfiguration config)
         {
             _baseUrl = config.AppConfig.ApiBaseUrl;
+            getLobbiesUrl = $"https://{_baseUrl}/api/v3/lobbies";
             _httpClient = new HttpClient();
             _httpClient.Timeout = TimeSpan.FromSeconds(20);
         }
@@ -46,7 +40,7 @@ namespace AoE2DELobbyBrowserAvalonia.Api
 
         public async Task<List<SteamPlayerDto>> GetSteamPlayersAsync(string ids)
         {
-            var url = $"https://{BaseUrl}/api/v3/players?ids={ids}";
+            var url = $"https://{_baseUrl}/api/v3/players?ids={ids}";
             return await _httpClient.GetFromJsonAsync<List<SteamPlayerDto>>(url);
         }
     }

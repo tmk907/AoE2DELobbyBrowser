@@ -12,12 +12,10 @@ using System.Windows.Input;
 
 namespace AoE2DELobbyBrowserAvalonia.Models
 {
-    public partial class Lobby : ObservableObject
+    public partial class LobbyVM : ObservableObject
     {
-        public Lobby()
+        public LobbyVM()
         {
-            JoinGameCommand = new AsyncRelayCommand(JoinGame);
-            CopyLobbyLinkCommand = new AsyncRelayCommand(CopyJoinLinkToClipboard);
             AddedAt = DateTime.Now;
         }
 
@@ -36,23 +34,22 @@ namespace AoE2DELobbyBrowserAvalonia.Models
         public string GameType { get; private set; }
         public string Map { get; private set; }
 
-        public ICommand JoinGameCommand { get; }
-        public ICommand CopyLobbyLinkCommand { get; }
-
         [ObservableProperty]
         private bool _isNew;
 
         public DateTime AddedAt { get; set; }
 
-        public List<Player> Players { get; } = new List<Player>();
+        public List<PlayerVM> Players { get; } = new List<PlayerVM>();
 
-        public async Task JoinGame()
+        [RelayCommand]
+        private async Task JoinGame()
         {
             var launcher = Ioc.Default.GetRequiredService<ILauncherService>();
             await launcher.LauchUriAsync(new Uri(JoinLink));
         }
 
-        public async Task CopyJoinLinkToClipboard()
+        [RelayCommand]
+        private async Task CopyLobbyLink()
         {
             var clipboard = Ioc.Default.GetRequiredService<IClipboard>();
             await clipboard.SetTextAsync(JoinLink);
@@ -65,9 +62,9 @@ namespace AoE2DELobbyBrowserAvalonia.Models
                 x.SteamProfileId == playerQuery);
         }
 
-        public static Lobby Create(LobbyDto dto)
+        public static LobbyVM Create(LobbyDto dto)
         {
-            var lobby = new Lobby()
+            var lobby = new LobbyVM()
             {
                 SteamLobbyId = dto.SteamLobbyId,
                 MatchId = dto.MatchId,
@@ -78,7 +75,7 @@ namespace AoE2DELobbyBrowserAvalonia.Models
                 GameType = dto.GameType,
                 Map = dto.MapType,
             };
-            lobby.Players.AddRange(dto.Players.OrderBy(x => x.Slot).Take(dto.NumSlots).Select(x => Player.Create(x)));
+            lobby.Players.AddRange(dto.Players.OrderBy(x => x.Slot).Take(dto.NumSlots).Select(x => PlayerVM.Create(x)));
             if (AppSettings.JoinLinkType == JoinLinkEnum.Aoe2de)
             {
                 lobby.JoinLink = $"aoe2de://0/{lobby.MatchId}";

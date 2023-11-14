@@ -5,8 +5,8 @@ namespace AoE2DELobbyBrowserAvalonia.Services
 {
     public interface INotificationsService
     {
-        void ShowNotification(Lobby lobby);
-        void ShowNotificationForGroup(IEnumerable<Lobby> lobbies);
-        void ShowNotifications(IEnumerable<Lobby> lobbies);
+        void ShowNotification(LobbyVM lobby);
+        void ShowNotificationForGroup(IEnumerable<LobbyVM> lobbies);
+        void ShowNotifications(IEnumerable<LobbyVM> lobbies);
     }
 }

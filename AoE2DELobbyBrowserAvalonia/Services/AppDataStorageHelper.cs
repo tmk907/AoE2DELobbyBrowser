@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace AoE2DELobbyBrowserAvalonia.Services
 {
-    public class ApplicationDataStorageHelper
+    public class AppDataStorageHelper
     {
         private readonly string _localFolder;
 
-        public ApplicationDataStorageHelper(IConfiguration configuration)
+        public AppDataStorageHelper(IConfiguration configuration)
         {
             _localFolder = configuration.AppDataFolder;
         }

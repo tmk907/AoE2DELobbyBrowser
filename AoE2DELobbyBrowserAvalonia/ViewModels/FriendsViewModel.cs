@@ -14,15 +14,15 @@ namespace AoE2DELobbyBrowser
         private readonly IPlayersService _playersService;
 
         public ICommand AddFriendFromIdCommand { get; }
-        public AsyncRelayCommand<Player> AddFriendCommand { get; }
+        public AsyncRelayCommand<PlayerVM> AddFriendCommand { get; }
 
         public ICommand RefreshCommand { get; }
-        public IAsyncRelayCommand<Friend>  DeleteFriendCommand { get; }
+        public IAsyncRelayCommand<FriendVM>  DeleteFriendCommand { get; }
 
         [ObservableProperty]
         private string _steamId;
 
-        public ReadOnlyObservableCollection<Friend> Friends { get; }
+        public ReadOnlyObservableCollection<FriendVM> Friends { get; }
 
         private async Task AddFriendAsync()
         {
@@ -30,7 +30,7 @@ namespace AoE2DELobbyBrowser
             SteamId = "";
         }
 
-        private async Task DeleteAsync(Friend friend)
+        private async Task DeleteAsync(FriendVM friend)
         {
             await _playersService.RemoveFriendAsync(friend.Player.SteamProfileId);
         }

@@ -16,19 +16,19 @@ namespace AoE2DELobbyBrowserAvalonia.ViewModels;
 
 public interface ILobbyListViewModel
 {
-    IRelayCommand<Lobby> SelectLobbyCommand { get; }
-    Lobby? SelectedLobby { get; }
-    ReadOnlyObservableCollection<Lobby> Lobbies { get; }
+    IRelayCommand<LobbyVM> SelectLobbyCommand { get; }
+    LobbyVM? SelectedLobby { get; }
+    ReadOnlyObservableCollection<LobbyVM> Lobbies { get; }
 }
 
-public partial class LobbyListViewModel : ViewModelBase, ILobbyListViewModel
+public partial class LobbyListViewModel : ObservableObject, ILobbyListViewModel
 {
     public LobbyListViewModel()
     {
         var myAdaptor = new MySortedObservableCollectionAdaptor();
         var lobbyService = Ioc.Default.GetRequiredService<LobbyService>();
         lobbyService.FilteredLobbyChanges
-            .Sort(SortExpressionComparer<Lobby>.Ascending(t => t.Name))
+            .Sort(SortExpressionComparer<LobbyVM>.Ascending(t => t.Name))
             .Do(x => Log.Debug("LobbiesVM {0}", x.Count))
             .ObserveOn(AvaloniaScheduler.Instance)
             .Bind(out _lobbies, adaptor: myAdaptor)
@@ -44,14 +44,14 @@ public partial class LobbyListViewModel : ViewModelBase, ILobbyListViewModel
     }
 
     [ObservableProperty]
-    private Lobby? _selectedLobby;
+    private LobbyVM? _selectedLobby;
 
     [RelayCommand]
-    private void SelectLobby(Lobby lobby)
+    private void SelectLobby(LobbyVM lobby)
     {
         SelectedLobby = lobby;
     }
 
-    private readonly ReadOnlyObservableCollection<Lobby> _lobbies;
-    public ReadOnlyObservableCollection<Lobby> Lobbies => _lobbies;
+    private readonly ReadOnlyObservableCollection<LobbyVM> _lobbies;
+    public ReadOnlyObservableCollection<LobbyVM> Lobbies => _lobbies;
 }

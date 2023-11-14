@@ -11,9 +11,9 @@ public class DesignLobbyListViewModel : ILobbyListViewModel
 {
     public DesignLobbyListViewModel()
     {
-        Lobbies = new ReadOnlyObservableCollection<Lobby>(new ObservableCollection<Lobby>
+        Lobbies = new ReadOnlyObservableCollection<LobbyVM>(new ObservableCollection<LobbyVM>
         {
-            Lobby.Create(new LobbyDto
+            LobbyVM.Create(new LobbyDto
             {
                 Name = "Lobby1",
                 Players = new List<PlayerDto>(),
@@ -24,7 +24,7 @@ public class DesignLobbyListViewModel : ILobbyListViewModel
                 Speed = GameSpeed.Unknown,
                 SteamLobbyId = "asd"
             }),
-            Lobby.Create(new LobbyDto
+            LobbyVM.Create(new LobbyDto
             {
                 Name = "Lobby2",
                 Players = new List<PlayerDto>(),
@@ -40,9 +40,9 @@ public class DesignLobbyListViewModel : ILobbyListViewModel
         SelectedLobby = Lobbies.First();
     }
 
-    public Lobby? SelectedLobby { get; }
+    public LobbyVM? SelectedLobby { get; }
 
-    public ReadOnlyObservableCollection<Lobby> Lobbies { get; }
+    public ReadOnlyObservableCollection<LobbyVM> Lobbies { get; }
 
-    public IRelayCommand<Lobby> SelectLobbyCommand => throw new System.NotImplementedException();
+    public IRelayCommand<LobbyVM> SelectLobbyCommand => throw new System.NotImplementedException();
 }

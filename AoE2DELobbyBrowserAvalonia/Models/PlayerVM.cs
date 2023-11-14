@@ -8,7 +8,7 @@ using System;
 
 namespace AoE2DELobbyBrowserAvalonia.Models
 {
-    public partial class Player : ObservableObject
+    public partial class PlayerVM : ObservableObject
     {
         public string SteamProfileId { get; private set; }
         public string Name { get; private set; }
@@ -16,7 +16,7 @@ namespace AoE2DELobbyBrowserAvalonia.Models
         public string Country { get; private set; }
         public string CountryName { get; private set; }
 
-        public Player(string name, string profileId, string countryCode)
+        public PlayerVM(string name, string profileId, string countryCode)
         {
             Name = name;
             SteamProfileId = profileId;
@@ -41,9 +41,9 @@ namespace AoE2DELobbyBrowserAvalonia.Models
             await launcher.LauchUriAsync(new Uri(url));
         }
 
-        public static Player Create(PlayerDto dto)
+        public static PlayerVM Create(PlayerDto dto)
         {
-            return new Player(dto.Name, dto.SteamProfileId, dto.Country);
+            return new PlayerVM(dto.Name, dto.SteamProfileId, dto.Country);
         }
     }
 }

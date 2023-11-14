@@ -21,11 +21,11 @@ namespace AoE2DELobbyBrowser.Services
     public class PlayersService : IPlayersService
     {
         private const string FileName = "favoritePlayers.json";
-        private ApplicationDataStorageHelper _storageHelper;
+        private AppDataStorageHelper _storageHelper;
 
         private readonly IApiClient _apiClient;
 
-        public PlayersService(IApiClient apiClient, ApplicationDataStorageHelper applicationDataStorageHelper)
+        public PlayersService(IApiClient apiClient, AppDataStorageHelper applicationDataStorageHelper)
         {
             _apiClient = apiClient;
             _storageHelper = applicationDataStorageHelper;
