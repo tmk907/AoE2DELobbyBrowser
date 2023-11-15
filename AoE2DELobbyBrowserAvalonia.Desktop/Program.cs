@@ -3,8 +3,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Avalonia;
 using Config.Net;
-using DesktopNotifications;
-using DesktopNotifications.Avalonia;
 using Serilog;
 
 namespace AoE2DELobbyBrowserAvalonia.Desktop;
@@ -38,8 +36,6 @@ class Program
             .StartWithClassicDesktopLifetime(args);
     }
 
-    public static INotificationManager NotificationManager = null!;
-
     private static void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
     {
         Log.Error("TaskScheduler error {0}", e.Exception);
@@ -51,7 +47,6 @@ class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace()
-            .SetupDesktopNotifications(out NotificationManager!)
             .AfterSetup(appBuilder =>
             {
                 var app = (App)appBuilder.Instance!;

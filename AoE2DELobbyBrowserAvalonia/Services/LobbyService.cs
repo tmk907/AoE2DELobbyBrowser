@@ -149,7 +149,6 @@ namespace AoE2DELobbyBrowserAvalonia.Services
                         return Observable.Empty<Unit>();
                     }))
                 .Concat()
-                //.Do(x => _notificationsService.ShowNotifications(x))
                 .Subscribe()
                 .DisposeWith(Disposal);
         }

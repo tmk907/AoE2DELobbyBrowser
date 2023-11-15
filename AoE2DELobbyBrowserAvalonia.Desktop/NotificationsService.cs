@@ -1,6 +1,7 @@
 ﻿using AoE2DELobbyBrowserAvalonia.Models;
 using AoE2DELobbyBrowserAvalonia.Services;
 using DesktopNotifications;
+using DesktopNotifications.Windows;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -9,16 +10,22 @@ using System.Threading.Tasks;
 
 namespace AoE2DELobbyBrowserAvalonia.Desktop
 {
-    internal class NotificationsService : INotificationsService
+    internal class NotificationsService : INotificationsService, IDisposable
     {
         private readonly INotificationManager _notificationManager;
         private readonly ILauncherService _launcherService;
 
         public NotificationsService(ILauncherService launcherService)
         {
-            _notificationManager = Program.NotificationManager;
+            _notificationManager = new WindowsNotificationManager();
+
             _notificationManager.NotificationActivated += OnNotificationActivated;
             _launcherService = launcherService;
+        }
+
+        public void Dispose()
+        {
+            _notificationManager.Dispose();
         }
 
         private async void OnNotificationActivated(object? sender, NotificationActivatedEventArgs e)
