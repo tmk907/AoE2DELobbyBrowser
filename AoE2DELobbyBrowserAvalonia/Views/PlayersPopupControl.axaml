@@ -4,17 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:design="using:AoE2DELobbyBrowserAvalonia.ViewModels.DesignData"
     xmlns:models="using:AoE2DELobbyBrowserAvalonia.Models"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="models:LobbyVM"
     mc:Ignorable="d">
-    <UserControl.Styles>
-        <Style Selector="Button.hyperlinkButton">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-        </Style>
-    </UserControl.Styles>
+    <Design.DataContext>
+        <design:DesignLobbyVM />
+    </Design.DataContext>
     <UserControl.DataTemplates>
         <DataTemplate DataType="models:PlayerVM">
             <Grid ColumnDefinitions="60,240">
@@ -34,7 +32,7 @@
         </DataTemplate>
     </UserControl.DataTemplates>
     <Border
-        Width="336"
+        Width="348"
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
         Background="#faf2e8"
@@ -47,7 +45,7 @@
             Tapped="Grid_Tapped">
             <Grid
                 Grid.Row="0"
-                Margin="8,0,8,0"
+                Margin="18,0,18,0"
                 ColumnDefinitions="60,240">
                 <TextBlock
                     Grid.Column="0"

@@ -23,12 +23,6 @@
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Margin" Value="1,29,0,5" />
         </Style>
-
-        <Style Selector="Button.hyperlinkButton">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{StaticResource DarkAccent}" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-        </Style>
     </UserControl.Styles>
     <Grid Background="{StaticResource BackgroundColor}" RowDefinitions="Auto, *">
         <Button
@@ -107,7 +101,7 @@
                     <!--  About  -->
                     <TextBlock Classes="settingsSectionHeaderTextBlockStyle" Text="About" />
 
-                    <ui:SettingsExpander Header="AoE2DE Lobby Browser" IsExpanded="True">
+                    <ui:SettingsExpander Header="AoE2DE Lobby Browser">
                         <ui:SettingsExpander.IconSource>
                             <ui:BitmapIconSource UriSource="avares://AoE2DELobbyBrowserAvalonia/Assets/appIcon.ico" />
                         </ui:SettingsExpander.IconSource>
@@ -191,7 +185,7 @@
                                             Classes="hyperlinkButton"
                                             Command="{Binding OpenUrlCommand}"
                                             CommandParameter="https://www.xbox.com/en-us/developers/rules">
-                                            <TextBlock Text="Game Content Usage Rules" TextDecorations="Underline" />
+                                            <TextBlock Text="Game Content Usage Rules" />
                                         </Button>
                                     </StackPanel>
                                 </ui:SettingsExpanderItem.Content>

@@ -16,6 +16,14 @@ public partial class MainWindow : Window
         RegisterKeyBinding(Key.Q, KeyModifiers.Control);
 
         DataContext = new MainWindowViewModel();
+
+        Focusable = true;
+        PointerPressed += MainWindow_PointerPressed;
+    }
+
+    private void MainWindow_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        Focus();
     }
 
     private void RegisterKeyBinding(Key key, KeyModifiers keyModifiers)

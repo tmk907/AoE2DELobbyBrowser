@@ -17,10 +17,9 @@
         <design:DesignLobbyListViewModel />
     </Design.DataContext>
     <UserControl.Styles>
-        <Style Selector="Button.hyperlinkButton">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-        </Style>
+		<Style Selector="Button.hyperlinkButton > TextBlock">
+			<Setter Property="TextDecorations" Value="" />
+		</Style>
     </UserControl.Styles>
     <UserControl.DataTemplates>
         <DataTemplate DataType="models:LobbyVM">
