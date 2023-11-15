@@ -20,6 +20,7 @@ namespace AoE2DELobbyBrowserAvalonia.Services
     {
         private readonly IApiClient _apiClient;
         private readonly AppSettingsService _appSettingsService;
+        private readonly INotificationsService _notificationsService;
         private LobbySettings _settings;
 
         private ISubject<bool> _isLoadingSubject;
@@ -27,10 +28,11 @@ namespace AoE2DELobbyBrowserAvalonia.Services
         protected CompositeDisposable Disposal = new CompositeDisposable();
         private readonly SourceCache<LobbyVM, string> _itemsCache;
 
-        public LobbyService(IApiClient apiClient, AppSettingsService appSettingsService)
+        public LobbyService(IApiClient apiClient, AppSettingsService appSettingsService, INotificationsService notificationsService)
         {
             _apiClient = apiClient;
             _appSettingsService = appSettingsService;
+            _notificationsService = notificationsService;
             _settings = appSettingsService.GetLobbySettings();
             _itemsCache = new SourceCache<LobbyVM, string>(x => x.MatchId);
             _isLoadingSubject = new Subject<bool>();
@@ -129,6 +131,27 @@ namespace AoE2DELobbyBrowserAvalonia.Services
                 .Filter(lobbyObservableFilter)
                 .Do(_ => Log.Debug($"onNext {nameof(FilteredLobbyChanges)}"))
                 .Publish().RefCount();
+
+            AllLobbyChanges
+                .Skip(1)
+                .Where(_ => _settings.ShowNotifications)
+                .WhereReasonsAre(ChangeReason.Add)
+                .Select(changeSet => changeSet.Select(x => x.Current).ToList())
+                .Do(list => Log.Debug($"Notification: {list.Count} new lobbies all"))
+                .Select(x => x.Where(x => lobbyFilter(x)).ToList())
+                .Do(list => Log.Debug($"Notification: {list.Count} new lobbies lobbyFilter"))
+                .Select(x => x.Where(x => gameFilter(x)).ToList())
+                .Do(list => Log.Debug($"Notification: {list.Count} new lobbies gameFilter"))
+                .Select(lobby => Observable.FromAsync(_ => _notificationsService.ShowNotifications(lobby))
+                    .Catch((Exception ex) =>
+                    {
+                        Log.Error(ex.ToString());
+                        return Observable.Empty<Unit>();
+                    }))
+                .Concat()
+                //.Do(x => _notificationsService.ShowNotifications(x))
+                .Subscribe()
+                .DisposeWith(Disposal);
         }
 
         public IObservable<bool> IsLoading { get; private set; }

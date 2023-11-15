@@ -1,42 +1,69 @@
 ﻿using AoE2DELobbyBrowserAvalonia.Models;
+using AoE2DELobbyBrowserAvalonia.Services;
+using DesktopNotifications;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace AoE2DELobbyBrowserAvalonia.Services
+namespace AoE2DELobbyBrowserAvalonia.Desktop
 {
     internal class NotificationsService : INotificationsService
     {
-        public NotificationsService()
+        private readonly INotificationManager _notificationManager;
+        private readonly ILauncherService _launcherService;
+
+        public NotificationsService(ILauncherService launcherService)
         {
+            _notificationManager = Program.NotificationManager;
+            _notificationManager.NotificationActivated += OnNotificationActivated;
+            _launcherService = launcherService;
         }
 
-        public void ShowNotifications(IEnumerable<LobbyVM> lobbies)
+        private async void OnNotificationActivated(object? sender, NotificationActivatedEventArgs e)
+        {
+            Log.Information($"Notification activated {e.ActionId}");
+
+            if (e.ActionId.StartsWith("JoinLink"))
+            {
+                var url = e.ActionId.Replace("JoinLink|", "");
+                //await _launcherService.LauchUriAsync(new Uri(url));
+            }
+        }
+
+        public async Task ShowNotifications(IEnumerable<LobbyVM> lobbies)
         {
             //Log.Debug($"Show notifications");
             //foreach(var lobby in lobbies)
             //{
             //    Log.Debug($"Show notification for {lobby.Name} {lobby.LobbyId} {lobby.MatchId}");
             //}
+
             var group = lobbies.Count() > 3;
             if (group)
             {
-                ShowNotificationForGroup(lobbies);
+                await ShowNotificationForGroup(lobbies);
             }
             else
             {
                 foreach (var lobby in lobbies)
                 {
-                    ShowNotification(lobby);
+                    await ShowNotification(lobby);
                 }
             }
         }
 
-        public void ShowNotificationForGroup(IEnumerable<LobbyVM> lobbies)
+        public async Task ShowNotificationForGroup(IEnumerable<LobbyVM> lobbies)
         {
             try
             {
+                var notification = new Notification
+                {
+                    Title = $"{lobbies.Count()} new lobbies",
+                };
+                await _notificationManager.ShowNotification(notification, DateTimeOffset.Now.AddHours(1));
+
                 //new ToastContentBuilder()
                 //    .AddArgument("type", "lobby notification")
                 //    .AddText($"{lobbies.Count()} new lobbies")
@@ -52,10 +79,21 @@ namespace AoE2DELobbyBrowserAvalonia.Services
             }
         }
 
-        public void ShowNotification(LobbyVM lobby)
+        private async Task ShowNotification(LobbyVM lobby)
         {
             try
             {
+                var notification = new Notification
+                {
+                    Title = "New lobby",
+                    Body = lobby.Name,
+                    Buttons =
+                    {
+                        ("Join game", $"JoinLink|{lobby.JoinLink}")
+                    }
+                };
+                await _notificationManager.ShowNotification(notification, DateTimeOffset.Now.AddHours(1));
+
                 //var toastArguments = new ToastArguments();
                 //toastArguments.Add("JoinLink", lobby.JoinLink);
                 //new ToastContentBuilder()

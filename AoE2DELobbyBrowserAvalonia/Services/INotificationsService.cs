@@ -1,12 +1,11 @@
 ﻿using AoE2DELobbyBrowserAvalonia.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AoE2DELobbyBrowserAvalonia.Services
 {
     public interface INotificationsService
     {
-        void ShowNotification(LobbyVM lobby);
-        void ShowNotificationForGroup(IEnumerable<LobbyVM> lobbies);
-        void ShowNotifications(IEnumerable<LobbyVM> lobbies);
+        Task ShowNotifications(IEnumerable<LobbyVM> lobbies);
     }
 }

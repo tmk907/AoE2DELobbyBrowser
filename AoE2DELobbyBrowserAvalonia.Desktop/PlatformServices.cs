@@ -1,7 +1,6 @@
 ﻿using AoE2DELobbyBrowserAvalonia.Services;
 using Config.Net;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 using System.IO;
 
 namespace AoE2DELobbyBrowserAvalonia.Desktop;
@@ -22,6 +21,6 @@ public class PlatformServices : IPlatformServices
         services.AddSingleton<IAppSettings>(appSettings);
 
         services.AddSingleton<ILauncherService, WindowsLauncherService>();
-        services.AddSingleton<INotificationsService>(_=>new NotificationsService());
+        services.AddSingleton<INotificationsService, NotificationsService>();
     }
 }
