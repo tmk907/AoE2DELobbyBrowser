@@ -6,6 +6,6 @@ namespace AoE2DELobbyBrowserAvalonia.Services
 {
     public interface INotificationsService
     {
-        Task ShowNotifications(IEnumerable<LobbyVM> lobbies);
+        void ShowNotifications(IEnumerable<LobbyVM> lobbies);
     }
 }

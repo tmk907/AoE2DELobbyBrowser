@@ -142,13 +142,7 @@ namespace AoE2DELobbyBrowserAvalonia.Services
                 .Do(list => Log.Debug($"Notification: {list.Count} new lobbies lobbyFilter"))
                 .Select(x => x.Where(x => gameFilter(x)).ToList())
                 .Do(list => Log.Debug($"Notification: {list.Count} new lobbies gameFilter"))
-                .Select(lobby => Observable.FromAsync(_ => _notificationsService.ShowNotifications(lobby))
-                    .Catch((Exception ex) =>
-                    {
-                        Log.Error(ex.ToString());
-                        return Observable.Empty<Unit>();
-                    }))
-                .Concat()
+                .Do(lobbies => _notificationsService.ShowNotifications(lobbies))
                 .Subscribe()
                 .DisposeWith(Disposal);
         }
