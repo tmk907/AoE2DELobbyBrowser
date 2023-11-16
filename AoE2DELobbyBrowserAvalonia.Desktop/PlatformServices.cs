@@ -10,7 +10,7 @@ public class PlatformServices : IPlatformServices
     public void Register(IServiceCollection services)
     {
         var config = new ConfigurationBuilder<IAppConfig>()
-               .UseJsonFile(WindowsConfiguration.ConfigFileName)
+               .UseJsonFile(WindowsConfiguration.GetConfigFilePath())
                .Build();
         var platformConfig = new WindowsConfiguration(config);
         services.AddSingleton<IConfiguration>(platformConfig);

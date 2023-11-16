@@ -5,7 +5,7 @@ namespace AoE2DELobbyBrowserAvalonia.Desktop;
 
 public class WindowsConfiguration : IConfiguration
 {
-    public const string ConfigFileName = "appsettings.json";
+    private const string ConfigFileName = "appsettings.json";
 
     public WindowsConfiguration(IAppConfig config)
     {
@@ -18,4 +18,6 @@ public class WindowsConfiguration : IConfiguration
     public string AppDataFolder { get; }
     public string LogsFolder { get; }
     public IAppConfig AppConfig { get; }
+
+    public static string GetConfigFilePath() => Path.Combine(AppContext.BaseDirectory, ConfigFileName);
 }

@@ -1,6 +1,4 @@
-﻿using AoE2DELobbyBrowserAvalonia.Api;
-using AoE2DELobbyBrowserAvalonia.Services;
-using AoE2DELobbyBrowserAvalonia.ViewModels;
+﻿using AoE2DELobbyBrowserAvalonia.ViewModels;
 using AoE2DELobbyBrowserAvalonia.Views;
 
 using Avalonia;

@@ -1,12 +1,12 @@
 ﻿using AoE2DELobbyBrowserAvalonia.Models;
 using AoE2DELobbyBrowserAvalonia.Services;
-using DesktopNotifications;
-using DesktopNotifications.Windows;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace AoE2DELobbyBrowserAvalonia.Desktop
 {
@@ -17,30 +17,39 @@ namespace AoE2DELobbyBrowserAvalonia.Desktop
 
         public NotificationsService(ILauncherService launcherService)
         {
-            _notificationManager = new WindowsNotificationManager();
-
-            _notificationManager.NotificationActivated += OnNotificationActivated;
+            _notificationManager = Program.NotificationManager;
             _launcherService = launcherService;
+
+            var disposable = _notificationManager.Notifications
+                .Select(args => Observable.FromAsync(_ => OnNotificationActivated(args)))
+                .Concat()
+                .Subscribe();
         }
 
-        private async void OnNotificationActivated(object? sender, NotificationActivatedEventArgs e)
+        private async Task OnNotificationActivated(ToastArguments args)
         {
-            Log.Information($"Notification activated {e.ActionId}");
-
-            if (e.ActionId.StartsWith("JoinLink"))
+            try
             {
-                var url = e.ActionId.Replace("JoinLink|", "");
-                await _launcherService.LauchUriAsync(new Uri(url));
+                if (args.TryGetValue("JoinLink", out string link) && !string.IsNullOrEmpty(link))
+                {
+                    Log.Information($"Notification JoinLink {0}", link);
+
+                    await _launcherService.LauchUriAsync(new Uri(link));
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
             }
         }
 
         public void ShowNotifications(IEnumerable<LobbyVM> lobbies)
         {
-            //Log.Debug($"Show notifications");
-            //foreach(var lobby in lobbies)
-            //{
-            //    Log.Debug($"Show notification for {lobby.Name} {lobby.LobbyId} {lobby.MatchId}");
-            //}
+            Log.Debug($"Show notifications");
+            foreach (var lobby in lobbies)
+            {
+                Log.Debug($"Show notification for {lobby.Name} {lobby.AddedAt} {lobby.MatchId}");
+            }
 
             var group = lobbies.Count() > 3;
             if (group)
@@ -77,8 +86,10 @@ namespace AoE2DELobbyBrowserAvalonia.Desktop
         {
             try
             {
-                var toastArguments = new ToastArguments();
-                toastArguments.Add("JoinLink", lobby.JoinLink);
+                var toastArguments = new ToastArguments
+                {
+                    { "JoinLink", lobby.JoinLink }
+                };
                 var xmlDoc = new ToastContentBuilder()
                     .AddArgument("type", "lobby notification")
                     .AddHeader("singlelobby", "New lobby", lobby.MatchId)
