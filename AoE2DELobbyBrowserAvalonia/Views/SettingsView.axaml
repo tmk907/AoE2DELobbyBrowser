@@ -141,27 +141,56 @@
                                 <ui:SettingsExpanderItem.Content>
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock Margin="0,0,0,16" Text="Dependencies &amp; references" />
-                                        <Button
-                                            Margin="-12,0,0,0"
-                                            Classes="hyperlinkButton"
-                                            Command="{Binding OpenUrlCommand}"
-                                            CommandParameter="https://avaloniaui.net/">
-                                            <TextBlock Text="Avalonia UI" />
-                                        </Button>
-                                        <Button
-                                            Margin="-12,0,0,0"
-                                            Classes="hyperlinkButton"
-                                            Command="{Binding OpenUrlCommand}"
-                                            CommandParameter="https://github.com/amwx/FluentAvalonia">
-                                            <TextBlock Text="FluentAvalonia" />
-                                        </Button>
-                                        <Button
-                                            Margin="-12,0,0,0"
-                                            Classes="hyperlinkButton"
-                                            Command="{Binding OpenUrlCommand}"
-                                            CommandParameter="https://github.com/serilog">
-                                            <TextBlock Text="Serilog" />
-                                        </Button>
+                                        <StackPanel>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://avaloniaui.net/">
+                                                <TextBlock Text="Avalonia UI" />
+                                            </Button>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://github.com/amwx/FluentAvalonia">
+                                                <TextBlock Text="FluentAvalonia" />
+                                            </Button>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://github.com/dotnet/reactive">
+                                                <TextBlock Text="Reactive Extensions for .NET" />
+                                            </Button>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://github.com/reactivemarbles/DynamicData">
+                                                <TextBlock Text="DynamicData" />
+                                            </Button>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://github.com/CommunityToolkit/dotnet">
+                                                <TextBlock Text="CommunityToolkit.Mvvm" />
+                                            </Button>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://github.com/CommunityToolkit/WindowsCommunityToolkit">
+                                                <TextBlock Text="Microsoft.Toolkit.Uwp.Notifications" />
+                                            </Button>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://github.com/aloneguid/config">
+                                                <TextBlock Text="Config.Net" />
+                                            </Button>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://github.com/serilog">
+                                                <TextBlock Text="Serilog" />
+                                            </Button>
+                                        </StackPanel>
                                     </StackPanel>
                                 </ui:SettingsExpanderItem.Content>
                             </ui:SettingsExpanderItem>

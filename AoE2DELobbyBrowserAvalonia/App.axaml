@@ -11,7 +11,9 @@
         <local:ViewLocator />
     </Application.DataTemplates>
     <Application.Styles>
-        <sty:FluentAvaloniaTheme />
+        <sty:FluentAvaloniaTheme>
+            <sty:FluentAvaloniaTheme.CustomAccentColor>#ffe1bf</sty:FluentAvaloniaTheme.CustomAccentColor>
+        </sty:FluentAvaloniaTheme>
         <Style Selector="TextBlock.listItemTextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>

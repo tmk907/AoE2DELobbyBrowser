@@ -37,10 +37,11 @@ class Program
         NotificationManager = new WindowsNotificationManager();
 
         Log.Information("App started {0} , isToastActivated {1}", DateTime.Now, isToastActivated);
-        Log.Information("{0}", AppContext.BaseDirectory);
-        Log.Information("{0}", platformConfig.AppDataFolder);
-        Log.Information("{0}", platformConfig.LogsFolder);
-        Log.Information("{0}", platformConfig.AppConfig.ApplicationName);
+        Log.Information("{0} ({1}) {2}",platformConfig.AppDisplayName, platformConfig.InformationVersion, 
+            platformConfig.AssemblyVersion);
+        Log.Information("BaseDirectory: {0}", AppContext.BaseDirectory);
+        Log.Information("AppDataFolder: {0}", platformConfig.AppDataFolder);
+        Log.Information("LogsFolder: {0}", platformConfig.LogsFolder);
 
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);

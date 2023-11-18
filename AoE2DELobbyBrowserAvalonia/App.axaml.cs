@@ -27,6 +27,7 @@ public partial class App : Application //, ILiveView
 
         Services = ConfigureServices();
         Ioc.Default.ConfigureServices(Services);
+        Name = Ioc.Default.GetRequiredService<IConfiguration>().AppDisplayName;
 
         if (Debugger.IsAttached || IsProduction())
         {

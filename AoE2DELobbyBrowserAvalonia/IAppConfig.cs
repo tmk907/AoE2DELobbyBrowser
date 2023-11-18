@@ -4,9 +4,6 @@ namespace AoE2DELobbyBrowserAvalonia;
 
 public interface IAppConfig
 {
-    [DefaultValue("AvaloniaApplication")]
-    string ApplicationName { get; }
-
-    [DefaultValue("aoe2api.dryforest.net")]
+    [DefaultValue("")]
     string ApiBaseUrl { get; }
 }

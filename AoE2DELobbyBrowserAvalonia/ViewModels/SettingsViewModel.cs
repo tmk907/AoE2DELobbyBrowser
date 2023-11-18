@@ -24,13 +24,17 @@ namespace AoE2DELobbyBrowserAvalonia.ViewModels
 
     public partial class SettingsViewModel : ViewModelBase, ISettingsViewModel
     {
+        private readonly IConfiguration _configuration;
+        private readonly ILauncherService _launcherService;
+
         public SettingsViewModel()
         {
+            _configuration = Ioc.Default.GetRequiredService<IConfiguration>();
+            _launcherService = Ioc.Default.GetRequiredService<ILauncherService>();
             _newLobbyHighlightTime = AppSettings.NewLobbyHighlightTime.TotalSeconds;
             _separator = AppSettings.Separator;
             _joinLink = AppSettings.JoinLinkType;
-
-            Version = "0.0.1";
+            Version = GetDisplayVersion();
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -72,25 +76,28 @@ namespace AoE2DELobbyBrowserAvalonia.ViewModels
         [RelayCommand]
         private async Task OpenLogsFolder()
         {
-            var logsFolder = Ioc.Default.GetRequiredService<IConfiguration>().LogsFolder;
+            var logsFolder = _configuration.LogsFolder;
             Directory.CreateDirectory(logsFolder);
-            var launcher = Ioc.Default.GetRequiredService<ILauncherService>();
-            await launcher.OpenFolderAsync(logsFolder);
+            await _launcherService.OpenFolderAsync(logsFolder);
         }
 
         [RelayCommand]
         private async Task RateApp()
         {
             var productId = "9NTQFS6RCXL8";
-            var launcher = Ioc.Default.GetRequiredService<ILauncherService>();
-            await launcher.LauchUriAsync(new Uri($"ms-windows-store://review/?ProductId={productId}"));
+            await _launcherService.LauchUriAsync(new Uri($"ms-windows-store://review/?ProductId={productId}"));
         }
 
         [RelayCommand]
         private async Task OpenUrl(string url)
         {
-            var launcher = Ioc.Default.GetRequiredService<ILauncherService>();
-            await launcher.LauchUriAsync(new Uri(url));
+            await _launcherService.LauchUriAsync(new Uri(url));
+        }
+
+        private string GetDisplayVersion()
+        {
+            var version = _configuration.AssemblyVersion;
+            return string.Format("{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
         }
     }
 }

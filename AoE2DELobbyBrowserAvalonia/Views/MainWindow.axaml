@@ -6,11 +6,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:AoE2DELobbyBrowserAvalonia.Views"
     xmlns:vm="using:AoE2DELobbyBrowserAvalonia.ViewModels"
-    Title="AoE2DELobbyBrowserAvalonia"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="vm:MainWindowViewModel"
-    Icon="/Assets/avalonia-logo.ico"
+    Icon="/Assets/appIcon.ico"
     mc:Ignorable="d">
     <TransitioningContentControl Content="{Binding ContentViewModel}" PageTransition="{Binding PageTransition}" />
 </Window>

@@ -9,9 +9,18 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
+  <PropertyGroup>
+	<AssemblyTitle>AoE2DE Lobby Browser</AssemblyTitle>
+    <VersionPrefix>1.6.0</VersionPrefix>
+    <VersionSuffix></VersionSuffix>
+	<InformationalVersion>Avalonia Dev</InformationalVersion>
+    <Authors>tmk907</Authors>
+    <Company>tmk907</Company>
+    <Description>Lobby browser for Age of Empires II: DE</Description>
+  </PropertyGroup>
+	
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="DesktopNotifications" Version="1.3.1" />
 	<PackageReference Include="Config.Net" Version="5.1.5" />
 	<PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
   </ItemGroup>
