@@ -36,7 +36,7 @@
                             <Button
                                 Grid.Column="2"
                                 Classes="hyperlinkButton"
-                                Command="{Binding $parent[ItemsControl].((vm:ILobbyListViewModel)DataContext).SelectLobbyCommand}"
+                                Command="{Binding $parent[ItemsRepeater].((vm:ILobbyListViewModel)DataContext).SelectLobbyCommand}"
                                 CommandParameter="{Binding}">
                                 <TextBlock Classes="listItemTextBlock">
                                     <Run Text="{Binding NumPlayers, Mode=OneWay}" />
