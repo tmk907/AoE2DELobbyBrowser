@@ -10,6 +10,13 @@ public partial class LobbyListControl : UserControl
     public LobbyListControl()
     {
         InitializeComponent();
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnUnloaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        var vm = (DataContext as LobbyListViewModel);
+        vm.SelectedLobby = null;
     }
 
     private void Grid_Tapped(object? sender, Avalonia.Input.TappedEventArgs e)
