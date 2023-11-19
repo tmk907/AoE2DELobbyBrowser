@@ -140,7 +140,7 @@
         <ProgressBar
             Grid.Row="1"
             Foreground="{StaticResource DarkAccent}"
-            IsIndeterminate="True"
+            IsIndeterminate="{Binding Loading}"
             IsVisible="{Binding Loading}" />
     </Grid>
 </UserControl>
