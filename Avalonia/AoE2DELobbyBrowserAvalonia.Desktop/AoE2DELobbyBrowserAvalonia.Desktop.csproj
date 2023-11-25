@@ -4,7 +4,6 @@
     <!--If you are willing to use Windows/MacOS native APIs you will need to create 3 projects.
     One for Windows with net7.0-windows TFM, one for MacOS with net7.0-macos and one with net7.0 TFM for Linux.-->
     <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>../AoE2DELobbyBrowserAvalonia/Assets/appIcon.ico</ApplicationIcon>
@@ -14,7 +13,8 @@
 	<AssemblyTitle>AoE2DE Lobby Browser</AssemblyTitle>
     <VersionPrefix>1.6.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
-	<InformationalVersion>Avalonia Dev</InformationalVersion>
+	<InformationalVersion Condition="'$(Configuration)' == 'Debug'">Avalonia Dev</InformationalVersion>
+	<InformationalVersion Condition="'$(Configuration)' == 'Release'">Avalonia</InformationalVersion>
     <Authors>tmk907</Authors>
     <Company>tmk907</Company>
     <Description>Lobby browser for Age of Empires II: DE</Description>

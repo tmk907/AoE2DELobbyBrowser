@@ -1,5 +1,7 @@
 ﻿using AoE2DELobbyBrowserAvalonia.Models;
 using AoE2DELobbyBrowserAvalonia.Services;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Threading;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Serilog;
 using System;
@@ -35,6 +37,21 @@ namespace AoE2DELobbyBrowserAvalonia.Desktop
                     Log.Information($"Notification JoinLink {0}", link);
 
                     await _launcherService.LauchUriAsync(new Uri(link));
+                }
+                else if (args.TryGetValue("type", out string type) && type == "lobby notification")
+                {
+                    if (App.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime &&
+                        desktopLifetime.MainWindow != null)
+                    {
+                        Dispatcher.UIThread.Invoke(() =>
+                        {
+                            if (desktopLifetime.MainWindow.WindowState == Avalonia.Controls.WindowState.Minimized)
+                            {
+                                desktopLifetime.MainWindow.WindowState = Avalonia.Controls.WindowState.Normal;
+                            }
+                            desktopLifetime.MainWindow.Show();
+                        });
+                    }
                 }
             }
             catch (Exception ex)
