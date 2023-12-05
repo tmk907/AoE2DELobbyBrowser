@@ -1,0 +1,41 @@
+<Application
+    x:Class="AoE2DELobbyBrowserAvalonia.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AoE2DELobbyBrowserAvalonia"
+    xmlns:sty="using:FluentAvalonia.Styling"
+    RequestedThemeVariant="Default">
+    <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator />
+    </Application.DataTemplates>
+    <Application.Styles>
+        <sty:FluentAvaloniaTheme>
+            <sty:FluentAvaloniaTheme.CustomAccentColor>#ffe1bf</sty:FluentAvaloniaTheme.CustomAccentColor>
+        </sty:FluentAvaloniaTheme>
+        <Style Selector="TextBlock.listItemTextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.hyperlinkButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Padding" Value="0,5,0,5" />
+        </Style>
+        <Style Selector="Button.hyperlinkButton > TextBlock">
+            <Setter Property="TextDecorations" Value="Underline" />
+        </Style>
+        <Style Selector="Button.hyperlinkButton:pointerover > TextBlock">
+            <Setter Property="TextDecorations" Value="" />
+        </Style>
+    </Application.Styles>
+    <Application.Resources>
+        <Color x:Key="DarkAccent">#92040a</Color>
+        <Color x:Key="Accent">#ba080e</Color>
+        <Color x:Key="BorderColor">#c3b880</Color>
+        <Color x:Key="ForegroundTextColor">#ffe1bf</Color>
+        <Color x:Key="BackgroundColor">#ffeacd</Color>
+        <Color x:Key="AlternateRowColor">#fff0cd</Color>
+        <FontFamily x:Key="SymbolFont">/Assets/Fonts/SegoeFluentIcons.ttf#Segoe Fluent Icons</FontFamily>
+    </Application.Resources>
+</Application>

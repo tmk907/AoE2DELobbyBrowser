@@ -1,0 +1,62 @@
+<UserControl
+    x:Class="AoE2DELobbyBrowserAvalonia.Views.PlayersPopupControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:design="using:AoE2DELobbyBrowserAvalonia.ViewModels.DesignData"
+    xmlns:models="using:AoE2DELobbyBrowserAvalonia.Models"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="models:LobbyVM"
+    mc:Ignorable="d">
+    <Design.DataContext>
+        <design:DesignLobbyVM />
+    </Design.DataContext>
+    <UserControl.DataTemplates>
+        <DataTemplate DataType="models:PlayerVM">
+            <Grid ColumnDefinitions="60,240">
+                <TextBlock
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="{Binding Country}"
+                    ToolTip.Tip="{Binding CountryName}" />
+                <Button
+                    Grid.Column="1"
+                    Classes="hyperlinkButton"
+                    Command="{Binding OpenUrlCommand}"
+                    CommandParameter="{Binding SteamProfileUrl}">
+                    <TextBlock Text="{Binding Name}" />
+                </Button>
+            </Grid>
+        </DataTemplate>
+    </UserControl.DataTemplates>
+    <Border
+        Width="348"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Background="#faf2e8"
+        BoxShadow="4 4 16 0 LightGray"
+        CornerRadius="8">
+        <Grid
+            Margin="10"
+            VerticalAlignment="Center"
+            RowDefinitions="Auto,Auto"
+            Tapped="Grid_Tapped">
+            <Grid
+                Grid.Row="0"
+                Margin="18,0,18,0"
+                ColumnDefinitions="60,240">
+                <TextBlock
+                    Grid.Column="0"
+                    FontWeight="SemiBold"
+                    Text="Country" />
+                <TextBlock
+                    Grid.Column="1"
+                    FontWeight="SemiBold"
+                    Text="Name" />
+            </Grid>
+            <ListBox Grid.Row="1" ItemsSource="{Binding Players}" />
+        </Grid>
+    </Border>
+</UserControl>

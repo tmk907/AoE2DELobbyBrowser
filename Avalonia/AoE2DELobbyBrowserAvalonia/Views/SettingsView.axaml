@@ -1,0 +1,222 @@
+<UserControl
+    x:Class="AoE2DELobbyBrowserAvalonia.Views.SettingsView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:AoE2DELobbyBrowserAvalonia.Views"
+    xmlns:converters="using:AoE2DELobbyBrowserAvalonia.Converters"
+    xmlns:design="using:AoE2DELobbyBrowserAvalonia.ViewModels.DesignData"
+    xmlns:services="using:AoE2DELobbyBrowserAvalonia.Services"
+    xmlns:ui="using:FluentAvalonia.UI.Controls"
+    xmlns:vm="using:AoE2DELobbyBrowserAvalonia.ViewModels"
+    d:DesignHeight="1000"
+    d:DesignWidth="800"
+    x:DataType="vm:SettingsViewModel"
+    mc:Ignorable="d">
+    <Design.DataContext>
+        <design:DesingSettingsViewModel />
+    </Design.DataContext>
+    <UserControl.Styles>
+        <Style Selector="TextBlock.settingsSectionHeaderTextBlockStyle">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="1,29,0,5" />
+        </Style>
+    </UserControl.Styles>
+    <Grid Background="{StaticResource BackgroundColor}" RowDefinitions="Auto, *">
+        <Button
+            Grid.Row="0"
+            Width="48"
+            Height="36"
+            Margin="8"
+            BorderBrush="{StaticResource DarkAccent}"
+            Command="{Binding NavigateBackCommand}"
+            HotKey="Ctrl+Left"
+            ToolTip.Tip="Go back (Ctrl + Left)">
+            <TextBlock
+                FontFamily="{StaticResource SymbolFont}"
+                FontSize="18"
+                Foreground="{StaticResource DarkAccent}"
+                Text="{x:Static controls:SymbolIcons.Back}" />
+        </Button>
+        <TextBlock
+            Grid.Row="0"
+            Margin="72,8,0,0"
+            FontSize="28"
+            FontWeight="SemiBold"
+            Text="Settings" />
+        <Grid Grid.Row="1" Margin="36,0,0,0">
+            <ScrollViewer
+                Padding="36,0,36,0"
+                IsTabStop="False"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="3">
+                    <TextBlock Classes="settingsSectionHeaderTextBlockStyle" Text="Browser" />
+                    <ui:SettingsExpander Description="How many seconds new lobby should be highlighted" Header="New lobby">
+                        <ui:SettingsExpander.IconSource>
+                            <ui:FontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="{x:Static controls:SymbolIcons.Stopwatch}" />
+                        </ui:SettingsExpander.IconSource>
+                        <ui:SettingsExpander.Footer>
+                            <NumericUpDown
+                                HorizontalAlignment="Left"
+                                Increment="5"
+                                Maximum="120"
+                                Minimum="5"
+                                Value="{Binding NewLobbyHighlightTime, Mode=TwoWay}" />
+                        </ui:SettingsExpander.Footer>
+                    </ui:SettingsExpander>
+
+                    <ui:SettingsExpander Header="Query separator">
+                        <ui:SettingsExpander.IconSource>
+                            <ui:FontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="{x:Static controls:SymbolIcons.Edit}" />
+                        </ui:SettingsExpander.IconSource>
+                        <ui:SettingsExpander.Footer>
+                            <TextBox
+                                x:Name="separatorTextBox"
+                                Width="100"
+                                HorizontalAlignment="Left"
+                                Text="{Binding Separator, Mode=TwoWay}" />
+                        </ui:SettingsExpander.Footer>
+                    </ui:SettingsExpander>
+
+                    <ui:SettingsExpander Description="Type of link used to join a game" Header="Game link">
+                        <ui:SettingsExpander.IconSource>
+                            <ui:FontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="{x:Static controls:SymbolIcons.Link}" />
+                        </ui:SettingsExpander.IconSource>
+                        <ui:SettingsExpander.Footer>
+                            <StackPanel Orientation="Vertical">
+                                <RadioButton
+                                    Content="aoe2de://"
+                                    GroupName="JoinLinkType"
+                                    IsChecked="{Binding JoinLink, Converter={x:Static converters:Converters.EnumToBooleanConverter}, ConverterParameter={x:Static services:JoinLinkEnum.Aoe2de}}" />
+                                <RadioButton
+                                    Content="steam://"
+                                    GroupName="JoinLinkType"
+                                    IsChecked="{Binding JoinLink, Converter={x:Static converters:Converters.EnumToBooleanConverter}, ConverterParameter={x:Static services:JoinLinkEnum.Steam}}" />
+                            </StackPanel>
+                        </ui:SettingsExpander.Footer>
+                    </ui:SettingsExpander>
+
+                    <!--  About  -->
+                    <TextBlock Classes="settingsSectionHeaderTextBlockStyle" Text="About" />
+
+                    <ui:SettingsExpander Header="AoE2DE Lobby Browser">
+                        <ui:SettingsExpander.IconSource>
+                            <ui:BitmapIconSource UriSource="avares://AoE2DELobbyBrowserAvalonia/Assets/appIcon.ico" />
+                        </ui:SettingsExpander.IconSource>
+                        <ui:SettingsExpander.Footer>
+                            <TextBlock Margin="0,-2,0,0" Text="{Binding Version}" />
+                        </ui:SettingsExpander.Footer>
+                        <ui:SettingsExpander.Items>
+                            <ui:SettingsExpanderItem
+                                Command="{Binding RateAppCommand}"
+                                Content="Rate and review in Microsoft Store"
+                                IsClickEnabled="True">
+                                <ui:SettingsExpanderItem.ActionIconSource>
+                                    <ui:FontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="&#xE8A7;" />
+                                </ui:SettingsExpanderItem.ActionIconSource>
+                            </ui:SettingsExpanderItem>
+                            <ui:SettingsExpanderItem Content="Github">
+                                <ui:SettingsExpanderItem.Footer>
+                                    <Button
+                                        Classes="hyperlinkButton"
+                                        Command="{Binding OpenUrlCommand}"
+                                        CommandParameter="https://github.com/tmk907/AoE2DELobbyBrowser">
+                                        <TextBlock Text="https://github.com/tmk907/AoE2DELobbyBrowser" />
+                                    </Button>
+                                </ui:SettingsExpanderItem.Footer>
+                            </ui:SettingsExpanderItem>
+                            <ui:SettingsExpanderItem Content="Application icon">
+                                <ui:SettingsExpanderItem.Footer>
+                                    <Button
+                                        Classes="hyperlinkButton"
+                                        Command="{Binding OpenUrlCommand}"
+                                        CommandParameter="https://www.flaticon.com/free-icons/roman">
+                                        <TextBlock Text="Roman icons created by Freepik - Flaticon" />
+                                    </Button>
+                                </ui:SettingsExpanderItem.Footer>
+                            </ui:SettingsExpanderItem>
+                            <ui:SettingsExpanderItem>
+                                <ui:SettingsExpanderItem.Content>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Margin="0,0,0,16" Text="Dependencies &amp; references" />
+                                        <StackPanel>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://avaloniaui.net/">
+                                                <TextBlock Text="Avalonia UI" />
+                                            </Button>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://github.com/amwx/FluentAvalonia">
+                                                <TextBlock Text="FluentAvalonia" />
+                                            </Button>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://github.com/dotnet/reactive">
+                                                <TextBlock Text="Reactive Extensions for .NET" />
+                                            </Button>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://github.com/reactivemarbles/DynamicData">
+                                                <TextBlock Text="DynamicData" />
+                                            </Button>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://github.com/CommunityToolkit/dotnet">
+                                                <TextBlock Text="CommunityToolkit.Mvvm" />
+                                            </Button>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://github.com/CommunityToolkit/WindowsCommunityToolkit">
+                                                <TextBlock Text="Microsoft.Toolkit.Uwp.Notifications" />
+                                            </Button>
+                                            <Button
+                                                Classes="hyperlinkButton"
+                                                Command="{Binding OpenUrlCommand}"
+                                                CommandParameter="https://github.com/serilog">
+                                                <TextBlock Text="Serilog" />
+                                            </Button>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ui:SettingsExpanderItem.Content>
+                            </ui:SettingsExpanderItem>
+                            <ui:SettingsExpanderItem
+                                Command="{Binding OpenLogsFolderCommand}"
+                                Content="Open folder with log files"
+                                IsClickEnabled="True">
+                                <ui:SettingsExpanderItem.ActionIconSource>
+                                    <ui:FontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="&#xE8A7;" />
+                                </ui:SettingsExpanderItem.ActionIconSource>
+                            </ui:SettingsExpanderItem>
+                            <ui:SettingsExpanderItem>
+                                <ui:SettingsExpanderItem.Content>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Margin="0,0,0,16" Text="Disclaimer" />
+                                        <TextBlock TextWrapping="Wrap">
+                                            Age of Empires II: Definitive Edition © Microsoft Corporation. AoE2DE Lobby Browser was created under Microsoft's &quot;Game Content Usage Rules&quot; using assets from Age of Empires II: Definitive Edition, and it is not endorsed by or affiliated with Microsoft.
+                                        </TextBlock>
+                                        <Button
+                                            Padding="0,4,0,4"
+                                            Classes="hyperlinkButton"
+                                            Command="{Binding OpenUrlCommand}"
+                                            CommandParameter="https://www.xbox.com/en-us/developers/rules">
+                                            <TextBlock Text="Game Content Usage Rules" />
+                                        </Button>
+                                    </StackPanel>
+                                </ui:SettingsExpanderItem.Content>
+                            </ui:SettingsExpanderItem>
+                        </ui:SettingsExpander.Items>
+                    </ui:SettingsExpander>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>
