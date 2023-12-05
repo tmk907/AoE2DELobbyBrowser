@@ -111,6 +111,7 @@ namespace AoE2DELobbyBrowserAvalonia.Desktop
                     .AddArgument("type", "lobby notification")
                     .AddHeader("singlelobby", "New lobby", lobby.MatchId)
                     .AddText(lobby.Name)
+                    .AddText(lobby.Players.FirstOrDefault()?.Name ?? "")
                     .AddButton("Join game", ToastActivationType.Foreground, toastArguments.ToString())
                     .GetXml();
 
