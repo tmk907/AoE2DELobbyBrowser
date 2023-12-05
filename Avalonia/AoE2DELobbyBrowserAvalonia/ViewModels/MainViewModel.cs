@@ -5,7 +5,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using DynamicData.Binding;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -44,13 +43,7 @@ public partial class MainViewModel : ViewModelBase, IMainViewModel
     {
         _lobbyService = Ioc.Default.GetRequiredService<LobbyService>();
         _appSettingsService = Ioc.Default.GetRequiredService<AppSettingsService>();
-        Settings = _appSettingsService.GetLobbySettings();
-
-        Settings.WhenAnyPropertyChanged()
-                .Do(_ => Log.Debug($"{nameof(MainViewModel)} {nameof(Settings)} changed"))
-                .Do(x => _lobbyService.UpdateSettings(x))
-                .Subscribe()
-                .DisposeWith(Disposal);
+        Settings = _appSettingsService.AppSettings.LobbySettings;
 
         LobbyListViewModel = new LobbyListViewModel();
 

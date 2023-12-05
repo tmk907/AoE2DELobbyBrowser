@@ -4,7 +4,7 @@ namespace AoE2DELobbyBrowserAvalonia
 {
     public interface IConfiguration
     {
-        IAppConfig AppConfig { get; }
+        string ApiBaseUrl { get; }
         string AppDataFolder { get; }
         string LogsFolder { get; }
         string AppDisplayName { get; }

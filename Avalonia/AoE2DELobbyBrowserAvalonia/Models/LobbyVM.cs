@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace AoE2DELobbyBrowserAvalonia.Models
 {
@@ -76,7 +75,8 @@ namespace AoE2DELobbyBrowserAvalonia.Models
                 Map = dto.MapType,
             };
             lobby.Players.AddRange(dto.Players.OrderBy(x => x.Slot).Take(dto.NumSlots).Select(x => PlayerVM.Create(x)));
-            if (AppSettings.JoinLinkType == JoinLinkEnum.Aoe2de)
+            var settingsService = Ioc.Default.GetRequiredService<AppSettingsService>();
+            if (settingsService.AppSettings.JoinLinkType == JoinLinkEnum.Aoe2de)
             {
                 lobby.JoinLink = $"aoe2de://0/{lobby.MatchId}";
             }

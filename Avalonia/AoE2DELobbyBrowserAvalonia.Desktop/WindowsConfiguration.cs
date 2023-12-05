@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
 using System.Reflection;
 
@@ -6,11 +7,14 @@ namespace AoE2DELobbyBrowserAvalonia.Desktop;
 
 public class WindowsConfiguration : IConfiguration
 {
-    private const string ConfigFileName = "appsettings.json";
-
-    public WindowsConfiguration(IAppConfig config)
+    public WindowsConfiguration()
     {
-        AppConfig = config;
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        ApiBaseUrl = configuration["ApiBaseUrl"]!;
 
         var assembly = Assembly.GetExecutingAssembly();
         AppDisplayName = assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "";
@@ -25,11 +29,9 @@ public class WindowsConfiguration : IConfiguration
 
     public string AppDataFolder { get; }
     public string LogsFolder { get; }
-    public IAppConfig AppConfig { get; }
+    public string ApiBaseUrl { get; }
 
     public string AppDisplayName { get; }
     public Version AssemblyVersion { get; }
     public string InformationVersion { get; }
-
-    public static string GetConfigFilePath() => Path.Combine(AppContext.BaseDirectory, ConfigFileName);
 }

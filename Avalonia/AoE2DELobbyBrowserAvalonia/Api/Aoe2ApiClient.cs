@@ -16,7 +16,7 @@ namespace AoE2DELobbyBrowserAvalonia.Api
 
         public Aoe2ApiClient(IConfiguration config)
         {
-            _baseUrl = config.AppConfig.ApiBaseUrl;
+            _baseUrl = config.ApiBaseUrl;
             getLobbiesUrl = $"https://{_baseUrl}/api/v3/lobbies";
             _httpClient = new HttpClient();
             _httpClient.Timeout = TimeSpan.FromSeconds(20);

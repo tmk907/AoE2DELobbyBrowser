@@ -26,14 +26,17 @@ namespace AoE2DELobbyBrowserAvalonia.ViewModels
     {
         private readonly IConfiguration _configuration;
         private readonly ILauncherService _launcherService;
+        private readonly AppSettingsService _settingsService;
 
         public SettingsViewModel()
         {
             _configuration = Ioc.Default.GetRequiredService<IConfiguration>();
             _launcherService = Ioc.Default.GetRequiredService<ILauncherService>();
-            _newLobbyHighlightTime = AppSettings.NewLobbyHighlightTime.TotalSeconds;
-            _separator = AppSettings.Separator;
-            _joinLink = AppSettings.JoinLinkType;
+            _settingsService = Ioc.Default.GetRequiredService<AppSettingsService>();
+
+            _newLobbyHighlightTime = _settingsService.AppSettings.NewLobbyHighlightTime.TotalSeconds;
+            _separator = _settingsService.AppSettings.Separator;
+            _joinLink = _settingsService.AppSettings.JoinLinkType;
             Version = GetDisplayVersion();
         }
 
@@ -42,13 +45,13 @@ namespace AoE2DELobbyBrowserAvalonia.ViewModels
             switch (e.PropertyName)
             {
                 case nameof(NewLobbyHighlightTime):
-                    AppSettings.NewLobbyHighlightTime = TimeSpan.FromSeconds(_newLobbyHighlightTime);
+                    _settingsService.AppSettings.NewLobbyHighlightTime = TimeSpan.FromSeconds(NewLobbyHighlightTime);
                     break;
                 case nameof(Separator):
-                    AppSettings.Separator = _separator;
+                    _settingsService.AppSettings.Separator = Separator;
                     break;
                 case nameof(JoinLink):
-                    AppSettings.JoinLinkType = _joinLink;
+                    _settingsService.AppSettings.JoinLinkType = JoinLink;
                     break;
                 default:
                     break;

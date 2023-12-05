@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia;
-using Config.Net;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Serilog;
 
@@ -16,10 +15,7 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        var config = new ConfigurationBuilder<IAppConfig>()
-               .UseJsonFile(WindowsConfiguration.GetConfigFilePath())
-               .Build();
-        var platformConfig = new WindowsConfiguration(config);
+        PlatformConfig = new WindowsConfiguration();
 
         Log.Logger = new LoggerConfiguration()
 #if DEBUG
@@ -28,7 +24,7 @@ class Program
 #else
                .MinimumLevel.Information()
 #endif
-          .WriteTo.File(Path.Combine(platformConfig.LogsFolder, "logs.txt"), rollingInterval: RollingInterval.Day)
+          .WriteTo.File(Path.Combine(PlatformConfig.LogsFolder, "logs.txt"), rollingInterval: RollingInterval.Day)
           .CreateLogger();
 
         TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
@@ -37,16 +33,17 @@ class Program
         NotificationManager = new WindowsNotificationManager();
 
         Log.Information("App started {0} , isToastActivated {1}", DateTime.Now, isToastActivated);
-        Log.Information("{0} ({1}) {2}",platformConfig.AppDisplayName, platformConfig.InformationVersion, 
-            platformConfig.AssemblyVersion);
+        Log.Information("{0} ({1}) {2}", PlatformConfig.AppDisplayName, PlatformConfig.InformationVersion,
+            PlatformConfig.AssemblyVersion);
         Log.Information("BaseDirectory: {0}", AppContext.BaseDirectory);
-        Log.Information("AppDataFolder: {0}", platformConfig.AppDataFolder);
-        Log.Information("LogsFolder: {0}", platformConfig.LogsFolder);
+        Log.Information("AppDataFolder: {0}", PlatformConfig.AppDataFolder);
+        Log.Information("LogsFolder: {0}", PlatformConfig.LogsFolder);
 
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
     }
 
+    public static WindowsConfiguration PlatformConfig { get; private set; }
     public static WindowsNotificationManager NotificationManager { get; private set; }
 
     private static void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)

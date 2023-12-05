@@ -1,5 +1,6 @@
 ﻿using AoE2DELobbyBrowserAvalonia.Models;
 using AoE2DELobbyBrowserAvalonia.Services;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using DynamicData;
 using DynamicData.Binding;
 using System;
@@ -13,7 +14,8 @@ namespace AoE2DELobbyBrowserAvalonia
         private TimeSpan _newLobbyHighlightTime;
         public MySortedObservableCollectionAdaptor()
         {
-            _newLobbyHighlightTime = AppSettings.NewLobbyHighlightTime;
+            var settingsService = Ioc.Default.GetRequiredService<AppSettingsService>();
+            _newLobbyHighlightTime = settingsService.AppSettings.NewLobbyHighlightTime;
         }
 
         public void Adapt(ISortedChangeSet<LobbyVM, string> changes, IObservableCollection<LobbyVM> collection)

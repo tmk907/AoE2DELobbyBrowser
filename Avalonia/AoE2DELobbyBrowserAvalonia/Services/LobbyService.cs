@@ -21,9 +21,9 @@ namespace AoE2DELobbyBrowserAvalonia.Services
         private readonly IApiClient _apiClient;
         private readonly AppSettingsService _appSettingsService;
         private readonly INotificationsService _notificationsService;
-        private LobbySettings _settings;
+        private readonly LobbySettings _settings;
 
-        private ISubject<bool> _isLoadingSubject;
+        private readonly ISubject<bool> _isLoadingSubject;
 
         protected CompositeDisposable Disposal = new CompositeDisposable();
         private readonly SourceCache<LobbyVM, string> _itemsCache;
@@ -33,17 +33,11 @@ namespace AoE2DELobbyBrowserAvalonia.Services
             _apiClient = apiClient;
             _appSettingsService = appSettingsService;
             _notificationsService = notificationsService;
-            _settings = appSettingsService.GetLobbySettings();
+            _settings = appSettingsService.AppSettings.LobbySettings;
             _itemsCache = new SourceCache<LobbyVM, string>(x => x.MatchId);
             _isLoadingSubject = new Subject<bool>();
             
             IsLoading = _isLoadingSubject.StartWith(false).Replay(1).AutoConnect();
-
-            _settings.WhenAnyPropertyChanged()
-                .Do(_ => Log.Debug($"Settings changed"))
-                .Do(x => _appSettingsService.SaveLobbySettings(x))
-                .Subscribe()
-                .DisposeWith(Disposal);
 
             _settings
                 .WhenAnyPropertyChanged(new[] { nameof(_settings.Interval), nameof(_settings.IsAutoRefreshEnabled) })
@@ -86,7 +80,7 @@ namespace AoE2DELobbyBrowserAvalonia.Services
                 var isMatched = true;
                 if (!string.IsNullOrEmpty(_settings.Query))
                 {
-                    var queries = _settings.Query.Split(AppSettings.Separator, StringSplitOptions.RemoveEmptyEntries);
+                    var queries = _settings.Query.Split(_appSettingsService.AppSettings.Separator, StringSplitOptions.RemoveEmptyEntries);
                     isMatched = queries
                         .Any(x => lobby.Name.ToLowerInvariant().Contains(x.ToLowerInvariant()));
                 }
@@ -94,7 +88,7 @@ namespace AoE2DELobbyBrowserAvalonia.Services
                 var isExcluded = false;
                 if (!string.IsNullOrEmpty(_settings.Exclude))
                 {
-                    var exclusions = _settings.Exclude.Split(AppSettings.Separator, StringSplitOptions.RemoveEmptyEntries);
+                    var exclusions = _settings.Exclude.Split(_appSettingsService.AppSettings.Separator, StringSplitOptions.RemoveEmptyEntries);
                     isExcluded = exclusions
                         .Any(x => lobby.Name.ToLowerInvariant().Contains(x.ToLowerInvariant()));
                 }
@@ -154,11 +148,6 @@ namespace AoE2DELobbyBrowserAvalonia.Services
         public void Dispose()
         {
             Disposal.Dispose();
-        }
-
-        public void UpdateSettings(LobbySettings settings)
-        {
-            _settings.Update(settings);
         }
 
         public async Task RefreshAsync(CancellationToken token)
