@@ -181,12 +181,6 @@
                                             <Button
                                                 Classes="hyperlinkButton"
                                                 Command="{Binding OpenUrlCommand}"
-                                                CommandParameter="https://github.com/aloneguid/config">
-                                                <TextBlock Text="Config.Net" />
-                                            </Button>
-                                            <Button
-                                                Classes="hyperlinkButton"
-                                                Command="{Binding OpenUrlCommand}"
                                                 CommandParameter="https://github.com/serilog">
                                                 <TextBlock Text="Serilog" />
                                             </Button>
