@@ -2,6 +2,7 @@
 using Avalonia.Controls.Templates;
 using Avalonia.Controls;
 using System;
+using AoE2DELobbyBrowser.Core.ViewModels;
 
 namespace AoE2DELobbyBrowserAvalonia
 {

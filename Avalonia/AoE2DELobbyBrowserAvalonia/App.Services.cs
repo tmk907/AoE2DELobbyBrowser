@@ -1,5 +1,7 @@
-﻿using AoE2DELobbyBrowser.Services;
-using AoE2DELobbyBrowserAvalonia.Api;
+﻿using AoE2DELobbyBrowser.Core;
+using AoE2DELobbyBrowser.Core.Api;
+using AoE2DELobbyBrowser.Core.Services;
+using AoE2DELobbyBrowser.Services;
 using AoE2DELobbyBrowserAvalonia.Services;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input.Platform;
@@ -31,6 +33,8 @@ namespace AoE2DELobbyBrowserAvalonia
                 }
                 return null;
             });
+            services.AddSingleton<IAssetsLoader,AssetsLoader>();
+            services.AddSingleton<IClipboardService,ClipboardService>();
 
             services.AddSingleton<IApiClient,Aoe2ApiClient>();
             services.AddSingleton(services => new AppSettingsService(services.GetRequiredService<IConfiguration>()));

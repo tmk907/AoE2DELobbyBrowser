@@ -1,4 +1,5 @@
-﻿using AoE2DELobbyBrowserAvalonia.Services;
+﻿using AoE2DELobbyBrowser.Core;
+using AoE2DELobbyBrowser.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AoE2DELobbyBrowserAvalonia.Desktop;

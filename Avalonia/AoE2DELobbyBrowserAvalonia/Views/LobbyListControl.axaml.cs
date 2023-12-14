@@ -1,4 +1,4 @@
-using AoE2DELobbyBrowserAvalonia.ViewModels;
+using AoE2DELobbyBrowser.Core.ViewModels;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;

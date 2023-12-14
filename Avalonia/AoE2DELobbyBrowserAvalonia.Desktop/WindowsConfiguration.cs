@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace AoE2DELobbyBrowserAvalonia.Desktop;
 
-public class WindowsConfiguration : IConfiguration
+public class WindowsConfiguration : AoE2DELobbyBrowser.Core.IConfiguration
 {
     public WindowsConfiguration()
     {

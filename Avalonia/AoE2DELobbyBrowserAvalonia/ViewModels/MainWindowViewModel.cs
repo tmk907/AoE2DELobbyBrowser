@@ -1,4 +1,6 @@
-﻿using Avalonia.Animation;
+﻿using AoE2DELobbyBrowser.Core;
+using AoE2DELobbyBrowser.Core.ViewModels;
+using Avalonia.Animation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using System;

@@ -1,4 +1,5 @@
-﻿using AoE2DELobbyBrowserAvalonia.ViewModels;
+﻿using AoE2DELobbyBrowser.Core;
+using AoE2DELobbyBrowserAvalonia.ViewModels;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;

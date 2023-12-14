@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AoE2DELobbyBrowserAvalonia.
 EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "AoE2DELobbyBrowserAvalonia.WinAppPackaging", "Avalonia\AoE2DELobbyBrowserAvalonia.WinAppPackaging\AoE2DELobbyBrowserAvalonia.WinAppPackaging.wapproj", "{7FDEA796-122D-4FE5-9B52-E8F267B01180}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoE2DELobbyBrowser.Core", "AoE2DELobbyBrowser.Core\AoE2DELobbyBrowser.Core.csproj", "{E889C5FA-6E97-4610-8A49-F5959BD462D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -169,6 +171,26 @@ Global
 		{7FDEA796-122D-4FE5-9B52-E8F267B01180}.Release|x86.ActiveCfg = Release|x86
 		{7FDEA796-122D-4FE5-9B52-E8F267B01180}.Release|x86.Build.0 = Release|x86
 		{7FDEA796-122D-4FE5-9B52-E8F267B01180}.Release|x86.Deploy.0 = Release|x86
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Debug|ARM.Build.0 = Debug|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Debug|x64.Build.0 = Debug|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Debug|x86.Build.0 = Debug|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Release|ARM.ActiveCfg = Release|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Release|ARM.Build.0 = Release|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Release|ARM64.Build.0 = Release|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Release|x64.ActiveCfg = Release|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Release|x64.Build.0 = Release|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Release|x86.ActiveCfg = Release|Any CPU
+		{E889C5FA-6E97-4610-8A49-F5959BD462D6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

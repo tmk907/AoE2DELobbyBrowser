@@ -36,4 +36,8 @@
     <PackageReference Include="System.Reactive" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\AoE2DELobbyBrowser.Core\AoE2DELobbyBrowser.Core.csproj" />
+  </ItemGroup>
+
 </Project>

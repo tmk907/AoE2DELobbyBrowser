@@ -1,5 +1,5 @@
-﻿using AoE2DELobbyBrowserAvalonia.Models;
-using AoE2DELobbyBrowserAvalonia.Services;
+﻿using AoE2DELobbyBrowser.Core.Models;
+using AoE2DELobbyBrowser.Core.Services;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using Microsoft.Toolkit.Uwp.Notifications;

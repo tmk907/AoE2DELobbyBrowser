@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
-using AoE2DELobbyBrowserAvalonia.Services;
+using AoE2DELobbyBrowser.Core.Services;
 
 namespace AoE2DELobbyBrowserAvalonia.Desktop;
 
