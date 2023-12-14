@@ -11,5 +11,10 @@ namespace AoE2DELobbyBrowserAvalonia.Services
         {
             return AssetLoader.Open(uri);
         }
+
+        public Stream OpenCountries()
+        {
+            return Open(new Uri("avares://AoE2DELobbyBrowserAvalonia/Assets/countries.csv"));
+        }
     }
 }

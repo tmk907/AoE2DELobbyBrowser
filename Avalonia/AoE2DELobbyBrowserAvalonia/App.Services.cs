@@ -5,8 +5,10 @@ using AoE2DELobbyBrowser.Services;
 using AoE2DELobbyBrowserAvalonia.Services;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input.Platform;
+using Avalonia.ReactiveUI;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Reactive.Concurrency;
 
 namespace AoE2DELobbyBrowserAvalonia
 {
@@ -35,6 +37,7 @@ namespace AoE2DELobbyBrowserAvalonia
             });
             services.AddSingleton<IAssetsLoader,AssetsLoader>();
             services.AddSingleton<IClipboardService,ClipboardService>();
+            services.AddSingleton<IScheduler>(_ => AvaloniaScheduler.Instance);
 
             services.AddSingleton<IApiClient,Aoe2ApiClient>();
             services.AddSingleton(services => new AppSettingsService(services.GetRequiredService<IConfiguration>()));

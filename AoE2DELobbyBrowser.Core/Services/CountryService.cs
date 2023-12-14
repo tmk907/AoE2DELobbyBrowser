@@ -28,7 +28,7 @@ namespace AoE2DELobbyBrowser.Core.Services
             List<string> lines = new List<string>();
             var loader = Ioc.Default.GetRequiredService<IAssetsLoader>();
 
-            using var stream = loader.Open(new Uri("avares://AoE2DELobbyBrowser.Core/Assets/countries.csv"));
+            using var stream = loader.OpenCountries();
             using var streamReader = new StreamReader(stream);
             while (!streamReader.EndOfStream)
             {
