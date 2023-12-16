@@ -23,18 +23,18 @@ public interface ILobbyListViewModel
 
 public partial class LobbyListViewModel : ObservableObject, ILobbyListViewModel
 {
-    private readonly IScheduler _backgroundScheduler;
+    private readonly IScheduler _uiScheduler;
 
     public LobbyListViewModel()
     {
         var myAdaptor = new MySortedObservableCollectionAdaptor();
         var lobbyService = Ioc.Default.GetRequiredService<LobbyService>();
-        _backgroundScheduler = Ioc.Default.GetRequiredService<IScheduler>();
+        _uiScheduler = Ioc.Default.GetRequiredService<IScheduler>();
 
         lobbyService.FilteredLobbyChanges
             .Sort(SortExpressionComparer<LobbyVM>.Ascending(t => t.Name))
             .Do(x => Log.Debug("LobbiesVM {0}", x.Count))
-            .ObserveOn(_backgroundScheduler)
+            .ObserveOn(_uiScheduler)
             .Bind(out _lobbies, adaptor: myAdaptor)
             .DisposeMany()
             .Subscribe()

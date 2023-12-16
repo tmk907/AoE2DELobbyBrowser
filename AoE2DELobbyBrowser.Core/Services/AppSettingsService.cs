@@ -62,6 +62,7 @@ namespace AoE2DELobbyBrowser.Core.Services
                 Separator = "/"
             };
         }
+
         private void SaveFile(string path, object data)
         {
             using var fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);

@@ -1,4 +1,6 @@
-﻿using AoE2DELobbyBrowser.Models;
+﻿using AoE2DELobbyBrowser.Core;
+using AoE2DELobbyBrowser.Core.Models;
+using AoE2DELobbyBrowser.Core.ViewModels;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -15,6 +17,7 @@ namespace AoE2DELobbyBrowser
     public sealed partial class MainPage : Page
     {
         public MainViewModel ViewModel { get; private set; }
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -48,12 +51,12 @@ namespace AoE2DELobbyBrowser
 
         private void NavigateToSettigns_Click(object sender, RoutedEventArgs e)
         {
-            WeakReferenceMessenger.Default.Send(new NavigateToMessage { Destination = typeof(SettingsPage) });
+            WeakReferenceMessenger.Default.Send(new NavigateToMessage(typeof(SettingsPage)));
         }
 
         private void ShowPlayersPopup(object sender, TappedRoutedEventArgs e)
         {
-            var lobby = (e.OriginalSource as FrameworkElement).DataContext as Lobby;
+            var lobby = (e.OriginalSource as FrameworkElement).DataContext as LobbyVM;
             ShowPlayersPopup(lobby);
         }
 
@@ -65,16 +68,16 @@ namespace AoE2DELobbyBrowser
 
         private void NavigateToFriends_Click(object sender, RoutedEventArgs e)
         {
-            WeakReferenceMessenger.Default.Send(new NavigateToMessage { Destination = typeof(FriendsPage) });
+            WeakReferenceMessenger.Default.Send(new NavigateToMessage(typeof(FriendsPage)));
         }
 
-        private void ShowPlayersPopup(Lobby lobby)
+        private void ShowPlayersPopup(LobbyVM lobby)
         {
             PlayersPopup.Visibility = Visibility.Visible;
             PlayersPopup.DataContext = lobby;
         }
 
-        private void OnNumPlayersTapped(object sender, Lobby lobby)
+        private void OnNumPlayersTapped(object sender, LobbyVM lobby)
         {
             ShowPlayersPopup(lobby);
         }

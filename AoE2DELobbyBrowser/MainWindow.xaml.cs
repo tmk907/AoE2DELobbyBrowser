@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using AoE2DELobbyBrowser.Core;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using System.IO;
 

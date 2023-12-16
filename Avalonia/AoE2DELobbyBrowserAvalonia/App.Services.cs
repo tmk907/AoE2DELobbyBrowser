@@ -1,7 +1,6 @@
 ﻿using AoE2DELobbyBrowser.Core;
 using AoE2DELobbyBrowser.Core.Api;
 using AoE2DELobbyBrowser.Core.Services;
-using AoE2DELobbyBrowser.Services;
 using AoE2DELobbyBrowserAvalonia.Services;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input.Platform;

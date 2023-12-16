@@ -4,10 +4,15 @@ using System;
 using CommunityToolkit.WinUI.Notifications;
 using System.Runtime.InteropServices;
 using Microsoft.UI.Dispatching;
-using Windows.Storage;
 using System.IO;
 using AoE2DELobbyBrowser.Services;
-using AoE2DELobbyBrowser.Api;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using AoE2DELobbyBrowser.Core.Services;
+using System.Reactive.Concurrency;
+using AoE2DELobbyBrowser.Core;
+using AoE2DELobbyBrowser.Core.Api;
+using ReactiveUI;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -19,8 +24,6 @@ namespace AoE2DELobbyBrowser
     /// </summary>
     public partial class App : Application
     {
-        public static string LogsFolderPath => Path.Combine(ApplicationData.Current.LocalFolder.Path, "logs");
-
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -29,6 +32,8 @@ namespace AoE2DELobbyBrowser
         {
             this.InitializeComponent();
 
+            PlatformConfig = new WinUI3Configuration();
+
             Log.Logger = new LoggerConfiguration()
 #if DEBUG
                 .MinimumLevel.Debug()
@@ -36,21 +41,26 @@ namespace AoE2DELobbyBrowser
 #else
                .MinimumLevel.Information()
 #endif
-               .WriteTo.File(Path.Combine(LogsFolderPath, "logs.txt"), rollingInterval: RollingInterval.Day)
+               .WriteTo.File(Path.Combine(PlatformConfig.LogsFolder, "logs.txt"), rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
+            var isToastActivated = ToastNotificationManagerCompat.WasCurrentProcessToastActivated();
             ToastNotificationManagerCompat.OnActivated += ToastNotificationManagerCompat_OnActivated;
-            ApiClient = new Aoe2ApiClient();
-            PlayersService = new PlayersService(ApiClient);
-            LobbyService = new LobbyService();
-            CountryService = new CountryService();
+
+            Log.Information("App started {0} , isToastActivated {1}", DateTime.Now, isToastActivated);
+            Log.Information("{0} ({1}) {2}", PlatformConfig.AppDisplayName, PlatformConfig.InformationVersion,
+                PlatformConfig.AssemblyVersion);
+            Log.Information("BaseDirectory: {0}", AppContext.BaseDirectory);
+            Log.Information("AppDataFolder: {0}", PlatformConfig.AppDataFolder);
+            Log.Information("LogsFolder: {0}", PlatformConfig.LogsFolder);
+
+            var serviceProvider = ConfigureServices();
+            Ioc.Default.ConfigureServices(serviceProvider);
         }
 
-        public static DispatcherQueue DispatcherQueue { get; private set; }
-        public static IPlayersService PlayersService { get; private set; }
-        public static LobbyService LobbyService { get; private set; }
-        public static IApiClient ApiClient { get; private set; }
-        public static CountryService CountryService { get; private set; }
+        private static WinUI3Configuration PlatformConfig;
+        private static DispatcherQueue DispatcherQueue;
+
 
         private Window m_window;
 
@@ -105,6 +115,28 @@ namespace AoE2DELobbyBrowser
             {
                 WindowHelper.ShowWindow(m_window);
             }
+        }
+
+        private IServiceProvider ConfigureServices()
+        {
+            var services = new ServiceCollection();
+
+            services.AddSingleton<IAssetsLoader, AssetsLoader>();
+            services.AddSingleton<IClipboardService, ClipboardService>();
+            services.AddSingleton<IScheduler>(_ => RxApp.MainThreadScheduler);
+
+            services.AddSingleton<IApiClient, Aoe2ApiClient>();
+            services.AddSingleton(services => new AppSettingsService(services.GetRequiredService<IConfiguration>()));
+            services.AddSingleton<AppDataStorageHelper>();
+            services.AddSingleton<IPlayersService,PlayersService>();
+            services.AddSingleton<CountryService>();
+            services.AddSingleton<LobbyService>();
+
+            services.AddSingleton<IConfiguration>(PlatformConfig);
+            services.AddSingleton<ILauncherService, WindowsLauncherService>();
+            services.AddSingleton<INotificationsService, NotificationsService>();
+
+            return services.BuildServiceProvider();
         }
 
         private static class WindowHelper

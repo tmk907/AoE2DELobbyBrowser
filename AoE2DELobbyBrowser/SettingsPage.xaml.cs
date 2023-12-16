@@ -1,10 +1,7 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using CommunityToolkit.Mvvm.Messaging;
-using System;
-using AoE2DELobbyBrowser.Services;
-using Windows.System;
-using System.IO;
+﻿using Microsoft.UI.Xaml.Controls;
+using AoE2DELobbyBrowser.Core.ViewModels;
+using AoE2DELobbyBrowser.Core.Services;
+using Microsoft.UI.Xaml;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -16,15 +13,16 @@ namespace AoE2DELobbyBrowser
     /// </summary>
     public sealed partial class SettingsPage : Page
     {
+        private SettingsViewModel ViewModel { get; }
+
         public SettingsPage()
         {
             this.InitializeComponent();
-            newLobbyNumberBox.Value = AppSettings.NewLobbyHighlightTime.TotalSeconds;
-            separatorTextBox.Text = AppSettings.Separator;
+            ViewModel = new SettingsViewModel();
         }
 
-        public bool IsAoe2deLink => AppSettings.JoinLinkType == AppSettings.JoinLink.Aoe2de;
-        public bool IsSteamLink => AppSettings.JoinLinkType == AppSettings.JoinLink.Steam;
+        public bool IsAoe2deLink => ViewModel.JoinLink == JoinLinkEnum.Aoe2de;
+        public bool IsSteamLink => ViewModel.JoinLink == JoinLinkEnum.Steam;
 
         public string Version
         {
@@ -35,47 +33,14 @@ namespace AoE2DELobbyBrowser
             }
         }
 
-        private void GoBack_Click(object sender, RoutedEventArgs e)
-        {
-            WeakReferenceMessenger.Default.Send(new NavigateBackMessage());
-        }
-
-        private void newLobbyNumberBox_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
-        {
-            double seconds = args.NewValue;
-            if (double.IsNaN(seconds)) return;
-            AppSettings.NewLobbyHighlightTime = TimeSpan.FromSeconds(seconds);
-        }
-
         private void Aoe2de_RadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            AppSettings.JoinLinkType = AppSettings.JoinLink.Aoe2de;
+            ViewModel.JoinLink = JoinLinkEnum.Aoe2de;
         }
 
         private void Steam_RadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            AppSettings.JoinLinkType = AppSettings.JoinLink.Steam;
-        }
-
-        private void separatorTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            AppSettings.Separator = separatorTextBox.Text;
-        }
-
-        private async void OpenLogsFolderClicked(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Directory.CreateDirectory(App.LogsFolderPath);
-            }
-            catch (Exception) { }
-            await Launcher.LaunchFolderPathAsync(App.LogsFolderPath);
-        }
-
-        private async void RateAppClicked(object sender, RoutedEventArgs e)
-        {
-            var productId = "9NTQFS6RCXL8";
-            bool result = await Launcher.LaunchUriAsync(new Uri($"ms-windows-store://review/?ProductId={productId}"));
+            ViewModel.JoinLink = JoinLinkEnum.Steam;
         }
     }
 }

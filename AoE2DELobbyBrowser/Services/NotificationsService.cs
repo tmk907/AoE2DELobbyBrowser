@@ -1,4 +1,5 @@
-﻿using AoE2DELobbyBrowser.Models;
+﻿using AoE2DELobbyBrowser.Core.Models;
+using AoE2DELobbyBrowser.Core.Services;
 using CommunityToolkit.WinUI.Notifications;
 using Serilog;
 using System;
@@ -7,13 +8,13 @@ using System.Linq;
 
 namespace AoE2DELobbyBrowser.Services
 {
-    internal class NotificationsService
+    internal class NotificationsService : INotificationsService
     {
         public NotificationsService()
         {
         }
 
-        public void ShowNotifications(IEnumerable<Lobby> lobbies)
+        public void ShowNotifications(IEnumerable<LobbyVM> lobbies)
         {
             //Log.Debug($"Show notifications");
             //foreach(var lobby in lobbies)
@@ -34,7 +35,7 @@ namespace AoE2DELobbyBrowser.Services
             }
         }
 
-        public void ShowNotificationForGroup(IEnumerable<Lobby> lobbies)
+        private void ShowNotificationForGroup(IEnumerable<LobbyVM> lobbies)
         {
             try
             {
@@ -53,7 +54,7 @@ namespace AoE2DELobbyBrowser.Services
             }
         }
 
-        public void ShowNotification(Lobby lobby)
+        private void ShowNotification(LobbyVM lobby)
         {
             try
             {
@@ -63,6 +64,7 @@ namespace AoE2DELobbyBrowser.Services
                     .AddArgument("type", "lobby notification")
                     .AddHeader("singlelobby", "New lobby", lobby.MatchId)
                     .AddText(lobby.Name)
+                    .AddText(lobby.Players.FirstOrDefault()?.Name ?? "")
                     .AddButton("Join game", ToastActivationType.Foreground, toastArguments.ToString())
                     .Show(toast =>
                     {

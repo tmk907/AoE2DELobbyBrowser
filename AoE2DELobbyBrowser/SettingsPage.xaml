@@ -29,7 +29,7 @@
             Height="36"
             Margin="8"
             BorderBrush="{StaticResource DarkAccent}"
-            Click="GoBack_Click">
+            Command="{x:Bind ViewModel.NavigateBackCommand}">
             <SymbolIcon Foreground="{StaticResource DarkAccent}" Symbol="Back" />
             <Button.KeyboardAccelerators>
                 <KeyboardAccelerator Key="Left" Modifiers="Control" />
@@ -66,7 +66,7 @@
                             Minimum="5"
                             SmallChange="5"
                             SpinButtonPlacementMode="Inline"
-                            ValueChanged="newLobbyNumberBox_ValueChanged" />
+                            Value="{x:Bind ViewModel.NewLobbyHighlightTime, Mode=TwoWay}" />
                     </controls:SettingsCard>
 
                     <controls:SettingsCard Header="Query separator">
@@ -77,8 +77,7 @@
                             x:Name="separatorTextBox"
                             Width="100"
                             HorizontalAlignment="Left"
-                            Text=""
-                            TextChanged="separatorTextBox_TextChanged" />
+                            Text="{x:Bind ViewModel.Separator, Mode=TwoWay}" />
                     </controls:SettingsCard>
 
                     <controls:SettingsCard Description="Type of link used to join a game" Header="Game link">
@@ -109,10 +108,10 @@
                             Margin="0,-2,0,0"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             IsTextSelectionEnabled="True"
-                            Text="{x:Bind Version}" />
+                            Text="{x:Bind ViewModel.Version}" />
                         <controls:SettingsExpander.Items>
                             <controls:SettingsCard
-                                Click="RateAppClicked"
+                                Command="{x:Bind ViewModel.RateAppCommand}"
                                 Header="Rate and review in Microsoft Store"
                                 IsClickEnabled="True">
                                 <controls:SettingsCard.ActionIcon>
@@ -137,7 +136,7 @@
                                 </StackPanel>
                             </controls:SettingsCard>
                             <controls:SettingsCard
-                                Click="OpenLogsFolderClicked"
+                                Command="{x:Bind ViewModel.OpenLogsFolderCommand}"
                                 Description="Open folder with log files"
                                 Header="Logs"
                                 IsClickEnabled="True">

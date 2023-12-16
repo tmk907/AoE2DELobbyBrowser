@@ -5,14 +5,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:AoE2DELobbyBrowser.Converters"
-    xmlns:models="using:AoE2DELobbyBrowser.Models"
+    xmlns:models="using:AoE2DELobbyBrowser.Core.Models"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:BoolToFontWeightConverter x:Key="BoolToFontWeight" />
     </UserControl.Resources>
     <ListView ItemsSource="{x:Bind ViewModel.Lobbies, Mode=OneWay}" SelectionMode="None">
         <ListView.ItemTemplate>
-            <DataTemplate x:DataType="models:Lobby">
+            <DataTemplate x:DataType="models:LobbyVM">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />

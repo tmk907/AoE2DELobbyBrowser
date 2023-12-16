@@ -1,7 +1,9 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using AoE2DELobbyBrowser.Models;
+using AoE2DELobbyBrowser.Core;
+using AoE2DELobbyBrowser.Core.Models;
+using AoE2DELobbyBrowser.Core.ViewModels;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -58,7 +60,7 @@ namespace AoE2DELobbyBrowser
         private void ShowPlayersPopup(object sender, TappedRoutedEventArgs e)
         {
             PlayersPopup.Visibility = Visibility.Visible;
-            var friend = (e.OriginalSource as FrameworkElement).DataContext as Friend;
+            var friend = (e.OriginalSource as FrameworkElement).DataContext as FriendVM;
             PlayersPopup.DataContext = friend.Lobby;
         }
 

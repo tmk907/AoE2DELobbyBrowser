@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:AoE2DELobbyBrowser.Converters"
-    xmlns:models="using:AoE2DELobbyBrowser.Models"
+    xmlns:models="using:AoE2DELobbyBrowser.Core.Models"
     xmlns:toolkitconverters="using:CommunityToolkit.WinUI.Converters"
     x:Name="rootPage"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -83,7 +83,7 @@
             ItemsSource="{x:Bind ViewModel.Friends, Mode=OneWay}"
             SelectionMode="None">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="models:Friend">
+                <DataTemplate x:DataType="models:FriendVM">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="16" />

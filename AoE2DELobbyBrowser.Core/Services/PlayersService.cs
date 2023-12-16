@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using AoE2DELobbyBrowser.Core.Api;
-using AoE2DELobbyBrowser.Core.Services;
+using DynamicData;
 using Serilog;
 
-namespace AoE2DELobbyBrowser.Services
+namespace AoE2DELobbyBrowser.Core.Services
 {
     public interface IPlayersService
     {
+        IObservableCache<SteamPlayerDto, string> AllPlayers { get; }
+
         Task AddFriendAsync(string id);
         Task<List<SteamPlayerDto>> GetFriendsListAsync();
         bool IsValidId(string id);
@@ -23,18 +26,30 @@ namespace AoE2DELobbyBrowser.Services
         private const string FileName = "favoritePlayers.json";
         private AppDataStorageHelper _storageHelper;
 
+        private readonly SourceCache<SteamPlayerDto, string> _playersCache;
         private readonly IApiClient _apiClient;
 
         public PlayersService(IApiClient apiClient, AppDataStorageHelper applicationDataStorageHelper)
         {
             _apiClient = apiClient;
             _storageHelper = applicationDataStorageHelper;
+            _playersCache = new SourceCache<SteamPlayerDto, string>(x => x.SteamId);
+
+            AllPlayers = _playersCache.AsObservableCache();
+
+            Observable
+                .FromAsync(GetFriendsListAsync)
+                .Do(list => _playersCache.AddOrUpdate(list))
+                .Do(_ => Log.Debug("GetFriendsListAsync loaded"))
+                .Subscribe();
         }
+
+        public IObservableCache<SteamPlayerDto, string> AllPlayers { get; }
 
         public bool IsValidId(string id)
         {
             if (id != null &&
-                id.Length == 17 && 
+                id.Length == 17 &&
                 long.TryParse(id, out var _)) return true;
             return false;
         }
@@ -55,8 +70,7 @@ namespace AoE2DELobbyBrowser.Services
                     {
                         savedPlayers.Add(player);
                         await SaveFriendsListAsync(savedPlayers);
-                        // TODO
-                        //_playersCache.AddOrUpdate(player);
+                        _playersCache.AddOrUpdate(player);
                     }
                 }
                 catch (Exception ex)
@@ -74,8 +88,7 @@ namespace AoE2DELobbyBrowser.Services
             {
                 savedPlayers.Remove(toRemove);
                 await SaveFriendsListAsync(savedPlayers);
-                // TODO
-                //_playersCache.Remove(toRemove);
+                _playersCache.Remove(toRemove);
             }
         }
 
@@ -88,13 +101,12 @@ namespace AoE2DELobbyBrowser.Services
 
                 var ids = string.Join(',', players.Select(x => x.SteamId));
                 players = await _apiClient.GetSteamPlayersAsync(ids);
-                
+
                 await SaveFriendsListAsync(players);
-                // TODO
-                //_playersCache.Edit(u =>
-                //{
-                //    u.AddOrUpdate(players);
-                //});
+                _playersCache.Edit(u =>
+                {
+                    u.AddOrUpdate(players);
+                });
             }
             catch (Exception ex)
             {

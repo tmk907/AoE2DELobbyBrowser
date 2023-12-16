@@ -12,6 +12,7 @@ using System.Reactive.Concurrency;
 using DynamicData.Binding;
 using System.Threading;
 using DynamicData;
+using System.Collections.ObjectModel;
 
 namespace AoE2DELobbyBrowser.Core.Services
 {
@@ -20,7 +21,8 @@ namespace AoE2DELobbyBrowser.Core.Services
         private readonly IApiClient _apiClient;
         private readonly AppSettingsService _appSettingsService;
         private readonly INotificationsService _notificationsService;
-        private readonly IScheduler _backgroundScheduler;
+        private readonly IScheduler _uiScheduler;
+        private readonly IPlayersService _playersService;
         private readonly LobbySettings _settings;
 
         private readonly ISubject<bool> _isLoadingSubject;
@@ -29,12 +31,13 @@ namespace AoE2DELobbyBrowser.Core.Services
         private readonly SourceCache<LobbyVM, string> _itemsCache;
 
         public LobbyService(IApiClient apiClient, AppSettingsService appSettingsService,
-            INotificationsService notificationsService, IScheduler backgroundScheduler)
+            INotificationsService notificationsService, IScheduler uiScheduler, IPlayersService playersService)
         {
             _apiClient = apiClient;
             _appSettingsService = appSettingsService;
             _notificationsService = notificationsService;
-            _backgroundScheduler = backgroundScheduler;
+            _uiScheduler = uiScheduler;
+            _playersService = playersService;
             _settings = appSettingsService.AppSettings.LobbySettings;
             _itemsCache = new SourceCache<LobbyVM, string>(x => x.MatchId);
             _isLoadingSubject = new Subject<bool>();
@@ -72,7 +75,7 @@ namespace AoE2DELobbyBrowser.Core.Services
 
             AllLobbyChanges
                 .Skip(1)
-                .ObserveOn(_backgroundScheduler)
+                .ObserveOn(_uiScheduler)
                 .OnItemAdded(x => x.IsNew = true)
                 .Subscribe()
                 .DisposeWith(Disposal);
@@ -141,11 +144,65 @@ namespace AoE2DELobbyBrowser.Core.Services
                 .Do(lobbies => _notificationsService.ShowNotifications(lobbies))
                 .Subscribe()
                 .DisposeWith(Disposal);
+
+            AllLobbyChanges
+                .Bind(out _allLobbies)
+                .Subscribe()
+                .DisposeWith(Disposal);
+
+            _friendSource = new SourceCache<FriendVM, string>(x => x.Player.SteamProfileId);
+            _playersService.AllPlayers.Connect()
+                .Do(x => Log.Debug("LobbyService AllPlayerChanges"))
+                .ObserveOn(_uiScheduler)
+                .OnItemAdded(x =>
+                {
+                    var friend = FriendVM.Create(x);
+                    friend.UpdateStatus(x.Status);
+                    friend.UpdateLobby(_allLobbies.FirstOrDefault(x => x.ContainsPlayer(friend.Player.SteamProfileId)));
+                    _friendSource.AddOrUpdate(friend);
+                })
+                .OnItemRemoved(x =>
+                {
+                    _friendSource.RemoveKey(x.SteamId);
+                })
+                .OnItemUpdated((current, prev) =>
+                {
+                    var friend = _friendSource.Lookup(current.SteamId);
+                    if (friend.HasValue)
+                    {
+                        friend.Value.Player.UpdateCountry(current.LocCountryCode);
+                        friend.Value.UpdateStatus(current.Status);
+                    }
+                })
+                .Subscribe()
+                .DisposeWith(Disposal);
+
+            AllLobbyChanges
+                .Do(_ => Log.Debug("LobbyService AllLobbyChanges ToCollection"))
+                .ObserveOn(_uiScheduler)
+                .Do(_ =>
+                {
+                    foreach (var friend in _friendSource.Items)
+                    {
+                        friend.UpdateLobby(_allLobbies.FirstOrDefault(x => x.ContainsPlayer(friend.Player.SteamProfileId)));
+                        friend.Player.UpdateCountry(friend?.Lobby?.Players?.FirstOrDefault()?.Country);
+                    }
+                })
+                .Do(_ => Log.Debug("LobbyService AllLobbyChanges ToCollection finished"))
+                .Subscribe()
+                .DisposeWith(Disposal);
+
+            FriendsChanges = _friendSource.AsObservableCache();
         }
 
         public IObservable<bool> IsLoading { get; private set; }
         public IObservable<IChangeSet<LobbyVM, string>> AllLobbyChanges { get; private set; }
         public IObservable<IChangeSet<LobbyVM, string>> FilteredLobbyChanges { get; private set; }
+        
+
+        private readonly ReadOnlyObservableCollection<LobbyVM> _allLobbies;
+        private readonly SourceCache<FriendVM, string> _friendSource;
+        public IObservableCache<FriendVM, string> FriendsChanges { get; private set; }
 
         public void Dispose()
         {

@@ -38,13 +38,13 @@ public partial class MainViewModel : ViewModelBase, IMainViewModel
 {
     private readonly AppSettingsService _appSettingsService;
     private readonly LobbyService _lobbyService;
-    private readonly IScheduler _backgroundScheduler;
+    private readonly IScheduler _uiScheduler;
 
     public MainViewModel()
     {
         _lobbyService = Ioc.Default.GetRequiredService<LobbyService>();
         _appSettingsService = Ioc.Default.GetRequiredService<AppSettingsService>();
-        _backgroundScheduler = Ioc.Default.GetRequiredService<IScheduler>();
+        _uiScheduler = Ioc.Default.GetRequiredService<IScheduler>();
 
         Settings = _appSettingsService.AppSettings.LobbySettings;
 
@@ -52,7 +52,7 @@ public partial class MainViewModel : ViewModelBase, IMainViewModel
 
         _lobbyService.IsLoading
                 .DistinctUntilChanged()
-                .ObserveOn(_backgroundScheduler)
+                .ObserveOn(_uiScheduler)
                 .Do(x => Loading = x)
                 .Subscribe()
                 .DisposeWith(Disposal);

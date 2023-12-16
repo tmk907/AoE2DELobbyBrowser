@@ -1,4 +1,5 @@
-using AoE2DELobbyBrowser.Models;
+using AoE2DELobbyBrowser.Core.Models;
+using AoE2DELobbyBrowser.Core.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -15,22 +16,22 @@ namespace AoE2DELobbyBrowser
             this.InitializeComponent();
         }
 
-        public LobbyListViewModel ViewModel
+        public ILobbyListViewModel ViewModel
         {
-            get { return (LobbyListViewModel)GetValue(ViewModelProperty); }
+            get { return (ILobbyListViewModel)GetValue(ViewModelProperty); }
             set { SetValue(ViewModelProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register("ViewModel", typeof(LobbyListViewModel), typeof(LobbyListControl), new PropertyMetadata(0));
+            DependencyProperty.Register("ViewModel", typeof(ILobbyListViewModel), typeof(LobbyListControl), new PropertyMetadata(0));
 
         private void NumPlayersTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            var lobby = (e.OriginalSource as FrameworkElement).DataContext as Lobby;
+            var lobby = (e.OriginalSource as FrameworkElement).DataContext as LobbyVM;
             NumPlayersTappedEvent?.Invoke(this, lobby);
         }
 
-        public event EventHandler<Lobby> NumPlayersTappedEvent;
+        public event EventHandler<LobbyVM> NumPlayersTappedEvent;
     }
 }
