@@ -65,7 +65,7 @@ namespace AoE2DELobbyBrowser.Core.Services
 
         private void SaveFile(string path, object data)
         {
-            using var fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
+            using var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
             JsonSerializer.Serialize(fileStream, data);
         }
 
