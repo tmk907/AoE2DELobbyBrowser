@@ -44,7 +44,7 @@ public partial class MainViewModel : ViewModelBase, IMainViewModel
     {
         _lobbyService = Ioc.Default.GetRequiredService<LobbyService>();
         _appSettingsService = Ioc.Default.GetRequiredService<AppSettingsService>();
-        _uiScheduler = Ioc.Default.GetRequiredService<IScheduler>();
+        _uiScheduler = Ioc.Default.GetRequiredService<ISchedulers>().UIScheduler;
 
         Settings = _appSettingsService.AppSettings.LobbySettings;
 

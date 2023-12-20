@@ -31,12 +31,12 @@ namespace AoE2DELobbyBrowser.Core.Services
         private readonly SourceCache<LobbyVM, string> _itemsCache;
 
         public LobbyService(IApiClient apiClient, AppSettingsService appSettingsService,
-            INotificationsService notificationsService, IScheduler uiScheduler, IPlayersService playersService)
+            INotificationsService notificationsService, ISchedulers schedulers, IPlayersService playersService)
         {
             _apiClient = apiClient;
             _appSettingsService = appSettingsService;
             _notificationsService = notificationsService;
-            _uiScheduler = uiScheduler;
+            _uiScheduler = schedulers.UIScheduler;
             _playersService = playersService;
             _settings = appSettingsService.AppSettings.LobbySettings;
             _itemsCache = new SourceCache<LobbyVM, string>(x => x.MatchId);

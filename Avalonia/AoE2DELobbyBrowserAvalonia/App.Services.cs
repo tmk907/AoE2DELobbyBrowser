@@ -36,7 +36,7 @@ namespace AoE2DELobbyBrowserAvalonia
             });
             services.AddSingleton<IAssetsLoader,AssetsLoader>();
             services.AddSingleton<IClipboardService,ClipboardService>();
-            services.AddSingleton<IScheduler>(_ => AvaloniaScheduler.Instance);
+            services.AddSingleton<ISchedulers, Schedulers>();
 
             services.AddSingleton<IApiClient,Aoe2ApiClient>();
             services.AddSingleton(services => new AppSettingsService(services.GetRequiredService<IConfiguration>()));

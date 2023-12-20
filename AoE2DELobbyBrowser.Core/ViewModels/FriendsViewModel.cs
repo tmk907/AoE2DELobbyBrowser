@@ -26,7 +26,7 @@ namespace AoE2DELobbyBrowser.Core.ViewModels
         {
             _playersService = Ioc.Default.GetRequiredService<IPlayersService>();
             _lobbyService = Ioc.Default.GetRequiredService<LobbyService>();
-            _uiScheduler = Ioc.Default.GetRequiredService<IScheduler>();
+            _uiScheduler = Ioc.Default.GetRequiredService<ISchedulers>().UIScheduler;
 
             var isOnlineChanges = _lobbyService.FriendsChanges.Connect()
                 .WhenPropertyChanged(x => x.IsOnline, false)

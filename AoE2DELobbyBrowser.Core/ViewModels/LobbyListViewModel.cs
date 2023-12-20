@@ -29,7 +29,7 @@ public partial class LobbyListViewModel : ObservableObject, ILobbyListViewModel
     {
         var myAdaptor = new MySortedObservableCollectionAdaptor();
         var lobbyService = Ioc.Default.GetRequiredService<LobbyService>();
-        _uiScheduler = Ioc.Default.GetRequiredService<IScheduler>();
+        _uiScheduler = Ioc.Default.GetRequiredService<ISchedulers>().UIScheduler;
 
         lobbyService.FilteredLobbyChanges
             .Sort(SortExpressionComparer<LobbyVM>.Ascending(t => t.Name))

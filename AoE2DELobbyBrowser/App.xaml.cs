@@ -123,7 +123,7 @@ namespace AoE2DELobbyBrowser
 
             services.AddSingleton<IAssetsLoader, AssetsLoader>();
             services.AddSingleton<IClipboardService, ClipboardService>();
-            services.AddSingleton<IScheduler>(_ => RxApp.MainThreadScheduler);
+            services.AddSingleton<ISchedulers, Schedulers>();
 
             services.AddSingleton<IApiClient, Aoe2ApiClient>();
             services.AddSingleton(services => new AppSettingsService(services.GetRequiredService<IConfiguration>()));
