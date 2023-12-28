@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:AoE2DELobbyBrowserAvalonia.Views"
     xmlns:design="using:AoE2DELobbyBrowser.Core.ViewModels.DesignData"
+    xmlns:fluent="using:FluentAvalonia.UI.Controls"
     xmlns:vm="using:AoE2DELobbyBrowser.Core.ViewModels"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -71,6 +72,23 @@
                         ToolTip.Tip="Show notifications (Ctrl + N)">
                         <TextBlock Classes="lightForeground" Text="Notifications" />
                     </CheckBox>
+                    <Grid>
+                        <Button
+                            Background="Transparent"
+                            Command="{Binding NavigateToFriendsCommand}"
+                            HotKey="Ctrl+P"
+                            ToolTip.Tip="Friends (Ctrl + P)">
+                            <TextBlock
+                                Classes="lightForeground"
+                                FontFamily="{StaticResource SymbolFont}"
+                                FontSize="18"
+                                Text="{x:Static controls:SymbolIcons.People}" />
+                        </Button>
+                        <fluent:InfoBadge
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Value="{Binding OnlineCount}" />
+                    </Grid>
                 </StackPanel>
                 <Button
                     Grid.Column="1"

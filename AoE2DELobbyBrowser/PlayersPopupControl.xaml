@@ -6,16 +6,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:AoE2DELobbyBrowser.Core.Models"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <XamlUICommand
-            x:Key="AddFriendCommand"
-            Command="{x:Bind AddFriendCommand, Mode=OneWay}"
-            Description="Add friend">
-            <XamlUICommand.IconSource>
-                <SymbolIconSource Symbol="AddFriend" />
-            </XamlUICommand.IconSource>
-        </XamlUICommand>
-    </UserControl.Resources>
     <Grid
         Width="348"
         Padding="10"
@@ -70,7 +60,7 @@
                         </TextBlock>
                         <Button
                             Grid.Column="2"
-                            Command="{StaticResource AddFriendCommand}"
+                            Command="{x:Bind AddFriendCommand}"
                             CommandParameter="{x:Bind}"
                             Style="{StaticResource ListItemSmallButtonStyle}">
                             <SymbolIcon Symbol="AddFriend" />

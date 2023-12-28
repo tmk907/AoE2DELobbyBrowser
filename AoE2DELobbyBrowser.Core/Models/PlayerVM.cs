@@ -41,6 +41,13 @@ namespace AoE2DELobbyBrowser.Core.Models
             await launcher.LauchUriAsync(new Uri(url));
         }
 
+        [RelayCommand]
+        private async Task AddFriendAsync()
+        {
+            var playerService = Ioc.Default.GetRequiredService<IPlayersService>();
+            await playerService.AddFriendAsync(SteamProfileId);
+        }
+
         public static PlayerVM Create(PlayerDto dto)
         {
             return new PlayerVM(dto.Name, dto.SteamProfileId, dto.Country);

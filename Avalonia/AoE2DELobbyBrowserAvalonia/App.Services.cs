@@ -41,7 +41,7 @@ namespace AoE2DELobbyBrowserAvalonia
             services.AddSingleton<IApiClient,Aoe2ApiClient>();
             services.AddSingleton(services => new AppSettingsService(services.GetRequiredService<IConfiguration>()));
             services.AddSingleton<AppDataStorageHelper>();
-            services.AddSingleton<PlayersService>();
+            services.AddSingleton<IPlayersService, PlayersService>();
             services.AddSingleton<CountryService>();
             services.AddSingleton<LobbyService>();
 

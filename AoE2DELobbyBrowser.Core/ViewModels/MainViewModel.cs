@@ -19,7 +19,7 @@ public interface IMainViewModel
 {
     IRelayCommand NavigateToSettingsCommand { get; }
     IAsyncRelayCommand RefreshCommand { get; }
-    //IAsyncRelayCommand<Player> AddFriendCommand { get; }
+    IRelayCommand NavigateToFriendsCommand { get; }
 
     LobbySettings Settings { get; }
 
@@ -56,6 +56,12 @@ public partial class MainViewModel : ViewModelBase, IMainViewModel
                 .Do(x => Loading = x)
                 .Subscribe()
                 .DisposeWith(Disposal);
+
+        _lobbyService.FriendsOnline
+            .ObserveOn(_uiScheduler)
+            .Do(x=>OnlineCount = x)
+            .Subscribe()
+            .DisposeWith(Disposal);
     }
 
     protected CompositeDisposable Disposal = new CompositeDisposable();
@@ -73,7 +79,9 @@ public partial class MainViewModel : ViewModelBase, IMainViewModel
     [NotifyPropertyChangedFor(nameof(CanRefresh))]
     [NotifyCanExecuteChangedFor(nameof(RefreshCommand))]
     private bool _loading;
-    public int OnlineCount { get; }
+
+    [ObservableProperty]
+    private int _onlineCount;
 
     public List<string> GameTypes { get; } = new GameType().GetAll();
     public List<string> GameSpeeds { get; } = new GameSpeed().GetAll();
@@ -88,13 +96,14 @@ public partial class MainViewModel : ViewModelBase, IMainViewModel
     }
 
     [RelayCommand]
-    private async Task AddFriendAsync()
-    {
-    }
-
-    [RelayCommand]
     private void NavigateToSettings()
     {
         WeakReferenceMessenger.Default.Send(new NavigateToMessage(typeof(SettingsViewModel)));
+    }
+
+    [RelayCommand]
+    private void NavigateToFriends()
+    {
+        WeakReferenceMessenger.Default.Send(new NavigateToMessage(typeof(FriendsViewModel)));
     }
 }

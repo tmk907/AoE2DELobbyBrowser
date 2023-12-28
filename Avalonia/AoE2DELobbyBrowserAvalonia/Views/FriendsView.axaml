@@ -1,0 +1,155 @@
+<UserControl
+    x:Class="AoE2DELobbyBrowserAvalonia.Views.FriendsView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:AoE2DELobbyBrowserAvalonia.Converters"
+    xmlns:design="using:AoE2DELobbyBrowser.Core.ViewModels.DesignData"
+    xmlns:models="using:AoE2DELobbyBrowser.Core.Models"
+    xmlns:views="using:AoE2DELobbyBrowserAvalonia.Views"
+    xmlns:vm="using:AoE2DELobbyBrowser.Core.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:IFriendsViewModel"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="IsOfflineBrush">Red</SolidColorBrush>
+        <SolidColorBrush x:Key="IsOnlineBrush">Green</SolidColorBrush>
+        <converters:BoolToObjectConverter
+            x:Key="IsOnlineConverter"
+            FalseValue="{StaticResource IsOfflineBrush}"
+            TrueValue="{StaticResource IsOnlineBrush}" />
+    </UserControl.Resources>
+    <Grid Background="{StaticResource BackgroundColor}" RowDefinitions="Auto,*">
+        <StackPanel
+            Grid.Row="0"
+            Background="{StaticResource DarkAccent}"
+            Orientation="Horizontal"
+            Spacing="2">
+            <Button
+                Grid.Row="0"
+                Width="40"
+                BorderBrush="{StaticResource DarkAccent}"
+                Command="{Binding NavigateBackCommand}"
+                HotKey="Ctrl+Left"
+                ToolTip.Tip="Go back (Ctrl + Left)">
+                <TextBlock
+                    FontFamily="{StaticResource SymbolFont}"
+                    FontSize="18"
+                    Foreground="{StaticResource DarkAccent}"
+                    Text="{x:Static views:SymbolIcons.Back}" />
+            </Button>
+            <TextBox
+                x:Name="searchTextBox"
+                Width="180"
+                KeyDown="UnFocusOnKeyDown"
+                Text="{Binding SteamId, Mode=TwoWay}"
+                ToolTip.Tip="Steam64 Id (Ctrl + F)"
+                Watermark="Steam64 Id" />
+            <Button
+                Width="80"
+                Command="{Binding AddFriendFromIdCommand}"
+                Content="Add"
+                HotKey="Ctrl+A"
+                ToolTip.Tip="Add (Ctrl + A)" />
+            <Button
+                Width="80"
+                Command="{Binding RefreshCommand}"
+                Content="Refresh"
+                HotKey="Ctrl+R"
+                ToolTip.Tip="Refresh (Ctrl + R)" />
+        </StackPanel>
+        <ListBox Grid.Row="1" ItemsSource="{Binding Friends}">
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="models:FriendVM">
+                    <Grid ColumnDefinitions="16,40,240,*,48">
+                        <Ellipse
+                            Width="8"
+                            Height="8"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Fill="{Binding IsOnline, Converter={StaticResource IsOnlineConverter}, Mode=OneWay}"
+                            StrokeThickness="0"
+                            ToolTip.Tip="Status" />
+                        <TextBlock
+                            Grid.Column="1"
+                            Classes="listItemTextBlock"
+                            Text="{Binding Player.Country}"
+                            ToolTip.Tip="{Binding Player.CountryName}" />
+                        <Button
+                            Grid.Column="2"
+                            Classes="hyperlinkButton"
+                            Command="{Binding Player.OpenUrlCommand}"
+                            CommandParameter="{Binding Player.SteamProfileUrl}">
+                            <TextBlock Text="{Binding Player.Name}" />
+                        </Button>
+                        <Grid
+                            Grid.Column="3"
+                            ColumnDefinitions="*,70,140,140,80"
+                            IsVisible="{Binding Lobby, Converter={x:Static ObjectConverters.IsNotNull}}">
+                            <TextBlock
+                                Grid.Column="0"
+                                Classes="listItemTextBlock"
+                                Text="{Binding Lobby.Name}"
+                                TextTrimming="CharacterEllipsis" />
+                            <Button
+                                Grid.Column="1"
+                                Classes="hyperlinkButton"
+                                Command="{Binding $parent[ListBox].((vm:IFriendsViewModel)DataContext).SelectLobbyCommand}"
+                                CommandParameter="{Binding}">
+                                <TextBlock Classes="listItemTextBlock">
+                                    <Run Text="{Binding Lobby.NumPlayers, Mode=OneWay}" />
+                                    <Run Text="/" />
+                                    <Run Text="{Binding Lobby.NumSlots, Mode=OneWay}" />
+                                </TextBlock>
+                            </Button>
+                            <TextBlock
+                                Grid.Column="2"
+                                Classes="listItemTextBlock"
+                                Text="{Binding Lobby.GameType}" />
+                            <TextBlock
+                                Grid.Column="3"
+                                Classes="listItemTextBlock"
+                                Text="{Binding Lobby.Map}" />
+                            <Button
+                                Grid.Column="4"
+                                Width="80"
+                                Background="{StaticResource Accent}"
+                                BorderBrush="{StaticResource BorderColor}"
+                                BorderThickness="1"
+                                Command="{Binding Lobby.JoinGameCommand}"
+                                Content="Join"
+                                Foreground="{StaticResource ForegroundTextColor}" />
+                        </Grid>
+                        <Button
+                            Grid.Column="4"
+                            Width="32"
+                            Height="32"
+                            Margin="12,0,0,0"
+                            Padding="0"
+                            Background="Transparent"
+                            BorderBrush="{StaticResource BorderColor}"
+                            BorderThickness="1"
+                            Command="{Binding $parent[ListBox].((vm:IFriendsViewModel)DataContext).DeleteFriendCommand}"
+                            CommandParameter="{Binding}"
+                            Foreground="{StaticResource DarkAccent}">
+                            <TextBlock
+                                FontFamily="{StaticResource SymbolFont}"
+                                FontSize="18"
+                                Text="{x:Static views:SymbolIcons.Delete}" />
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Grid
+            x:Name="playersPopup"
+            Grid.Row="1"
+            Background="Transparent"
+            IsVisible="{Binding SelectedLobby, Converter={x:Static ObjectConverters.IsNotNull}}"
+            Tapped="Grid_Tapped">
+            <views:PlayersPopupControl DataContext="{Binding SelectedLobby}" />
+        </Grid>
+    </Grid>
+</UserControl>

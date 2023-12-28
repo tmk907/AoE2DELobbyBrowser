@@ -26,6 +26,7 @@ namespace AoE2DELobbyBrowser.Core.Services
         private readonly LobbySettings _settings;
 
         private readonly ISubject<bool> _isLoadingSubject;
+        private readonly ISubject<int> _friendsOnlineSubject;
 
         protected CompositeDisposable Disposal = new CompositeDisposable();
         private readonly SourceCache<LobbyVM, string> _itemsCache;
@@ -41,8 +42,10 @@ namespace AoE2DELobbyBrowser.Core.Services
             _settings = appSettingsService.AppSettings.LobbySettings;
             _itemsCache = new SourceCache<LobbyVM, string>(x => x.MatchId);
             _isLoadingSubject = new Subject<bool>();
-            
+            _friendsOnlineSubject = new Subject<int>();
+
             IsLoading = _isLoadingSubject.StartWith(false).Replay(1).AutoConnect();
+            FriendsOnline = _friendsOnlineSubject.StartWith(0).Replay(1).AutoConnect();
 
             _settings
                 .WhenAnyPropertyChanged(new[] { nameof(_settings.Interval), nameof(_settings.IsAutoRefreshEnabled) })
@@ -129,7 +132,7 @@ namespace AoE2DELobbyBrowser.Core.Services
                 .Filter(gameObservableFilter)
                 .Filter(lobbyObservableFilter)
                 .Do(_ => Log.Debug($"onNext {nameof(FilteredLobbyChanges)}"))
-                .Publish().RefCount();
+                .Replay(1).AutoConnect();
 
             AllLobbyChanges
                 .Skip(1)
@@ -174,6 +177,7 @@ namespace AoE2DELobbyBrowser.Core.Services
                         friend.Value.UpdateStatus(current.Status);
                     }
                 })
+                .Do(x => _friendsOnlineSubject.OnNext(_friendSource.Items.Count(x => x.IsOnline)))
                 .Subscribe()
                 .DisposeWith(Disposal);
 
@@ -187,6 +191,7 @@ namespace AoE2DELobbyBrowser.Core.Services
                         friend.UpdateLobby(_allLobbies.FirstOrDefault(x => x.ContainsPlayer(friend.Player.SteamProfileId)));
                         friend.Player.UpdateCountry(friend?.Lobby?.Players?.FirstOrDefault()?.Country);
                     }
+                    _friendsOnlineSubject.OnNext(_friendSource.Items.Count(x => x.IsOnline));
                 })
                 .Do(_ => Log.Debug("LobbyService AllLobbyChanges ToCollection finished"))
                 .Subscribe()
@@ -203,6 +208,7 @@ namespace AoE2DELobbyBrowser.Core.Services
         private readonly ReadOnlyObservableCollection<LobbyVM> _allLobbies;
         private readonly SourceCache<FriendVM, string> _friendSource;
         public IObservableCache<FriendVM, string> FriendsChanges { get; private set; }
+        public IObservable<int> FriendsOnline { get; private set; }
 
         public void Dispose()
         {

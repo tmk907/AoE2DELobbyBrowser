@@ -9,6 +9,8 @@
         public static string Stopwatch = "\ue916";
         public static string Edit = "\ue70f";
         public static string Link = "\ue71b";
-
+        public static string AddFriend = "\ue8fa";
+        public static string People = "\ue716";
+        public static string Delete = "\ue74d";
     }
 }

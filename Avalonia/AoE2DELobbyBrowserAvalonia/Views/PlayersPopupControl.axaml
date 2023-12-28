@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:AoE2DELobbyBrowserAvalonia.Views"
     xmlns:design="using:AoE2DELobbyBrowser.Core.ViewModels.DesignData"
     xmlns:models="using:AoE2DELobbyBrowser.Core.Models"
     d:DesignHeight="450"
@@ -15,7 +16,7 @@
     </Design.DataContext>
     <UserControl.DataTemplates>
         <DataTemplate DataType="models:PlayerVM">
-            <Grid ColumnDefinitions="60,240">
+            <Grid ColumnDefinitions="48,220,32">
                 <TextBlock
                     Grid.Column="0"
                     VerticalAlignment="Center"
@@ -27,6 +28,21 @@
                     Command="{Binding OpenUrlCommand}"
                     CommandParameter="{Binding SteamProfileUrl}">
                     <TextBlock Text="{Binding Name}" />
+                </Button>
+                <Button
+                    Grid.Column="2"
+                    Width="32"
+                    Height="32"
+                    Padding="0"
+                    Background="Transparent"
+                    BorderBrush="{StaticResource BorderColor}"
+                    BorderThickness="1"
+                    Command="{Binding AddFriendCommand}"
+                    Foreground="{StaticResource DarkAccent}">
+                    <TextBlock
+                        FontFamily="{StaticResource SymbolFont}"
+                        FontSize="18"
+                        Text="{x:Static controls:SymbolIcons.AddFriend}" />
                 </Button>
             </Grid>
         </DataTemplate>
@@ -45,8 +61,8 @@
             Tapped="Grid_Tapped">
             <Grid
                 Grid.Row="0"
-                Margin="18,0,18,0"
-                ColumnDefinitions="60,240">
+                Margin="12,0,12,0"
+                ColumnDefinitions="60,220,32">
                 <TextBlock
                     Grid.Column="0"
                     FontWeight="SemiBold"
@@ -56,7 +72,11 @@
                     FontWeight="SemiBold"
                     Text="Name" />
             </Grid>
-            <ListBox Grid.Row="1" ItemsSource="{Binding Players}" />
+            <ListBox
+                Grid.Row="1"
+                Width="328"
+                Padding="0"
+                ItemsSource="{Binding Players}" />
         </Grid>
     </Border>
 </UserControl>

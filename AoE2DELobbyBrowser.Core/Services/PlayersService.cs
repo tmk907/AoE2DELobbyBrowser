@@ -123,7 +123,8 @@ namespace AoE2DELobbyBrowser.Core.Services
         {
             try
             {
-                return await _storageHelper.ReadFileAsync(FileName, () => new List<SteamPlayerDto>());
+                var result = await _storageHelper.ReadFileAsync(FileName, () => new List<SteamPlayerDto>());
+                return result;
             }
             catch (FileNotFoundException)
             {

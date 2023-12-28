@@ -1,9 +1,13 @@
 ﻿using AoE2DELobbyBrowser.Core.Api;
+using AoE2DELobbyBrowser.Core.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
+using System.Threading.Tasks;
 
 namespace AoE2DELobbyBrowser.Core.Models
 {
-    public class FriendVM : ObservableObject
+    public partial class FriendVM : ObservableObject
     {
         public PlayerVM Player { get; set; }
 

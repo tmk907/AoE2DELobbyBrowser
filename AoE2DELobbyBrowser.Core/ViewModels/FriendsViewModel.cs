@@ -3,8 +3,10 @@ using AoE2DELobbyBrowser.Core.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using DynamicData;
 using DynamicData.Binding;
+using Serilog;
 using System;
 using System.Collections.ObjectModel;
 using System.Reactive;
@@ -16,7 +18,19 @@ using System.Threading.Tasks;
 
 namespace AoE2DELobbyBrowser.Core.ViewModels
 {
-    public partial class FriendsViewModel : ObservableObject
+    public interface IFriendsViewModel
+    {
+        IRelayCommand NavigateBackCommand { get; }
+        IAsyncRelayCommand AddFriendFromIdCommand { get; }
+        IAsyncRelayCommand<FriendVM> DeleteFriendCommand { get; }
+        IAsyncRelayCommand RefreshCommand { get; }
+        IRelayCommand<FriendVM> SelectLobbyCommand { get; }
+        string SteamId { get; }
+        LobbyVM? SelectedLobby { get; }
+        ReadOnlyObservableCollection<FriendVM> Friends { get; }
+    }
+
+    public partial class FriendsViewModel : ObservableObject, IFriendsViewModel, INavigableViewModel
     {
         private readonly IPlayersService _playersService;
         private readonly LobbyService _lobbyService;
@@ -28,7 +42,7 @@ namespace AoE2DELobbyBrowser.Core.ViewModels
             _lobbyService = Ioc.Default.GetRequiredService<LobbyService>();
             _uiScheduler = Ioc.Default.GetRequiredService<ISchedulers>().UIScheduler;
 
-            var isOnlineChanges = _lobbyService.FriendsChanges.Connect()
+            var isOnlineChanged = _lobbyService.FriendsChanges.Connect()
                 .WhenPropertyChanged(x => x.IsOnline, false)
                 .Throttle(TimeSpan.FromMilliseconds(250))
                 .Select(_ => Unit.Default);
@@ -36,7 +50,7 @@ namespace AoE2DELobbyBrowser.Core.ViewModels
 
             var allFriends = _lobbyService.FriendsChanges
                 .Connect()
-                .Sort(comparer, isOnlineChanges)
+                .Sort(comparer, isOnlineChanged)
                 .TreatMovesAsRemoveAdd()
                 .ObserveOn(_uiScheduler)
                 .Bind(out _friends)
@@ -52,12 +66,22 @@ namespace AoE2DELobbyBrowser.Core.ViewModels
         protected CompositeDisposable Disposal = new CompositeDisposable();
         public void Dispose()
         {
+            Log.Debug("Dispose {0}", nameof(FriendsViewModel));
             Disposal.Dispose();
         }
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(AddFriendCommand))]
-        private string _steamId;
+        [NotifyCanExecuteChangedFor(nameof(AddFriendFromIdCommand))]
+        private string? _steamId;
+
+        [ObservableProperty]
+        private LobbyVM? _selectedLobby;
+
+        [RelayCommand]
+        private void SelectLobby(FriendVM lobby)
+        {
+            SelectedLobby = lobby.Lobby;
+        }
 
         private bool CanAddFriend()
         {
@@ -68,12 +92,6 @@ namespace AoE2DELobbyBrowser.Core.ViewModels
         private readonly ReadOnlyObservableCollection<FriendVM> _friends;
         public ReadOnlyObservableCollection<FriendVM> Friends => _friends;
 
-
-        [RelayCommand(AllowConcurrentExecutions = false)]
-        private async Task AddFriendAsync(PlayerVM player)
-        {
-            await _playersService.AddFriendAsync(player.SteamProfileId);
-        }
 
         [RelayCommand(AllowConcurrentExecutions = false, CanExecute = nameof(CanAddFriend))]
         private async Task AddFriendFromIdAsync()
@@ -93,6 +111,12 @@ namespace AoE2DELobbyBrowser.Core.ViewModels
         {
             await _playersService.UpdatePlayersFromSteamAsync();
             await _lobbyService.RefreshAsync(ct);
+        }
+
+        [RelayCommand]
+        private void NavigateBack()
+        {
+            WeakReferenceMessenger.Default.Send(new NavigateBackMessage());
         }
     }
 }

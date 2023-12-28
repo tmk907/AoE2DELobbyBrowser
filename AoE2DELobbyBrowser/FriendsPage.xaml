@@ -168,7 +168,7 @@
             Background="Transparent"
             Tapped="ClosePlayersPopup"
             Visibility="Collapsed">
-            <local:PlayersPopupControl AddFriendCommand="{Binding ElementName=rootPage, Path=ViewModel.AddFriendCommand}" DataContext="{Binding ElementName=PlayersPopup, Path=DataContext.Players}" />
+            <local:PlayersPopupControl DataContext="{Binding ElementName=PlayersPopup, Path=DataContext.Players}" />
         </Grid>
     </Grid>
 </Page>
