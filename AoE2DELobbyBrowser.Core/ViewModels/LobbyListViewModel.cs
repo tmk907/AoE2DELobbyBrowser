@@ -14,7 +14,7 @@ using System.Reactive.Linq;
 
 namespace AoE2DELobbyBrowser.Core.ViewModels;
 
-public interface ILobbyListViewModel
+public interface ILobbyListViewModel : IDisposable
 {
     IRelayCommand<LobbyVM> SelectLobbyCommand { get; }
     LobbyVM? SelectedLobby { get; }
@@ -33,7 +33,7 @@ public partial class LobbyListViewModel : ObservableObject, ILobbyListViewModel
 
         lobbyService.FilteredLobbyChanges
             .Sort(SortExpressionComparer<LobbyVM>.Ascending(t => t.Name))
-            .Do(x => Log.Debug("LobbiesVM {0}", x.Count))
+            .Do(x => Log.Debug("LobbyListViewModel LobbiesVM {0}", x.Count))
             .ObserveOn(_uiScheduler)
             .Bind(out _lobbies, adaptor: myAdaptor)
             .DisposeMany()

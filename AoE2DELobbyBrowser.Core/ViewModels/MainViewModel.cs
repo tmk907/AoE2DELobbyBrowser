@@ -68,6 +68,7 @@ public partial class MainViewModel : ViewModelBase, IMainViewModel
     public void Dispose()
     {
         Log.Debug("Dispose MainViewModel");
+        LobbyListViewModel.Dispose();
         Disposal.Dispose();
     }
 

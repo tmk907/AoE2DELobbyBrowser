@@ -45,7 +45,8 @@ namespace AoE2DELobbyBrowserAvalonia.ViewModels
         private void GoBack()
         {
             if (_pages.Count == 1) return;
-            _pages.Pop();
+            var vm = _pages.Pop();
+            (vm as IDisposable)?.Dispose();
 
             IsReversed = true;
             ContentViewModel = _pages.Peek();

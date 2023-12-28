@@ -45,4 +45,6 @@ public class DesignLobbyListViewModel : ILobbyListViewModel
     public ReadOnlyObservableCollection<LobbyVM> Lobbies { get; }
 
     public IRelayCommand<LobbyVM> SelectLobbyCommand => throw new System.NotImplementedException();
+
+    public void Dispose() { }
 }
