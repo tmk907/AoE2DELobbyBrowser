@@ -26,14 +26,28 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
         {
             var advertisement = new Advertisement() { Matches = new List<Match>(), Avatars = new List<Avatar>() };
 
-            var start = 0;
-            var adv = await GetAdvertisementAsync(start);
-            while ((adv?.Matches?.Count ?? 0) > 0)
+            var results = await Task.WhenAll(
+                GetAdvertisementAsync(0), 
+                GetAdvertisementAsync(100), 
+                GetAdvertisementAsync(200));
+
+            foreach(var adv in results)
             {
                 if (adv?.Matches != null) advertisement.Matches.AddRange(adv.Matches);
                 if (adv?.Avatars != null) advertisement.Avatars.AddRange(adv.Avatars);
-                start += 100;
-                adv = await GetAdvertisementAsync(start);
+            }
+
+            if ((results.LastOrDefault()?.Matches?.Count ?? 0) > 0)
+            {
+                var start = 300;
+                var adv = await GetAdvertisementAsync(start);
+                while ((adv?.Matches?.Count ?? 0) > 0)
+                {
+                    if (adv?.Matches != null) advertisement.Matches.AddRange(adv.Matches);
+                    if (adv?.Avatars != null) advertisement.Avatars.AddRange(adv.Avatars);
+                    start += 100;
+                    adv = await GetAdvertisementAsync(start);
+                }
             }
 
             advertisement.Matches = advertisement.Matches.DistinctBy(x=>x.Id).ToList();
