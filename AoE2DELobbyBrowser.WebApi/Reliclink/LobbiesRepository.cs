@@ -58,7 +58,7 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
 
         private async Task<Advertisement?> GetAdvertisementAsync(int start)
         {
-            var url = $"https://aoe-api.reliclink.com/community/advertisement/findAdvertisements?title=age2&start={start}";
+            var url = $"https://aoe-api.worldsedgelink.com/community/advertisement/findAdvertisements?title=age2&start={start}";
             var httpClient = _httpClientFactory.CreateClient();
             try
             {
