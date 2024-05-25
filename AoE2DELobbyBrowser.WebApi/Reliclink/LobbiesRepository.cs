@@ -52,6 +52,8 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
 
             advertisement.Matches = advertisement.Matches.DistinctBy(x=>x.Id).ToList();
             advertisement.Avatars = advertisement.Avatars.DistinctBy(x=>x.ProfileId).ToList();
+            _logger.LogInformation("Found {matches} matches, {players} players",
+                advertisement.Matches.Count, advertisement.Avatars.Count);
 
             return advertisement;
         }
@@ -62,12 +64,7 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
             var httpClient = _httpClientFactory.CreateClient();
             try
             {
-                _logger.LogInformation("Get lobbies from reliclink");
-
                 var advertisement = await httpClient.GetFromJsonAsync<Advertisement>(url);
-
-                _logger.LogInformation($"Total lobbies {advertisement?.Matches?.Count ?? 0}");
-
                 return advertisement;
             }
             catch (Exception ex)

@@ -17,9 +17,6 @@ builder.Services.AddSingleton<ApiCache>();
 builder.Services.AddTransient<AoE2DELobbyBrowser.WebApi.v2.Reliclink.LobbiesRepository>();
 builder.Services.AddTransient<LobbiesRepository>();
 
-
-//builder.Services.AddHostedService<MyBackgroundService>();
-
 var app = builder.Build();
 
 app.MapGet("/", () => 
