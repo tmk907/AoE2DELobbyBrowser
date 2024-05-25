@@ -37,15 +37,15 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.0.230907" />
-    <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.0.230907" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.0.240109" />
+    <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.0.240109" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230822000" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
-    <PackageReference Include="ReactiveUI.WinUI" Version="19.4.1" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240428000" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
+    <PackageReference Include="ReactiveUI.WinUI" Version="20.1.1" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
 	<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <!--<Manifest Include="$(ApplicationManifest)" />-->
