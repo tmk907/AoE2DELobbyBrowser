@@ -23,6 +23,11 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - name: Dump GitHub context
+        run: |
+          scp
+          ssh
+
       # build and publish    
       - name: Build and publish
         run: dotnet publish "$projectDir/AoE2DELobbyBrowser.WebApi.csproj" -c Release -o "$projectDir/publish" -r linux-x64
