@@ -25,7 +25,7 @@ jobs:
 
       # build and publish    
       - name: Build and publish
-        run: dotnet publish "$env:projectDir/AoE2DELobbyBrowser.WebApi.csproj" -c Release -o "$env:projectDir/publish" -r linux-x64
+        run: dotnet publish "$projectDir/AoE2DELobbyBrowser.WebApi.csproj" -c Release -o "$projectDir/publish" -r linux-x64
     
       # Stop container
       - name: Stop container
@@ -45,7 +45,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_KEY }}
           passphrase: ${{ secrets.SERVER_PASSPHRASE }}
-          source: "$env:projectDir/Dockerfile"
+          source: "$projectDir/Dockerfile"
           target: "/home/tmk/apps/aoe2deapi"
 
       # Transfer publish folder
@@ -56,7 +56,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_KEY }}
           passphrase: ${{ secrets.SERVER_PASSPHRASE }}
-          source: "$env:projectDir/publish/*"
+          source: "$projectDir/publish/*"
           target: "/home/tmk/apps/aoe2deapi/publish"
           rm: true
       # Start container
