@@ -13,6 +13,7 @@ jobs:
 
     env:
       projectPath: AoE2DELobbyBrowser.WebApi/AoE2DELobbyBrowser.WebApi.csproj
+      projectDir: AoE2DELobbyBrowser.WebApi
       
     steps:
       - uses: actions/checkout@v4
@@ -22,15 +23,9 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      - name: Dump GitHub context
-        run: |
-          echo "$GITHUB_WORKSPACE"
-          ls
-          ls AoE2DELobbyBrowser.WebApi
-
       # build and publish    
       - name: Build and publish
-        run: dotnet publish "AoE2DELobbyBrowser.WebApi/AoE2DELobbyBrowser.WebApi.csproj" -c Release -o publish -r linux-x64
+        run: dotnet publish "$env:projectDir/AoE2DELobbyBrowser.WebApi.csproj" -c Release -o "$env:projectDir/publish" -r linux-x64
     
       # Stop container
       - name: Stop container
@@ -50,7 +45,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_KEY }}
           passphrase: ${{ secrets.SERVER_PASSPHRASE }}
-          source: "Dockerfile"
+          source: "$env:projectDir/Dockerfile"
           target: "/home/tmk/apps/aoe2deapi"
 
       # Transfer publish folder
@@ -61,7 +56,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_KEY }}
           passphrase: ${{ secrets.SERVER_PASSPHRASE }}
-          source: "publish/*"
+          source: "$env:projectDir/publish/*"
           target: "/home/tmk/apps/aoe2deapi/publish"
           rm: true
       # Start container
