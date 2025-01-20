@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      projectPath: AoE2DELobbyBrowser/AoE2DELobbyBrowser.WebApi/AoE2DELobbyBrowser.WebApi.csproj
+      projectPath: "AoE2DELobbyBrowser.WebApi/AoE2DELobbyBrowser.WebApi.csproj"
       
     steps:
       - uses: actions/checkout@v4
