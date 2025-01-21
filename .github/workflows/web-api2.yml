@@ -46,8 +46,6 @@ jobs:
           END
           printf '#!/bin/sh\necho "$SSH_PASSPHRASE"\n' > ~/.ssh/askpass.sh 
           chmod +x ~/.ssh/askpass.sh
-          eval $(ssh-agent)
-          ls ~/.ssh
         env:
           SSH_USER: ${{ secrets.SERVER_USERNAME }}
           SSH_KEY: ${{ secrets.SERVER_KEY }}
@@ -56,6 +54,8 @@ jobs:
       
       - name: Configure SSH
         run: |
+          ls ~/.ssh
+          eval $(ssh-agent)
           SSH_ASKPASS_REQUIRE=force SSH_ASKPASS=~/.ssh/askpass.sh ssh-add "~/.ssh/staging.key"
           ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
