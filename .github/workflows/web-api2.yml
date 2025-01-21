@@ -14,6 +14,9 @@ jobs:
     env:
       projectPath: AoE2DELobbyBrowser.WebApi/AoE2DELobbyBrowser.WebApi.csproj
       projectDir: AoE2DELobbyBrowser.WebApi
+      # Use the same ssh-agent socket value across all jobs
+      # Useful when a GH action is using SSH behind-the-scenes
+      SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       
     steps:
       # - uses: actions/checkout@v4
