@@ -34,14 +34,6 @@ jobs:
           chmod 700 ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/staging.key
           chmod 600 ~/.ssh/staging.key
-        env:
-          SSH_USER: ${{ secrets.SERVER_USERNAME }}
-          SSH_KEY: ${{ secrets.SERVER_KEY }}
-          SSH_HOST: ${{ secrets.SERVER_HOST }}
-          SSH_PASSPHRASE: ${{ secrets.SERVER_PASSPHRASE }}
-      
-      - name: Configure SSH
-        run: |
           cat >>~/.ssh/config <<END
           Host staging
               HostName $SSH_HOST
@@ -52,6 +44,15 @@ jobs:
           printf '#!/bin/sh\necho "$SSH_PASSPHRASE"\n' > ~/.ssh/askpass.sh 
           chmod +x ~/.ssh/askpass.sh
           eval $(ssh-agent)
+          ls ~/.ssh
+        env:
+          SSH_USER: ${{ secrets.SERVER_USERNAME }}
+          SSH_KEY: ${{ secrets.SERVER_KEY }}
+          SSH_HOST: ${{ secrets.SERVER_HOST }}
+          SSH_PASSPHRASE: ${{ secrets.SERVER_PASSPHRASE }}
+      
+      - name: Configure SSH
+        run: |
           SSH_ASKPASS_REQUIRE=force SSH_ASKPASS=~/.ssh/askpass.sh ssh-add "~/.ssh/staging.key"
           ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
