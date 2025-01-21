@@ -23,54 +23,88 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      - name: Dump GitHub context
-        run: |
-          scp
-          ssh
-
       # build and publish    
       - name: Build and publish
         run: dotnet publish "$projectDir/AoE2DELobbyBrowser.WebApi.csproj" -c Release -o "$projectDir/publish" -r linux-x64
     
+      # https://stackoverflow.com/questions/50277495/how-to-run-an-ansible-playbook-with-a-passphrase-protected-ssh-private-key/69016014#69016014
+      - name: Configure SSH
+        run: |
+          eval $(ssh-agent)
+          mkdir -p ~/.ssh/
+          chmod 700 ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/staging.key
+          chmod 600 ~/.ssh/staging.key
+          cat >>~/.ssh/config <<END
+          Host staging
+              HostName $SSH_HOST
+              User $SSH_USER
+              IdentityFile ~/.ssh/staging.key
+              StrictHostKeyChecking no
+          END
+          echo 'echo $SSH_PASSPHRASE' > ~/.ssh/tmp && chmod 700 ~/.ssh/tmp
+          echo "$SSH_KEY" | tr -d '\r' | DISPLAY=None SSH_ASKPASS=~/.ssh/tmp ssh-add -
+          ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+        env:
+          SSH_USER: ${{ secrets.SERVER_USERNAME }}
+          SSH_KEY: ${{ secrets.SERVER_KEY }}
+          SSH_HOST: ${{ secrets.SERVER_HOST }}
+          SSH_PASSPHRASE: ${{ secrets.SERVER_PASSPHRASE }}
+
+      # Remove shh file
+      - name: test
+        run: |
+          cat ~/.ssh/known_hosts
+          cat ~/.ssh/tmp
+          cat ~/.ssh/staging.key
+          ls ~/.ssh
+          ssh staging "docker container stop aoe2deapi"
+
       # Stop container
-      - name: Stop container
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SERVER_KEY }}
-          passphrase: ${{ secrets.SERVER_PASSPHRASE }}
-          script: docker container stop aoe2deapi
+      # - name: Stop container
+      #   uses: appleboy/ssh-action@v1.2.0
+      #   with:
+      #     host: ${{ secrets.SERVER_HOST }}
+      #     username: ${{ secrets.SERVER_USERNAME }}
+      #     key: ${{ secrets.SERVER_KEY }}
+      #     passphrase: ${{ secrets.SERVER_PASSPHRASE }}
+      #     script: docker container stop aoe2deapi
 
       # Transfer Dockerfile
-      - name: Copy Dockerfile
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SERVER_KEY }}
-          passphrase: ${{ secrets.SERVER_PASSPHRASE }}
-          source: "$projectDir/Dockerfile"
-          target: "/home/tmk/apps/aoe2deapi"
+      # - name: Copy Dockerfile
+      #   uses: appleboy/scp-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.SERVER_HOST }}
+      #     username: ${{ secrets.SERVER_USERNAME }}
+      #     key: ${{ secrets.SERVER_KEY }}
+      #     passphrase: ${{ secrets.SERVER_PASSPHRASE }}
+      #     source: "$projectDir/Dockerfile"
+      #     target: "/home/tmk/apps/aoe2deapi"
 
       # Transfer publish folder
-      - name: Transfer publish folder
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SERVER_KEY }}
-          passphrase: ${{ secrets.SERVER_PASSPHRASE }}
-          source: "$projectDir/publish/*"
-          target: "/home/tmk/apps/aoe2deapi/publish"
-          rm: true
+      # - name: Transfer publish folder
+      #   uses: appleboy/scp-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.SERVER_HOST }}
+      #     username: ${{ secrets.SERVER_USERNAME }}
+      #     key: ${{ secrets.SERVER_KEY }}
+      #     passphrase: ${{ secrets.SERVER_PASSPHRASE }}
+      #     source: "$projectDir/publish/*"
+      #     target: "/home/tmk/apps/aoe2deapi/publish"
+      #     rm: true
       # Start container
-      - name: Stop container
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SERVER_KEY }}
-          passphrase: ${{ secrets.SERVER_PASSPHRASE }}
-          script: docker run -d -p 5100:8080 -e ASPNETCORE_URLS="http://*:8080" --name aoe2deapi aoe2delobbybrowser
+      # - name: Stop container
+      #   uses: appleboy/ssh-action@v1.2.0
+      #   with:
+      #     host: ${{ secrets.SERVER_HOST }}
+      #     username: ${{ secrets.SERVER_USERNAME }}
+      #     key: ${{ secrets.SERVER_KEY }}
+      #     passphrase: ${{ secrets.SERVER_PASSPHRASE }}
+      #     script: docker run -d -p 5100:8080 -e ASPNETCORE_URLS="http://*:8080" --name aoe2deapi aoe2delobbybrowser
+
+      # Remove shh file
+      - name: Remove ssh files
+        run: |
+          rm ~/.ssh/staging.key
 
