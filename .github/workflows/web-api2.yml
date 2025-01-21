@@ -24,8 +24,8 @@ jobs:
           dotnet-version: '9.0.x'
 
       # build and publish    
-      - name: Build and publish
-        run: dotnet publish "$projectDir/AoE2DELobbyBrowser.WebApi.csproj" -c Release -o "$projectDir/publish" -r linux-x64
+      # - name: Build and publish
+      #   run: dotnet publish "$projectDir/AoE2DELobbyBrowser.WebApi.csproj" -c Release -o "$projectDir/publish" -r linux-x64
     
       # https://stackoverflow.com/questions/50277495/how-to-run-an-ansible-playbook-with-a-passphrase-protected-ssh-private-key/69016014#69016014
       - name: Configure SSH
@@ -42,7 +42,8 @@ jobs:
               IdentityFile ~/.ssh/staging.key
               StrictHostKeyChecking no
           END
-          echo 'echo $SSH_PASSPHRASE' > ~/.ssh/tmp && chmod 700 ~/.ssh/tmp
+          echo "$SSH_PASSPHRASE" > ~/.ssh/tmp 
+          chmod 700 ~/.ssh/tmp
           echo "$SSH_KEY" | tr -d '\r' | DISPLAY=None SSH_ASKPASS=~/.ssh/tmp ssh-add -
           ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
