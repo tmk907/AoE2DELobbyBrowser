@@ -30,7 +30,6 @@ jobs:
       # https://stackoverflow.com/questions/50277495/how-to-run-an-ansible-playbook-with-a-passphrase-protected-ssh-private-key/69016014#69016014
       - name: Configure SSH
         run: |
-          eval $(ssh-agent)
           mkdir -p ~/.ssh/
           chmod 700 ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/staging.key
@@ -42,9 +41,10 @@ jobs:
               IdentityFile ~/.ssh/staging.key
               StrictHostKeyChecking no
           END
-          echo "$SSH_PASSPHRASE" > ~/.ssh/tmp 
-          chmod 700 ~/.ssh/tmp
-          echo "$SSH_KEY" | tr -d '\r' | DISPLAY=None SSH_ASKPASS=~/.ssh/tmp ssh-add -
+          printf '#!/bin/sh\necho "$SSH_PASSPHRASE"\n' > ~/.ssh/askpass.sh 
+          chmod +x ~/.ssh/askpass.sh
+          eval $(ssh-agent)
+          SSH_ASKPASS_REQUIRE=force SSH_ASKPASS=~/.ssh/askpass.sh ssh-add "~/.ssh/staging.key"
           ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
         env:
