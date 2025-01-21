@@ -67,7 +67,9 @@ jobs:
       - name: staging
         run: cat ~/.ssh/staging.key    
       - name: ls
-        run: ls ~/.ssh   
+        run: ls ~/.ssh 
+      - name: docker
+        run: ssh staging "docker container stop aoe2deapi"
       # Stop container
       # - name: Stop container
       #   uses: appleboy/ssh-action@v1.2.0
