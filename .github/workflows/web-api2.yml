@@ -16,24 +16,32 @@ jobs:
       projectDir: AoE2DELobbyBrowser.WebApi
       
     steps:
-      - uses: actions/checkout@v4
+      # - uses: actions/checkout@v4
 
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.x'
+      # - name: Set up .NET Core
+      #   uses: actions/setup-dotnet@v4
+      #   with:
+      #     dotnet-version: '9.0.x'
 
       # build and publish    
       # - name: Build and publish
       #   run: dotnet publish "$projectDir/AoE2DELobbyBrowser.WebApi.csproj" -c Release -o "$projectDir/publish" -r linux-x64
     
       # https://stackoverflow.com/questions/50277495/how-to-run-an-ansible-playbook-with-a-passphrase-protected-ssh-private-key/69016014#69016014
-      - name: Configure SSH
+      - name: Configure SSH1
         run: |
           mkdir -p ~/.ssh/
           chmod 700 ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/staging.key
           chmod 600 ~/.ssh/staging.key
+        env:
+          SSH_USER: ${{ secrets.SERVER_USERNAME }}
+          SSH_KEY: ${{ secrets.SERVER_KEY }}
+          SSH_HOST: ${{ secrets.SERVER_HOST }}
+          SSH_PASSPHRASE: ${{ secrets.SERVER_PASSPHRASE }}
+      
+      - name: Configure SSH
+        run: |
           cat >>~/.ssh/config <<END
           Host staging
               HostName $SSH_HOST
