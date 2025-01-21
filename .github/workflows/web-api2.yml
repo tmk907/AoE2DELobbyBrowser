@@ -53,14 +53,21 @@ jobs:
           SSH_PASSPHRASE: ${{ secrets.SERVER_PASSPHRASE }}
 
       # Remove shh file
-      - name: test
-        run: |
-          cat ~/.ssh/known_hosts
-          cat ~/.ssh/tmp
-          cat ~/.ssh/staging.key
-          ls ~/.ssh
-          ssh staging "docker container stop aoe2deapi"
-
+      # - name: test
+      #   run: |
+      #     cat ~/.ssh/known_hosts
+      #     cat ~/.ssh/tmp
+      #     cat ~/.ssh/staging.key
+      #     ls ~/.ssh
+      #     ssh staging "docker container stop aoe2deapi"
+      - name: known_hosts
+        run: cat ~/.ssh/known_hosts
+      - name: tmp
+        run: cat ~/.ssh/tmp
+      - name: staging
+        run: cat ~/.ssh/staging.key    
+      - name: ls
+        run: ls ~/.ssh   
       # Stop container
       # - name: Stop container
       #   uses: appleboy/ssh-action@v1.2.0
