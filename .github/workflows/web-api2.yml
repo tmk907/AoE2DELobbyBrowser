@@ -52,11 +52,14 @@ jobs:
 
       # Transfer Dockerfile
       - name: Copy Dockerfile
-        run: scp "$projectDir/Dockerfile" vps:"/home/tmk/apps/aoe2deapi"
+        run: scp "$projectDir/Dockerfile" vps:"~/apps/aoe2deapi"
 
       # Transfer publish folder
       - name: Transfer publish folder
-        run: scp "$projectDir/publish/*" vps:"/home/tmk/apps/aoe2deapi/publish"
+        run: |
+          rm -r ~/apps/aoe2deapi/publish
+          mkdir ~/apps/aoe2deapi/publish
+          scp "$projectDir/publish/*" vps:"~/apps/aoe2deapi/publish"
 
       # Start container
       - name: Start container
