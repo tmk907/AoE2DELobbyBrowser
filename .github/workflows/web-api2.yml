@@ -77,7 +77,7 @@ jobs:
       - name: known_hosts
         run: cat ~/.ssh/known_hosts
       - name: staging
-        run: cat ~/.ssh/id_ed25519    
+        run: ls -la /dev/tty    
       - name: ls
         run: ls ~/.ssh 
       - name: docker
