@@ -45,6 +45,7 @@ jobs:
               IdentityFile ~/.ssh/id_ed25519
               StrictHostKeyChecking no
               IdentitiesOnly yes
+              PasswordAuthentication no
           END
           echo "exec cat" > ap-cat.sh 
           chmod a+x ap-cat.sh
@@ -59,7 +60,7 @@ jobs:
           ls ~/.ssh
           eval $(ssh-agent)
           export DISPLAY=1
-          echo "$SSH_KEY" | tr -d '\r' | SSH_ASKPASS=./tmp-ask.sh ssh-add -
+          echo "$SSH_KEY" | SSH_ASKPASS=./tmp-ask.sh ssh-add -
           ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
         env:
