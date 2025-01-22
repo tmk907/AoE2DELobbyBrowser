@@ -70,16 +70,13 @@ jobs:
       # - name: test
       #   run: |
       #     cat ~/.ssh/known_hosts
-      #     cat ~/.ssh/tmp
       #     cat ~/.ssh/staging.key
       #     ls ~/.ssh
       #     ssh staging "docker container stop aoe2deapi"
       - name: known_hosts
         run: cat ~/.ssh/known_hosts
-      - name: tmp
-        run: cat ~/.ssh/tmp
       - name: staging
-        run: cat ~/.ssh/staging.key    
+        run: cat ~/.ssh/id_ed25519    
       - name: ls
         run: ls ~/.ssh 
       - name: docker
