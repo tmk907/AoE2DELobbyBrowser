@@ -64,7 +64,7 @@ jobs:
 
       # Start container
       - name: Start container
-        run: ssh vps "docker run -d -p 5100:8080 -e ASPNETCORE_URLS="http://*:8080" --name aoe2deapi aoe2delobbybrowser"
+        run: ssh vps "docker container start aoe2deapi"
 
       # Remove shh files
       - name: Remove ssh files
