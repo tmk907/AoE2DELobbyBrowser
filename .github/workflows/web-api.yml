@@ -19,7 +19,7 @@ jobs:
       projectPath: AoE2DELobbyBrowser.WebApi\AoE2DELobbyBrowser.WebApi.csproj
       
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       # Create file with publish profile
       - name: Create file with publish profile
@@ -39,10 +39,9 @@ jobs:
           [IO.File]::WriteAllText($env:webConfigTransformationsFilePath, $webconfig.Trim())
 
       - name: Set up .NET Core
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-          include-prerelease: true
 
       # build and publish    
       - name: Build and publish
