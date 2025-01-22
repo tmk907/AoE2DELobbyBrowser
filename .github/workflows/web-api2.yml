@@ -43,6 +43,7 @@ jobs:
               User $SSH_USER
               IdentityFile ~/.ssh/id_ed25519
               StrictHostKeyChecking no
+              IdentitiesOnly yes
           END
           echo "exec cat" > ap-cat.sh 
           chmod a+x ap-cat.sh
@@ -80,7 +81,7 @@ jobs:
       - name: ls
         run: ls ~/.ssh 
       - name: docker
-        run: ssh staging "docker container stop aoe2deapi"
+        run: ssh staging -vvv "docker container stop aoe2deapi"
       # Stop container
       # - name: Stop container
       #   uses: appleboy/ssh-action@v1.2.0
