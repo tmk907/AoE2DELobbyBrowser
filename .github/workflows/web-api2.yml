@@ -16,7 +16,7 @@ jobs:
       projectDir: AoE2DELobbyBrowser.WebApi
       # Use the same ssh-agent socket value across all jobs
       # Useful when a GH action is using SSH behind-the-scenes
-      SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      # SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       
     steps:
       # - uses: actions/checkout@v4
@@ -38,8 +38,7 @@ jobs:
           echo "$SSH_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           cat >>~/.ssh/config <<END
-          echo 'echo $SSH_PASSPHRASE' > tmp-ask.sh && chmod 700 tmp-ask.sh
-          Host staging
+          Host vps
               HostName $SSH_HOST
               User $SSH_USER
               IdentityFile ~/.ssh/id_ed25519
@@ -47,8 +46,6 @@ jobs:
               IdentitiesOnly yes
               PasswordAuthentication no
           END
-          echo "exec cat" > ap-cat.sh 
-          chmod a+x ap-cat.sh
         env:
           SSH_USER: ${{ secrets.SERVER_USERNAME }}
           SSH_KEY: ${{ secrets.SERVER_KEY }}
@@ -57,10 +54,6 @@ jobs:
       
       - name: Configure SSH
         run: |
-          ls ~/.ssh
-          eval $(ssh-agent)
-          export DISPLAY=1
-          echo "$SSH_KEY" | SSH_ASKPASS=./tmp-ask.sh ssh-add -
           ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
         env:
@@ -78,12 +71,10 @@ jobs:
       #     ssh staging "docker container stop aoe2deapi"
       - name: known_hosts
         run: cat ~/.ssh/known_hosts
-      - name: staging
-        run: ls -la /dev/tty    
       - name: ls
         run: ls ~/.ssh 
       - name: docker
-        run: ssh staging -vvv "docker container stop aoe2deapi"
+        run: ssh vps -vvv "docker container stop aoe2deapi"
       # Stop container
       # - name: Stop container
       #   uses: appleboy/ssh-action@v1.2.0
