@@ -38,6 +38,7 @@ jobs:
           echo "$SSH_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           cat >>~/.ssh/config <<END
+          echo 'echo $SSH_PASSPHRASE' > ~/.ssh/tmp && chmod 700 ~/.ssh/tmp
           Host staging
               HostName $SSH_HOST
               User $SSH_USER
@@ -58,7 +59,7 @@ jobs:
           ls ~/.ssh
           eval $(ssh-agent)
           export DISPLAY=1
-          echo "$SSH_PASSPHRASE" | SSH_ASKPASS=./ap-cat.sh ssh-add ~/.ssh/id_ed25519
+          echo "$SSH_KEY" | tr -d '\r' | SSH_ASKPASS=~/.ssh/tmp ssh-add -
           ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
         env:
