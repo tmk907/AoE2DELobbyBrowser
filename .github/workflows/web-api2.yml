@@ -35,17 +35,17 @@ jobs:
         run: |
           mkdir -p ~/.ssh/
           chmod 700 ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/staging.key
-          chmod 600 ~/.ssh/staging.key
+          echo "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
           cat >>~/.ssh/config <<END
           Host staging
               HostName $SSH_HOST
               User $SSH_USER
-              IdentityFile ~/.ssh/staging.key
+              IdentityFile ~/.ssh/id_ed25519
               StrictHostKeyChecking no
           END
-          printf '#!/bin/sh\necho "$SSH_PASSPHRASE"\n' > ~/.ssh/askpass.sh 
-          chmod +x ~/.ssh/askpass.sh
+          echo "exec cat" > ap-cat.sh 
+          chmod a+x ap-cat.sh
         env:
           SSH_USER: ${{ secrets.SERVER_USERNAME }}
           SSH_KEY: ${{ secrets.SERVER_KEY }}
@@ -56,7 +56,8 @@ jobs:
         run: |
           ls ~/.ssh
           eval $(ssh-agent)
-          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | SSH_ASKPASS_REQUIRE=force SSH_ASKPASS=~/.ssh/askpass.sh ssh-add -
+          export DISPLAY=1
+          echo "$SSH_PASSPHRASE" | SSH_ASKPASS=./ap-cat.sh ssh-add ~/.ssh/id_ed25519
           ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
         env:
