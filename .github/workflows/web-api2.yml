@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy to VPS
 
 on:
@@ -12,26 +9,24 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      projectPath: AoE2DELobbyBrowser.WebApi/AoE2DELobbyBrowser.WebApi.csproj
       projectDir: AoE2DELobbyBrowser.WebApi
       # Use the same ssh-agent socket value across all jobs
       # Useful when a GH action is using SSH behind-the-scenes
       # SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       
     steps:
-      # - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # - name: Set up .NET Core
-      #   uses: actions/setup-dotnet@v4
-      #   with:
-      #     dotnet-version: '9.0.x'
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
 
       # build and publish    
-      # - name: Build and publish
-      #   run: dotnet publish "$projectDir/AoE2DELobbyBrowser.WebApi.csproj" -c Release -o "$projectDir/publish" -r linux-x64
+      - name: Build and publish
+        run: dotnet publish "$projectDir/AoE2DELobbyBrowser.WebApi.csproj" -c Release -o "$projectDir/publish" -r linux-x64
     
-      # https://stackoverflow.com/questions/50277495/how-to-run-an-ansible-playbook-with-a-passphrase-protected-ssh-private-key/69016014#69016014
-      - name: Configure SSH1
+      - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
           chmod 700 ~/.ssh
@@ -50,75 +45,26 @@ jobs:
           SSH_USER: ${{ secrets.SERVER_USERNAME }}
           SSH_KEY: ${{ secrets.SERVER_KEY }}
           SSH_HOST: ${{ secrets.SERVER_HOST }}
-          SSH_PASSPHRASE: ${{ secrets.SERVER_PASSPHRASE }}
       
-      - name: Configure SSH
-        run: |
-          ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
-        env:
-          SSH_USER: ${{ secrets.SERVER_USERNAME }}
-          SSH_KEY: ${{ secrets.SERVER_KEY }}
-          SSH_HOST: ${{ secrets.SERVER_HOST }}
-          SSH_PASSPHRASE: ${{ secrets.SERVER_PASSPHRASE }}
-
-      # Remove shh file
-      # - name: test
-      #   run: |
-      #     cat ~/.ssh/known_hosts
-      #     cat ~/.ssh/staging.key
-      #     ls ~/.ssh
-      #     ssh staging "docker container stop aoe2deapi"
-      - name: known_hosts
-        run: cat ~/.ssh/known_hosts
-      - name: ls
-        run: ls ~/.ssh 
-      - name: docker
-        run: ssh vps -vvv "docker container stop aoe2deapi"
-      # Stop container
-      # - name: Stop container
-      #   uses: appleboy/ssh-action@v1.2.0
-      #   with:
-      #     host: ${{ secrets.SERVER_HOST }}
-      #     username: ${{ secrets.SERVER_USERNAME }}
-      #     key: ${{ secrets.SERVER_KEY }}
-      #     passphrase: ${{ secrets.SERVER_PASSPHRASE }}
-      #     script: docker container stop aoe2deapi
+      - name: Stop container
+        run: ssh vps "docker container stop aoe2deapi"
+      
 
       # Transfer Dockerfile
-      # - name: Copy Dockerfile
-      #   uses: appleboy/scp-action@v0.1.7
-      #   with:
-      #     host: ${{ secrets.SERVER_HOST }}
-      #     username: ${{ secrets.SERVER_USERNAME }}
-      #     key: ${{ secrets.SERVER_KEY }}
-      #     passphrase: ${{ secrets.SERVER_PASSPHRASE }}
-      #     source: "$projectDir/Dockerfile"
-      #     target: "/home/tmk/apps/aoe2deapi"
+      - name: Copy Dockerfile
+        run: scp "$projectDir/Dockerfile" vps:"/home/tmk/apps/aoe2deapi"
 
       # Transfer publish folder
-      # - name: Transfer publish folder
-      #   uses: appleboy/scp-action@v0.1.7
-      #   with:
-      #     host: ${{ secrets.SERVER_HOST }}
-      #     username: ${{ secrets.SERVER_USERNAME }}
-      #     key: ${{ secrets.SERVER_KEY }}
-      #     passphrase: ${{ secrets.SERVER_PASSPHRASE }}
-      #     source: "$projectDir/publish/*"
-      #     target: "/home/tmk/apps/aoe2deapi/publish"
-      #     rm: true
-      # Start container
-      # - name: Stop container
-      #   uses: appleboy/ssh-action@v1.2.0
-      #   with:
-      #     host: ${{ secrets.SERVER_HOST }}
-      #     username: ${{ secrets.SERVER_USERNAME }}
-      #     key: ${{ secrets.SERVER_KEY }}
-      #     passphrase: ${{ secrets.SERVER_PASSPHRASE }}
-      #     script: docker run -d -p 5100:8080 -e ASPNETCORE_URLS="http://*:8080" --name aoe2deapi aoe2delobbybrowser
+      - name: Transfer publish folder
+        run: scp "$projectDir/publish/*" vps:"/home/tmk/apps/aoe2deapi/publish"
 
-      # Remove shh file
+      # Start container
+      - name: Start container
+        run: ssh vps "docker run -d -p 5100:8080 -e ASPNETCORE_URLS="http://*:8080" --name aoe2deapi aoe2delobbybrowser"
+
+      # Remove shh files
       - name: Remove ssh files
         run: |
-          rm ~/.ssh/staging.key
+          rm ~/.ssh/id_ed25519
+          rm ~/.ssh/config
 
