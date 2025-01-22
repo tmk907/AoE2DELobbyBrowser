@@ -57,8 +57,8 @@ jobs:
       # Transfer publish folder
       - name: Transfer publish folder
         run: |
-          mkdir ~/apps/aoe2deapi/publish
-          rm -rf ~/apps/aoe2deapi/publish/*
+          ssh vps "mkdir ~/apps/aoe2deapi/publish"
+          ssh vps "rm -rf ~/apps/aoe2deapi/publish/*"
           scp "$projectDir/publish/*" vps:"~/apps/aoe2deapi/publish"
 
       # Start container
