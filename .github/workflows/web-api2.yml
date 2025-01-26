@@ -70,7 +70,7 @@ jobs:
       - name: Transfer publish folder
         run: |
           ssh vps "mkdir -p /srv/www/aoe2deapi/publish"
-          rsync -rzvh --delete ssh "$projectDir/publish" vps:"/srv/www/aoe2deapi/publish"
+          rsync -rzvh --delete "$projectDir/publish" vps:"/srv/www/aoe2deapi/publish"
 
       # Start container
       - name: Start container
