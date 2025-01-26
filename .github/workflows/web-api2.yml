@@ -51,13 +51,12 @@ jobs:
       # Stop container
       - name: Stop container
         run: |
-          ssh vps /bin/bash << EOF
-            container_name="aoe2deapi"
-            if [ "$(docker ps -q -f name=$container_name)" ]; then
-              echo "Container $container_name is running. Stopping it..."
-              docker container stop $container_name
+          ssh vps << EOF
+            if [ "$(docker ps -q -f name=$containerName)" ]; then
+              echo "Container $containerName is running. Stopping it..."
+              docker container stop $containerName
             else
-              echo "Container $container_name is not running."
+              echo "Container $containerName is not running."
             fi
           EOF
 
@@ -76,13 +75,12 @@ jobs:
       # Start container
       - name: Start container
         run: |
-          ssh vps /bin/bash << EOF
-            container_name="aoe2deapi"
-            if docker inspect "$container_name" > /dev/null 2>&1; then
-              echo "The container $container_name exists. Start container."
-              docker container start "$container_name"
+          ssh vps << EOF
+            if docker inspect "$containerName" > /dev/null 2>&1; then
+              echo "The container $containerName exists. Start container."
+              docker container start "$containerName"
             else
-              echo "The container $container_name does not exist. Build image and run container."
+              echo "The container $containerName does not exist. Build image and run container."
               cd /srv/www/aoe2deapi
               docker build -t aoe2delobbybrowser .
               docker run -d -p 5100:8080 -e ASPNETCORE_URLS="http://*:8080" --name aoe2deapi aoe2delobbybrowser
