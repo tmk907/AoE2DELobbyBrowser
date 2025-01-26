@@ -82,6 +82,7 @@ jobs:
               docker container start "$container_name"
             else
               echo "The container $container_name does not exist. Build image and run container."
+              cd /srv/www/aoe2deapi
               docker build -t aoe2delobbybrowser .
               docker run -d -p 5100:8080 -e ASPNETCORE_URLS="http://*:8080" --name aoe2deapi aoe2delobbybrowser
             fi
