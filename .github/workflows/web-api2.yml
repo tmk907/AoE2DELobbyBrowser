@@ -11,6 +11,7 @@ jobs:
     env:
       projectDir: AoE2DELobbyBrowser.WebApi
       containerName: aoe2deapi
+      targetFolder: /srv/www/aoe2deapi
       # Use the same ssh-agent socket value across all jobs
       # Useful when a GH action is using SSH behind-the-scenes
       # SSH_AUTH_SOCK: /tmp/ssh_agent.sock
@@ -50,7 +51,7 @@ jobs:
       # Stop container
       - name: Stop container
         run: |
-          ssh vps << EOF
+          ssh vps /bin/bash << EOF
             container_name="aoe2deapi"
             if [ "$(docker ps -q -f name=$container_name)" ]; then
               echo "Container $container_name is running. Stopping it..."
@@ -75,7 +76,7 @@ jobs:
       # Start container
       - name: Start container
         run: |
-          ssh vps << EOF
+          ssh vps /bin/bash << EOF
             container_name="aoe2deapi"
             if docker inspect "$container_name" > /dev/null 2>&1; then
               echo "The container $container_name exists. Start container."
