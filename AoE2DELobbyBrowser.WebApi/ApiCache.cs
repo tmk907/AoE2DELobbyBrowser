@@ -2,6 +2,8 @@
 
 public class ApiCache
 {
+    public const string LobbiesKey = "lobbies";
+
     private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
     private readonly IMemoryCache _memoryCache;
     private readonly TimeSpan cacheExpiration;
@@ -13,9 +15,20 @@ public class ApiCache
         cacheExpiration = TimeSpan.FromSeconds(exp);
     }
 
-    public async Task<T> GetOrCreateAsync<T>(string key, Func<Task<T>> func)
+    public T? Get<T>(string key)
     {
-        if (!_memoryCache.TryGetValue<T>(key, out T data))
+        var data = _memoryCache.Get<T>(key);
+        return data;
+    }
+
+    public void Set<T>(string key, T data)
+    {
+        _memoryCache.Set(key, data, cacheExpiration);
+    }
+
+    public async Task<T?> GetOrCreateAsync<T>(string key, Func<Task<T>> func)
+    {
+        if (!_memoryCache.TryGetValue<T>(key, out T? data))
         {
             await semaphoreSlim.WaitAsync();
             try
