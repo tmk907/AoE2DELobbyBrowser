@@ -16,7 +16,6 @@ var logger = new LoggerConfiguration()
 builder.Logging.AddSerilog(logger);
 
 builder.Services.AddSingleton<ApiCache>();
-builder.Services.AddScoped<AoE2DELobbyBrowser.WebApi.v2.Reliclink.LobbiesRepository>();
 builder.Services.AddScoped<LobbiesRepository>();
 builder.Services.AddHostedService<BackgroundApiClient>();
 
@@ -32,12 +31,6 @@ app.MapGet("/api", () =>
 {
     var html = $"This API is used by <a href='https://github.com/tmk907/AoE2DELobbyBrowser'>AoE2DELobbyBrowser</a>";
     return Results.Content(html, contentType: MediaTypeNames.Text.Html);
-});
-
-app.MapGet("/api/v2/lobbies", async (AoE2DELobbyBrowser.WebApi.v2.Reliclink.LobbiesRepository lobbiesRepository) =>
-{
-    var lobbies = await lobbiesRepository.GetLobbiesAsync();
-    return Results.Json(lobbies);
 });
 
 app.MapGet("/api/v3/lobbies", async (ApiCache apiCache) =>
