@@ -17,9 +17,16 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
 
         public async Task<IEnumerable<LobbyDto>> GetLobbiesAsync()
         {
-            var advertisement = await _apiCache.GetOrCreateAsync("advertisement", GetAllAdvertisementsAsync);
-            var lobbies = GetLobbies(advertisement);
+            var advertisements = await GetAllAdvertisementsAsync();
+            var lobbies = GetLobbies(advertisements);
             return lobbies;
+        }
+
+        public async Task RefreshCacheAsync()
+        {
+            _logger.LogInformation("Refresh cache");
+            var lobbies = await GetLobbiesAsync();
+            _apiCache.Set(ApiCache.LobbiesKey, lobbies);
         }
 
         private async Task<Advertisement> GetAllAdvertisementsAsync()
@@ -69,10 +76,11 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Get lobbies from aoe2insights");
+                _logger.LogError(ex, "GetAdvertisementAsync");
                 return null;
             }
         }
+
 
         private List<LobbyDto> GetLobbies(Advertisement? advertisements)
         {
@@ -85,7 +93,7 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
                 try
                 {
                     var options = OptionsDecoder.DecodedToDict(OptionsDecoder.DecodeOptions(match.Options));
-                    result.Add(Create(match, options, advertisements.Avatars));
+                    result.Add(ToLobby(match, options, advertisements.Avatars));
                 }
                 catch (Exception) { }
             }
@@ -93,7 +101,7 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
             return result.Where(x => x.Players.Count < x.NumSlots).ToList();
         }
  
-        private LobbyDto Create(Match match, Dictionary<int, string> options, List<Avatar> avatars)
+        private LobbyDto ToLobby(Match match, Dictionary<int, string> options, List<Avatar> avatars)
         {
             var gameId = int.Parse(options.GetValueOrDefault(OptionsDecoder.GameTypeKey, "-1"));
             var mapId = int.Parse(options.GetValueOrDefault(OptionsDecoder.MapTypeKey, "-1"));
@@ -108,13 +116,13 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
                 NumSlots = match.Maxplayers,
                 Players = match.Matchmembers
                     .OrderBy(x => (x.ProfileId == match.HostProfileId) ? 0 : 1)
-                    .Select((x, i) => Create(i, x, avatars))
+                    .Select((x, i) => ToPlayer(i, x, avatars))
                     .ToList(),
                 Speed = GameSpeedConverter.ToName(speedId)
             };
         }
 
-        private PlayerDto Create(int i, Matchmember dto, List<Avatar> avatars)
+        private PlayerDto ToPlayer(int i, Matchmember dto, List<Avatar> avatars)
         {
             var avatar = avatars.FirstOrDefault(x => x.ProfileId == dto.ProfileId);
             if (avatar == null)

@@ -7,15 +7,17 @@ using System.Net.Mime;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
+
 builder.Logging.ClearProviders();
 var logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
 builder.Logging.AddSerilog(logger);
+
 builder.Services.AddSingleton<ApiCache>();
-builder.Services.AddTransient<AoE2DELobbyBrowser.WebApi.v2.Reliclink.LobbiesRepository>();
-builder.Services.AddTransient<LobbiesRepository>();
+builder.Services.AddScoped<LobbiesRepository>();
+builder.Services.AddHostedService<BackgroundApiClient>();
 
 var app = builder.Build();
 
@@ -31,15 +33,9 @@ app.MapGet("/api", () =>
     return Results.Content(html, contentType: MediaTypeNames.Text.Html);
 });
 
-app.MapGet("/api/v2/lobbies", async (AoE2DELobbyBrowser.WebApi.v2.Reliclink.LobbiesRepository lobbiesRepository) =>
+app.MapGet("/api/v3/lobbies", async (ApiCache apiCache) =>
 {
-    var lobbies = await lobbiesRepository.GetLobbiesAsync();
-    return Results.Json(lobbies);
-});
-
-app.MapGet("/api/v3/lobbies", async (LobbiesRepository lobbiesRepository) =>
-{
-    var lobbies = await lobbiesRepository.GetLobbiesAsync();
+    var lobbies = apiCache.Get<IEnumerable<LobbyDto>>(ApiCache.LobbiesKey);
     return Results.Json(lobbies);
 });
 
