@@ -52,12 +52,10 @@ jobs:
       - name: Stop container
         run: |
           ssh vps << EOF
-            if [ "$(docker ps -q -f name=$containerName)" ]; then
-              echo "Container $containerName is running. Stopping it..."
-              docker container stop $containerName
-            else
-              echo "Container $containerName is not running."
-            fi
+            echo "Stopping and removing container $containerName"
+            docker container stop $containerName
+            docker container rm $containerName
+            echo "Container $containerName removed"
           EOF
 
       # Transfer Dockerfile
