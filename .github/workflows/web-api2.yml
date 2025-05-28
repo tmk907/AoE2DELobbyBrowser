@@ -88,6 +88,7 @@ jobs:
               -e SteamWebApiKey="$steamWebApiKey" \
               -v /var/log/www/aoe2deapi:/app/logs \
               --network=seq-network \
+              --restart on-failure:10 \
               --name aoe2deapi aoe2delobbybrowser
             fi
           EOF
