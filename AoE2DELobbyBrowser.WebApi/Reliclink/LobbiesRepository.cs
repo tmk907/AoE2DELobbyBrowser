@@ -1,8 +1,9 @@
 ﻿using AoE2DELobbyBrowser.WebApi.Dto;
+using System.Text.RegularExpressions;
 
 namespace AoE2DELobbyBrowser.WebApi.Reliclink
 {
-    public partial class LobbiesRepository
+    public class LobbiesRepository
     {
         private readonly ILogger<LobbiesRepository> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -156,6 +157,7 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
                 .Select(x => x.MatchId).ToList();
             foreach (var id in toDelete)
             {
+                _logger.LogInformation("Remove fvd match {matchId} {updatedAt}", id, fvdMatches[id].UpdatedAt);
                 fvdMatches.Remove(id);
             }
 
@@ -172,6 +174,7 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
                     else
                     {
                         fvdMatches.Add(match.Id, new FvdMatch(match.Id, match.Matchmembers.Select(x => x.ProfileId)));
+                        _logger.LogInformation("New fvd match {matchId}", match.Id);
                     }
                 }
             }
