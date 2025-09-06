@@ -8,8 +8,12 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
         public const int GameTypeKey = 5;
         public const int MapTypeKey = 10;
         public const int GameSpeedKey = 41;
+        public const int ModId = 59;
+        public const int Scenario = 38;
+        public const int Dataset = 63;
 
-        private static byte[] DecodeZLib(byte[] input)
+
+        public static byte[] DecodeZLib(byte[] input)
         {
             var inputStream = new MemoryStream(input);
             using (var zipInput = new InflaterInputStream(inputStream))

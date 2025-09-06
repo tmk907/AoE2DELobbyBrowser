@@ -3,6 +3,7 @@
 public class ApiCache
 {
     public const string LobbiesKey = "lobbies";
+    public const string FvdMatchesKey = "fvd";
 
     private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
     private readonly IMemoryCache _memoryCache;

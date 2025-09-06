@@ -2,7 +2,7 @@
 
 namespace AoE2DELobbyBrowser.WebApi.Reliclink
 {
-    public class LobbiesRepository
+    public partial class LobbiesRepository
     {
         private readonly ILogger<LobbiesRepository> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -15,17 +15,14 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
             _apiCache = apiCache;
         }
 
-        public async Task<IEnumerable<LobbyDto>> GetLobbiesAsync()
-        {
-            var advertisements = await GetAllAdvertisementsAsync();
-            var lobbies = GetLobbies(advertisements);
-            return lobbies;
-        }
-
         public async Task RefreshCacheAsync()
         {
             _logger.LogInformation("Refresh cache");
-            var lobbies = await GetLobbiesAsync();
+
+            var advertisements = await GetAllAdvertisementsAsync();
+            var lobbies = GetLobbies(advertisements);
+            UpdateFvdMatches(advertisements);
+
             _apiCache.Set(ApiCache.LobbiesKey, lobbies);
         }
 
@@ -147,6 +144,39 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
                     SteamProfileId = avatar.Name.Replace("/steam/", "")
                 };
             }
+        }
+
+        private void UpdateFvdMatches(Advertisement advertisement)
+        {
+            var maxDuration = TimeSpan.FromHours(24);
+            var fvdMatches = _apiCache.Get<Dictionary<int, FvdMatch>>(ApiCache.FvdMatchesKey) ?? new();
+
+            var toDelete = fvdMatches.Values
+                .Where(x => (DateTime.UtcNow - x.UpdatedAt) > maxDuration)
+                .Select(x => x.MatchId).ToList();
+            foreach (var id in toDelete)
+            {
+                fvdMatches.Remove(id);
+            }
+
+            foreach (var match in advertisement.Matches)
+            {
+                var options = OptionsDecoder.DecodedToDict(OptionsDecoder.DecodeOptions(match.Options));
+                var modId = options.GetValueOrDefault(OptionsDecoder.ModId, "");
+                if (modId == "23222+" || modId == "23222")
+                {
+                    if (fvdMatches.TryGetValue(match.Id, out var fvdMatch))
+                    {
+                        fvdMatch.UpdatePlayers(match.Matchmembers.Select(x => x.ProfileId));
+                    }
+                    else
+                    {
+                        fvdMatches.Add(match.Id, new FvdMatch(match.Id, match.Matchmembers.Select(x => x.ProfileId)));
+                    }
+                }
+            }
+
+            _apiCache.Set(ApiCache.FvdMatchesKey, fvdMatches);
         }
     }
 }

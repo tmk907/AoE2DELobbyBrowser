@@ -64,5 +64,11 @@ app.MapGet("/api/v3/players", async ([FromQuery] string ids, IConfiguration conf
     }
 });
 
+app.MapGet("/api/v3/fvdMatches", async (ApiCache apiCache) =>
+{
+    var matches = apiCache.Get<Dictionary<int, FvdMatch>>(ApiCache.FvdMatchesKey) ?? new();
+    return Results.Json(matches.Values);
+});
+
 app.Logger.LogInformation("The application started");
 app.Run();
