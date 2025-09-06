@@ -1,3 +1,4 @@
+using AoE2DELobbyBrowser.WebApi;
 using AoE2DELobbyBrowser.WebApi.Dto;
 using AoE2DELobbyBrowser.WebApi.Reliclink;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ builder.Logging.AddSerilog(logger);
 
 builder.Services.AddSingleton<ApiCache>();
 builder.Services.AddScoped<LobbiesRepository>();
+builder.Services.AddSingleton<FvdLobbyService>();
 builder.Services.AddHostedService<BackgroundApiClient>();
 
 var app = builder.Build();
@@ -64,10 +66,10 @@ app.MapGet("/api/v3/players", async ([FromQuery] string ids, IConfiguration conf
     }
 });
 
-app.MapGet("/api/v3/fvdMatches", async (ApiCache apiCache) =>
+app.MapGet("/api/v3/fvdLobbies", async (FvdLobbyService fvdLobbyService) =>
 {
-    var matches = apiCache.Get<Dictionary<int, FvdMatch>>(ApiCache.FvdMatchesKey) ?? new();
-    return Results.Json(matches.Values);
+    var matches = fvdLobbyService.GetFvdMatches();
+    return Results.Json(matches);
 });
 
 app.Logger.LogInformation("The application started");

@@ -1,5 +1,4 @@
 ﻿using AoE2DELobbyBrowser.WebApi.Dto;
-using System.Text.RegularExpressions;
 
 namespace AoE2DELobbyBrowser.WebApi.Reliclink
 {
@@ -8,12 +7,15 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
         private readonly ILogger<LobbiesRepository> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ApiCache _apiCache;
+        private readonly FvdLobbyService _fvdLobbyService;
 
-        public LobbiesRepository(ILogger<LobbiesRepository> logger, IHttpClientFactory httpClientFactory, ApiCache apiCache)
+        public LobbiesRepository(ILogger<LobbiesRepository> logger, IHttpClientFactory httpClientFactory, 
+            ApiCache apiCache, FvdLobbyService fvdLobbyService)
         {
             _logger = logger;
             _httpClientFactory = httpClientFactory;
             _apiCache = apiCache;
+            _fvdLobbyService = fvdLobbyService;
         }
 
         public async Task RefreshCacheAsync()
@@ -22,7 +24,7 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
 
             var advertisements = await GetAllAdvertisementsAsync();
             var lobbies = GetLobbies(advertisements);
-            UpdateFvdMatches(advertisements);
+            _fvdLobbyService.UpdateFvdMatches(advertisements);
 
             _apiCache.Set(ApiCache.LobbiesKey, lobbies);
         }
@@ -145,41 +147,6 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
                     SteamProfileId = avatar.Name.Replace("/steam/", "")
                 };
             }
-        }
-
-        private void UpdateFvdMatches(Advertisement advertisement)
-        {
-            var maxDuration = TimeSpan.FromHours(24);
-            var fvdMatches = _apiCache.Get<Dictionary<int, FvdMatch>>(ApiCache.FvdMatchesKey) ?? new();
-
-            var toDelete = fvdMatches.Values
-                .Where(x => (DateTime.UtcNow - x.UpdatedAt) > maxDuration)
-                .Select(x => x.MatchId).ToList();
-            foreach (var id in toDelete)
-            {
-                _logger.LogInformation("Remove fvd match {matchId} {updatedAt}", id, fvdMatches[id].UpdatedAt);
-                fvdMatches.Remove(id);
-            }
-
-            foreach (var match in advertisement.Matches)
-            {
-                var options = OptionsDecoder.DecodedToDict(OptionsDecoder.DecodeOptions(match.Options));
-                var modId = options.GetValueOrDefault(OptionsDecoder.ModId, "");
-                if (modId == "23222+" || modId == "23222")
-                {
-                    if (fvdMatches.TryGetValue(match.Id, out var fvdMatch))
-                    {
-                        fvdMatch.UpdatePlayers(match.Matchmembers.Select(x => x.ProfileId));
-                    }
-                    else
-                    {
-                        fvdMatches.Add(match.Id, new FvdMatch(match.Id, match.Matchmembers.Select(x => x.ProfileId)));
-                        _logger.LogInformation("New fvd match {matchId}", match.Id);
-                    }
-                }
-            }
-
-            _apiCache.Set(ApiCache.FvdMatchesKey, fvdMatches);
-        }
+        }        
     }
 }
