@@ -18,7 +18,7 @@ builder.Logging.AddSerilog(logger);
 
 builder.Services.AddSingleton<ApiCache>();
 builder.Services.AddScoped<LobbiesRepository>();
-builder.Services.AddSingleton<FvdLobbyService>();
+builder.Services.AddSingleton<CachedLobbyService>();
 builder.Services.AddHostedService<BackgroundApiClient>();
 
 var app = builder.Build();
@@ -66,9 +66,10 @@ app.MapGet("/api/v3/players", async ([FromQuery] string ids, IConfiguration conf
     }
 });
 
-app.MapGet("/api/v3/fvdLobbies", async (FvdLobbyService fvdLobbyService) =>
+app.MapGet("/api/v3/cachedLobbies", async ([AsParameters]CachedLobbiesQuery cachedLobbiesQuery, 
+    CachedLobbyService cachedLobbyService) =>
 {
-    var matches = fvdLobbyService.GetFvdMatches();
+    var matches = cachedLobbyService.GetMatches(cachedLobbiesQuery);
     return Results.Json(matches);
 });
 

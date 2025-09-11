@@ -7,10 +7,10 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
         private readonly ILogger<LobbiesRepository> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ApiCache _apiCache;
-        private readonly FvdLobbyService _fvdLobbyService;
+        private readonly CachedLobbyService _fvdLobbyService;
 
         public LobbiesRepository(ILogger<LobbiesRepository> logger, IHttpClientFactory httpClientFactory, 
-            ApiCache apiCache, FvdLobbyService fvdLobbyService)
+            ApiCache apiCache, CachedLobbyService fvdLobbyService)
         {
             _logger = logger;
             _httpClientFactory = httpClientFactory;
@@ -24,7 +24,7 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
 
             var advertisements = await GetAllAdvertisementsAsync();
             var lobbies = GetLobbies(advertisements);
-            _fvdLobbyService.UpdateFvdMatches(advertisements);
+            _fvdLobbyService.UpdateLobbies(advertisements);
 
             _apiCache.Set(ApiCache.LobbiesKey, lobbies);
         }
