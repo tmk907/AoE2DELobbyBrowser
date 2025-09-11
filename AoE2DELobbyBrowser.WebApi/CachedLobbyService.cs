@@ -78,7 +78,7 @@ namespace AoE2DELobbyBrowser.WebApi
             }
             if (query.ModId != null)
             {
-                results = results.Where(x => x.ModId == query.ModId || x.ModId == $"{query.ModId}+");
+                results = results.Where(x => x.ModId.StartsWith(query.ModId));
             }
             if (query.Scenario != null)
             {
