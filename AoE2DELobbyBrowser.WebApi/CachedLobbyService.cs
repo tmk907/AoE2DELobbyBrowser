@@ -45,7 +45,8 @@ namespace AoE2DELobbyBrowser.WebApi
                         Speed = options.GetValueOrDefault(OptionsDecoder.GameSpeedKey, ""),
                         Dataset = options.GetValueOrDefault(OptionsDecoder.Dataset, ""),
                         ModId = options.GetValueOrDefault(OptionsDecoder.ModId, ""),
-                        Scenario = options.GetValueOrDefault(OptionsDecoder.Scenario, "")
+                        Scenario = options.GetValueOrDefault(OptionsDecoder.Scenario, ""),
+                        IsObservable = match.IsObservable == 1
                     };
                     _lobbies.TryAdd(match.Id, newLobby);
                     _logger.LogInformation("New lobby {matchId}", match.Id);

@@ -53,7 +53,7 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
         public int Observermax { get; set; }
 
         [JsonPropertyName("isobservable")]
-        public int Isobservable { get; set; }
+        public int IsObservable { get; set; }
 
         [JsonPropertyName("observerdelay")]
         public int Observerdelay { get; set; }
