@@ -46,7 +46,7 @@ namespace AoE2DELobbyBrowser.WebApi
                         Dataset = options.GetValueOrDefault(OptionsDecoder.Dataset, ""),
                         ModId = options.GetValueOrDefault(OptionsDecoder.ModId, ""),
                         Scenario = options.GetValueOrDefault(OptionsDecoder.Scenario, ""),
-                        IsObservable = match.IsObservable == 1
+                        IsObservable = match.IsObservable
                     };
                     _lobbies.TryAdd(match.Id, newLobby);
                     _logger.LogInformation("New lobby {matchId}", match.Id);
@@ -88,6 +88,10 @@ namespace AoE2DELobbyBrowser.WebApi
             if (query.PlayerId != null)
             {
                 results = results.Where(x => x.PlayerIds.Contains(query.PlayerId.Value));
+            }
+            if (query.IsObservable != null)
+            {
+                results = results.Where(x => x.IsObservable == query.IsObservable.Value);
             }
 
             return results.OrderBy(x => x.CreatedAt).ToList();

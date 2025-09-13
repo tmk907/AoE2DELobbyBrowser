@@ -39,7 +39,7 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
         public string Scenario { get; set; }
 
         [JsonPropertyName("isobservable")]
-        public bool IsObservable { get; set; }
+        public int IsObservable { get; set; }
 
         public CachedLobby(int matchId, IEnumerable<int> playerIds)
         {
