@@ -91,7 +91,7 @@ jobs:
               docker run -d \
               -p 127.0.0.1:5100:8080 \
               -e ASPNETCORE_URLS="http://*:8080" \
-              -e Serilog__WriteTo__1__Args__apiKey="$seqApiKey" \
+              -e Serilog__WriteTo__SeqSink__Args__apiKey="$seqApiKey" \
               -e SteamWebApiKey="$steamWebApiKey" \
               -v /var/log/www/aoe2deapi:/app/logs \
               --network=seq-network \
