@@ -70,6 +70,13 @@ jobs:
           ssh vps "mkdir -p /srv/www/aoe2deapi/publish"
           rsync -rzvh --delete "$projectDir/publish" vps:"/srv/www/aoe2deapi"
 
+      # Copy confg file
+      - name: Copy config file
+        run: |
+          ssh vps << EOF
+            cp /srv/www/aoe2deapi/appsettings.Production.json /srv/www/aoe2deapi/publish/appsettings.Production.json
+          EOF
+
       # Start container
       - name: Start container
         run: |
