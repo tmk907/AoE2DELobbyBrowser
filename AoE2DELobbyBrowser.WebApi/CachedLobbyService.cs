@@ -1,21 +1,24 @@
 ﻿using AoE2DELobbyBrowser.WebApi.Reliclink;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace AoE2DELobbyBrowser.WebApi
 {
     public class CachedLobbyService
     {
         private readonly ConcurrentDictionary<int, CachedLobby> _lobbies;
+        private readonly DatabaseService _databaseService;
         private readonly ILogger<CachedLobbyService> _logger;
         private readonly TimeSpan _maxDuration = TimeSpan.FromHours(12);
 
-        public CachedLobbyService(ILogger<CachedLobbyService> logger)
+        public CachedLobbyService(DatabaseService databaseService, ILogger<CachedLobbyService> logger)
         {
             _lobbies = new ConcurrentDictionary<int, CachedLobby>();
+            _databaseService = databaseService;
             _logger = logger;
         }
 
-        public void UpdateLobbies(Advertisement advertisement)
+        public async Task UpdateLobbies(Advertisement advertisement)
         {
             var toDelete = _lobbies.Values
                 .Where(x => (DateTime.UtcNow - x.UpdatedAt) > _maxDuration)
@@ -27,6 +30,9 @@ namespace AoE2DELobbyBrowser.WebApi
                 _lobbies.TryRemove(id, out _);
             }
 
+            var lobbiesToSave = new List<CachedLobby>();
+            var matchesToSave = new List<Match>();
+
             foreach (var match in advertisement.Matches)
             {
                 var options = OptionsDecoder.DecodedToDict(OptionsDecoder.DecodeOptions(match.Options));
@@ -34,6 +40,8 @@ namespace AoE2DELobbyBrowser.WebApi
                 if (_lobbies.TryGetValue(match.Id, out var lobby))
                 {
                     lobby.UpdatePlayers(match.Matchmembers.Select(x => x.ProfileId));
+                    lobbiesToSave.Add(lobby);
+                    matchesToSave.Add(match);
                 }
                 else
                 {
@@ -49,52 +57,71 @@ namespace AoE2DELobbyBrowser.WebApi
                         IsObservable = match.IsObservable
                     };
                     _lobbies.TryAdd(match.Id, newLobby);
+                    lobbiesToSave.Add(newLobby);
+                    matchesToSave.Add(match);
                     _logger.LogInformation("New lobby {matchId}", match.Id);
                 }
             }
+            try
+            {
+                await _databaseService.AddOrUpdateLobbies(lobbiesToSave);
+                await _databaseService.AddOrUpdateMatches(matchesToSave);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "UpdateLobbies");
+            }
         }
 
-        public List<CachedLobby> GetMatches(CachedLobbiesQuery query)
+        public async Task<List<CachedLobby>> GetMatches(CachedLobbiesQuery query)
         {
-            var results = _lobbies.Values.AsEnumerable();
-            if (query.Name != null)
+            if (query.CreatedAt != null)
             {
-                results = results.Where(x => x.Name.Contains(query.Name, StringComparison.InvariantCultureIgnoreCase));
+                var lobbies = await _databaseService.GetLobbies(query);
+                return lobbies;
             }
-            if (query.GameType != null)
+            else
             {
-                results = results.Where(x => x.GameType == query.GameType);
-            }
-            if (query.MapType != null)
-            {
-                results = results.Where(x => x.MapType == query.MapType);
-            }
-            if (query.Speed != null)
-            {
-                results = results.Where(x => x.Speed == query.Speed);
-            }
-            if (query.Dataset != null)
-            {
-                results = results.Where(x => x.Dataset.Contains(query.Dataset, StringComparison.InvariantCultureIgnoreCase));
-            }
-            if (query.ModId != null)
-            {
-                results = results.Where(x => x.ModId.StartsWith(query.ModId));
-            }
-            if (query.Scenario != null)
-            {
-                results = results.Where(x => x.Scenario.Contains(query.Scenario, StringComparison.InvariantCultureIgnoreCase));
-            }
-            if (query.PlayerId != null)
-            {
-                results = results.Where(x => x.PlayerIds.Contains(query.PlayerId.Value));
-            }
-            if (query.IsObservable != null)
-            {
-                results = results.Where(x => x.IsObservable == query.IsObservable.Value);
-            }
+                var results = _lobbies.Values.AsEnumerable();
+                if (query.Name != null)
+                {
+                    results = results.Where(x => x.Name.Contains(query.Name, StringComparison.InvariantCultureIgnoreCase));
+                }
+                if (query.GameType != null)
+                {
+                    results = results.Where(x => x.GameType == query.GameType);
+                }
+                if (query.MapType != null)
+                {
+                    results = results.Where(x => x.MapType == query.MapType);
+                }
+                if (query.Speed != null)
+                {
+                    results = results.Where(x => x.Speed == query.Speed);
+                }
+                if (query.Dataset != null)
+                {
+                    results = results.Where(x => x.Dataset.Contains(query.Dataset, StringComparison.InvariantCultureIgnoreCase));
+                }
+                if (query.ModId != null)
+                {
+                    results = results.Where(x => x.ModId.StartsWith(query.ModId));
+                }
+                if (query.Scenario != null)
+                {
+                    results = results.Where(x => x.Scenario.Contains(query.Scenario, StringComparison.InvariantCultureIgnoreCase));
+                }
+                if (query.PlayerId != null)
+                {
+                    results = results.Where(x => x.PlayerIds.Contains(query.PlayerId.Value));
+                }
+                if (query.IsObservable != null)
+                {
+                    results = results.Where(x => x.IsObservable == query.IsObservable.Value);
+                }
 
-            return results.OrderBy(x => x.CreatedAt).ToList();
+                return results.OrderBy(x => x.CreatedAt).ToList();
+            }
         }
     }
 }

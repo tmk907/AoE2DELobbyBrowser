@@ -24,7 +24,7 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
 
             var advertisements = await GetAllAdvertisementsAsync();
             var lobbies = GetLobbies(advertisements);
-            _fvdLobbyService.UpdateLobbies(advertisements);
+            await _fvdLobbyService.UpdateLobbies(advertisements);
 
             _apiCache.Set(ApiCache.LobbiesKey, lobbies);
         }

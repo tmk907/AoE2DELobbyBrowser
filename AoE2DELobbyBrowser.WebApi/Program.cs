@@ -1,7 +1,9 @@
 using AoE2DELobbyBrowser.WebApi;
+using AoE2DELobbyBrowser.WebApi.Database;
 using AoE2DELobbyBrowser.WebApi.Dto;
 using AoE2DELobbyBrowser.WebApi.Reliclink;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Net.Mime;
 
@@ -9,12 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
 
-builder.Logging.ClearProviders();
-var logger = new LoggerConfiguration()
-    .Enrich.FromLogContext()
-    .ReadFrom.Configuration(builder.Configuration)
-    .CreateLogger();
-builder.Logging.AddSerilog(logger);
+builder.Host.UseSerilog((context, loggerConfig)
+    => loggerConfig.ReadFrom.Configuration(context.Configuration));
+
+builder.Services.AddDbContextFactory<MatchesDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
+    .EnableSensitiveDataLogging());
+builder.Services.AddTransient<DatabaseService>();
 
 builder.Services.AddSingleton<ApiCache>();
 builder.Services.AddScoped<LobbiesRepository>();
@@ -37,8 +40,16 @@ app.MapGet("/api", () =>
 
 app.MapGet("/api/v3/lobbies", async (ApiCache apiCache) =>
 {
-    var lobbies = apiCache.Get<IEnumerable<LobbyDto>>(ApiCache.LobbiesKey);
-    return Results.Json(lobbies);
+    try
+    {
+        var lobbies = apiCache.Get<IEnumerable<LobbyDto>>(ApiCache.LobbiesKey);
+        return Results.Json(lobbies);
+    }
+    catch (Exception ex)
+    {
+        Log.Error(ex.ToString());
+        return Results.BadRequest();
+    }
 });
 
 app.MapGet("/api/v3/players", async ([FromQuery] string ids, IConfiguration configuration, IHttpClientFactory httpClientFactory) =>
@@ -69,8 +80,16 @@ app.MapGet("/api/v3/players", async ([FromQuery] string ids, IConfiguration conf
 app.MapGet("/api/v3/cachedLobbies", async ([AsParameters]CachedLobbiesQuery cachedLobbiesQuery, 
     CachedLobbyService cachedLobbyService) =>
 {
-    var matches = cachedLobbyService.GetMatches(cachedLobbiesQuery);
-    return Results.Json(matches);
+    try
+    {
+        var matches = await cachedLobbyService.GetMatches(cachedLobbiesQuery);
+        return Results.Json(matches);
+    }
+    catch (Exception ex)
+    {
+        Log.Error(ex.ToString());
+        return Results.BadRequest();
+    }
 });
 
 app.Logger.LogInformation("The application started");

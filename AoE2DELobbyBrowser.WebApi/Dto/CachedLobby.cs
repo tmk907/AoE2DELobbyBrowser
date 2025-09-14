@@ -84,5 +84,9 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
 
         [FromQuery]
         public int? IsObservable { get; set; }
+
+        [FromQuery]
+        public DateTime? CreatedAt { get; set; }
+
     }
 }
