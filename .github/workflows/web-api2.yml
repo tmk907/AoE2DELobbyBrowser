@@ -94,6 +94,7 @@ jobs:
               -e Serilog__WriteTo__SeqSink__Args__apiKey="$seqApiKey" \
               -e SteamWebApiKey="$steamWebApiKey" \
               -v /var/log/www/aoe2deapi:/app/logs \
+              -v /srv/www/aoe2deapi/data:/app/data \
               --network=seq-network \
               --restart on-failure:10 \
               --name aoe2deapi aoe2delobbybrowser
