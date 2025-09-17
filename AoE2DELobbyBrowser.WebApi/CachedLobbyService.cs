@@ -35,31 +35,38 @@ namespace AoE2DELobbyBrowser.WebApi
 
             foreach (var match in advertisement.Matches)
             {
-                var options = OptionsDecoder.DecodedToDict(OptionsDecoder.DecodeOptions(match.Options));
-                
-                if (_lobbies.TryGetValue(match.Id, out var lobby))
+                try
                 {
-                    lobby.UpdatePlayers(match.Matchmembers.Select(x => x.ProfileId));
-                    lobbiesToSave.Add(lobby);
-                    matchesToSave.Add(match);
-                }
-                else
-                {
-                    var newLobby = new CachedLobby(match.Id, match.Matchmembers.Select(x => x.ProfileId))
+                    var options = OptionsDecoder.DecodedToDict(OptionsDecoder.DecodeOptions(match.Options));
+
+                    if (_lobbies.TryGetValue(match.Id, out var lobby))
                     {
-                        Name = match.Description,
-                        GameType = options.GetValueOrDefault(OptionsDecoder.GameTypeKey, ""),
-                        MapType = options.GetValueOrDefault(OptionsDecoder.MapTypeKey, ""),
-                        Speed = options.GetValueOrDefault(OptionsDecoder.GameSpeedKey, ""),
-                        Dataset = options.GetValueOrDefault(OptionsDecoder.Dataset, ""),
-                        ModId = options.GetValueOrDefault(OptionsDecoder.ModId, ""),
-                        Scenario = options.GetValueOrDefault(OptionsDecoder.Scenario, ""),
-                        IsObservable = match.IsObservable
-                    };
-                    _lobbies.TryAdd(match.Id, newLobby);
-                    lobbiesToSave.Add(newLobby);
-                    matchesToSave.Add(match);
-                    _logger.LogInformation("New lobby {matchId}", match.Id);
+                        lobby.UpdatePlayers(match.Matchmembers.Select(x => x.ProfileId));
+                        lobbiesToSave.Add(lobby);
+                        matchesToSave.Add(match);
+                    }
+                    else
+                    {
+                        var newLobby = new CachedLobby(match.Id, match.Matchmembers.Select(x => x.ProfileId))
+                        {
+                            Name = match.Description,
+                            GameType = options.GetValueOrDefault(OptionsDecoder.GameTypeKey, ""),
+                            MapType = options.GetValueOrDefault(OptionsDecoder.MapTypeKey, ""),
+                            Speed = options.GetValueOrDefault(OptionsDecoder.GameSpeedKey, ""),
+                            Dataset = options.GetValueOrDefault(OptionsDecoder.Dataset, ""),
+                            ModId = options.GetValueOrDefault(OptionsDecoder.ModId, ""),
+                            Scenario = options.GetValueOrDefault(OptionsDecoder.Scenario, ""),
+                            IsObservable = match.IsObservable
+                        };
+                        _lobbies.TryAdd(match.Id, newLobby);
+                        lobbiesToSave.Add(newLobby);
+                        matchesToSave.Add(match);
+                        _logger.LogInformation("New lobby {matchId}", match.Id);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, null);
                 }
             }
             try
