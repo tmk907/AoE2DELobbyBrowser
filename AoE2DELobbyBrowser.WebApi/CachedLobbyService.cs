@@ -41,13 +41,14 @@ namespace AoE2DELobbyBrowser.WebApi
 
                     if (_lobbies.TryGetValue(match.Id, out var lobby))
                     {
-                        lobby.UpdatePlayers(match.Matchmembers.Select(x => x.ProfileId));
+                        lobby.UpdatePlayers(match.Matchmembers.OrderBy(x => (x.ProfileId == match.HostProfileId) ? 0 : 1).Select(x => x.ProfileId));
                         lobbiesToSave.Add(lobby);
                         matchesToSave.Add(match);
                     }
                     else
                     {
-                        var newLobby = new CachedLobby(match.Id, match.Matchmembers.Select(x => x.ProfileId))
+                        var newLobby = new CachedLobby(match.Id, 
+                            match.Matchmembers.OrderBy(x => (x.ProfileId == match.HostProfileId) ? 0 : 1).Select(x => x.ProfileId))
                         {
                             Name = match.Description,
                             GameType = options.GetValueOrDefault(OptionsDecoder.GameTypeKey, ""),
