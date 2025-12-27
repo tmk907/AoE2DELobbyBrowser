@@ -96,7 +96,7 @@ jobs:
               -v /var/log/www/aoe2deapi:/app/logs \
               -v /srv/www/aoe2deapi/data:/app/data \
               --network=seq-network \
-              --restart on-failure:10 \
+              --restart unless-stopped \
               --name aoe2deapi aoe2delobbybrowser
             fi
           EOF
