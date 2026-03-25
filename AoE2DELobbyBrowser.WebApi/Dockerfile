@@ -1,5 +1,5 @@
 # Final stage: run the application using the ASP.NET Core runtime
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 COPY publish/ ./
 # Expose port 80 for the application
