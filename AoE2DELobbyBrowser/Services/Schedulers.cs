@@ -1,13 +1,20 @@
 ﻿using AoE2DELobbyBrowser.Core.Services;
-using ReactiveUI;
+using ReactiveUI.Builder;
 using System.Reactive.Concurrency;
 
 namespace AoE2DELobbyBrowser.Services
 {
     public class Schedulers : ISchedulers
     {
-        public IScheduler UIScheduler => RxApp.MainThreadScheduler;
+        private readonly IReactiveUIInstance _reactiveUIInstance;
 
-        public IScheduler BackgroundScheduler => RxApp.TaskpoolScheduler;
+        public Schedulers(IReactiveUIInstance reactiveUIInstance)
+        {
+            _reactiveUIInstance = reactiveUIInstance;
+        }
+
+        public IScheduler UIScheduler => _reactiveUIInstance.MainThreadScheduler;
+
+        public IScheduler BackgroundScheduler => _reactiveUIInstance.TaskpoolScheduler;
     }
 }

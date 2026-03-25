@@ -17,12 +17,12 @@ jobs:
       # SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: '10.0.x'
 
       # build and publish    
       - name: Build and publish

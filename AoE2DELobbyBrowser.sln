@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31912.275
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11527.330 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AoE2DELobbyBrowser", "AoE2DELobbyBrowser\AoE2DELobbyBrowser.csproj", "{84B3EC2D-C38C-4D63-9178-6695E0A602DE}"
 EndProject
@@ -18,6 +18,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoE2DELobbyBrowser.Core", "AoE2DELobbyBrowser.Core\AoE2DELobbyBrowser.Core.csproj", "{E889C5FA-6E97-4610-8A49-F5959BD462D6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoE2DELobbyBrowser.WebApi.Database", "AoE2DELobbyBrowser.WebApi.Database\AoE2DELobbyBrowser.WebApi.Database.csproj", "{616003C7-7AAA-40A2-A1F2-A55573090694}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{66AA34B9-FD3E-4926-9796-809085D00960}"
+	ProjectSection(SolutionItems) = preProject
+		Avalonia\Directory.Build.props = Avalonia\Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,18 +1,17 @@
-﻿using Microsoft.UI.Xaml;
-using Serilog;
-using System;
-using CommunityToolkit.WinUI.Notifications;
-using System.Runtime.InteropServices;
-using Microsoft.UI.Dispatching;
-using System.IO;
+﻿using AoE2DELobbyBrowser.Core;
+using AoE2DELobbyBrowser.Core.Api;
+using AoE2DELobbyBrowser.Core.Services;
 using AoE2DELobbyBrowser.Services;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.WinUI.Notifications;
 using Microsoft.Extensions.DependencyInjection;
-using AoE2DELobbyBrowser.Core.Services;
-using System.Reactive.Concurrency;
-using AoE2DELobbyBrowser.Core;
-using AoE2DELobbyBrowser.Core.Api;
-using ReactiveUI;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
+using ReactiveUI.Builder;
+using Serilog;
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -119,7 +118,13 @@ namespace AoE2DELobbyBrowser
 
         private IServiceProvider ConfigureServices()
         {
+            var rxuiInstance = RxAppBuilder.CreateReactiveUIBuilder()
+                .WithWinUI()
+                .BuildApp();
+
             var services = new ServiceCollection();
+
+            services.AddSingleton<IReactiveUIInstance>(rxuiInstance);
 
             services.AddSingleton<IAssetsLoader, AssetsLoader>();
             services.AddSingleton<IClipboardService, ClipboardService>();
