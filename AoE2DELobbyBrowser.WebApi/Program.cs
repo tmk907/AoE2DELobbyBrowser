@@ -52,6 +52,20 @@ app.MapGet("/api/v3/lobbies", async (ApiCache apiCache) =>
     }
 });
 
+app.MapGet("/api/v3/advertisements", async (ApiCache apiCache) =>
+{
+    try
+    {
+        var lobbies = apiCache.Get<Advertisement?>(ApiCache.AdvertisementsKey);
+        return Results.Json(lobbies);
+    }
+    catch (Exception ex)
+    {
+        Log.Error(ex.ToString());
+        return Results.BadRequest();
+    }
+});
+
 app.MapGet("/api/v3/players", async ([FromQuery] string ids, IConfiguration configuration, IHttpClientFactory httpClientFactory) =>
 {
     try

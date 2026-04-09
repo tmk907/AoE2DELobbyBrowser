@@ -23,6 +23,7 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
             _logger.LogInformation("Refresh cache");
 
             var advertisements = await GetAllAdvertisementsAsync();
+            _apiCache.Set(ApiCache.AdvertisementsKey, advertisements);
             var lobbies = GetLobbies(advertisements);
             try
             {
