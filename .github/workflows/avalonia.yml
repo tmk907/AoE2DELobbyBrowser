@@ -1,0 +1,50 @@
+# This workflow builds the Avalonia desktop app and publishes it as a GitHub release.
+
+name: Build Avalonia desktop app
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+
+  build:
+    runs-on: windows-latest
+
+    env:
+      Project_Path: Avalonia/AoE2DELobbyBrowserAvalonia.Desktop/AoE2DELobbyBrowserAvalonia.Desktop.csproj
+      Runtime: win-x64
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Get app version from project
+      run: |
+        [xml]$project = Get-Content $env:Project_Path
+        $version = ($project.Project.PropertyGroup.VersionPrefix | Where-Object { $_ }) | Select-Object -First 1
+        echo "App_Version=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo "Zip_Name=AoE2DELobbyBrowser-Avalonia-$version-$env:Runtime.zip" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 10.0.x
+
+    - name: Publish
+      run: dotnet publish $env:Project_Path -c Release -r $env:Runtime --self-contained true -o publish
+
+    - name: Create zip
+      run: Compress-Archive -Path publish/* -DestinationPath $env:Zip_Name
+
+    - name: Create a GitHub release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: avalonia-${{ env.App_Version }}
+        name: Avalonia ${{ env.App_Version }}
+        artifacts: ${{ env.Zip_Name }}
+        generateReleaseNotes: true
+        allowUpdates: true
+        token: ${{ secrets.GITHUB_TOKEN }}

@@ -11,7 +11,7 @@
 
   <PropertyGroup>
 	<AssemblyTitle>AoE2DE Lobby Browser</AssemblyTitle>
-    <VersionPrefix>1.6.0</VersionPrefix>
+    <VersionPrefix>1.7.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
 	<InformationalVersion Condition="'$(Configuration)' == 'Debug'">Avalonia Dev</InformationalVersion>
 	<InformationalVersion Condition="'$(Configuration)' == 'Release'">Avalonia</InformationalVersion>
