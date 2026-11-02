@@ -109,7 +109,11 @@ namespace AoE2DELobbyBrowser.Core.Services
                 return (_settings.SelectedGameType == GameType.All || lobby.GameType == _settings.SelectedGameType)
                     && (_settings.SelectedGameSpeed == GameType.All || lobby.Speed == _settings.SelectedGameSpeed)
                     && (_settings.SelectedMapType == MapType.All || lobby.Map == _settings.SelectedMapType
-                        || _settings.SelectedGameType == GameType.Scenario);
+                        || _settings.SelectedGameType == GameType.Scenario)
+                    && (string.IsNullOrWhiteSpace(_settings.Dataset)
+                        || _settings.Dataset
+                            .Split(_appSettingsService.AppSettings.Separator, StringSplitOptions.RemoveEmptyEntries)
+                            .Any(x=>lobby.Dataset.Contains(x.Trim(), StringComparison.OrdinalIgnoreCase)));
             };
 
             var lobbyObservableFilter = _settings
@@ -121,10 +125,10 @@ namespace AoE2DELobbyBrowser.Core.Services
                 .Select(_ => lobbyFilter);
 
             var gameObservableFilter = _settings
-                .WhenAnyPropertyChanged(new[] { nameof(_settings.SelectedGameType), nameof(_settings.SelectedGameSpeed), nameof(_settings.SelectedMapType) })
-                .Do(x => Log.Debug($"Filter game {x.SelectedGameType} {x.SelectedGameSpeed} {x.SelectedMapType}"))
-                .Select(s => (s.SelectedGameType, s.SelectedGameSpeed, s.SelectedMapType))
-                .StartWith((_settings.SelectedGameType, _settings.SelectedGameSpeed, _settings.SelectedMapType))
+                .WhenAnyPropertyChanged(new[] { nameof(_settings.SelectedGameType), nameof(_settings.SelectedGameSpeed), nameof(_settings.SelectedMapType), nameof(_settings.Dataset) })
+                .Do(x => Log.Debug($"Filter game {x.SelectedGameType} {x.SelectedGameSpeed} {x.SelectedMapType} {x.Dataset}"))
+                .Select(s => (s.SelectedGameType, s.SelectedGameSpeed, s.SelectedMapType, s.Dataset))
+                .StartWith((_settings.SelectedGameType, _settings.SelectedGameSpeed, _settings.SelectedMapType, _settings.Dataset))
                 .DistinctUntilChanged()
                 .Select(_ => gameFilter);
 

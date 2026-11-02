@@ -23,6 +23,9 @@ namespace AoE2DELobbyBrowser.WebApi.Dto
         [JsonPropertyName("speed")]
         public string Speed { get; set; }
 
+        [JsonPropertyName("dataset")]
+        public string Dataset { get; set; }
+
         [JsonPropertyName("num_slots")]
         public int NumSlots { get; set; }
 

@@ -103,7 +103,8 @@ namespace AoE2DELobbyBrowser.Core
                             if (AreDifferent(prev, current, x => x.GameType) ||
                                 AreDifferent(prev, current, x => x.Map) ||
                                 AreDifferent(prev, current, x => x.Name) ||
-                                AreDifferent(prev, current, x => x.Speed))
+                                AreDifferent(prev, current, x => x.Speed) ||
+                                AreDifferent(prev, current, x => x.Dataset))
                             {
                                 current.AddedAt = prev.AddedAt;
                                 list[update.CurrentIndex] = current;

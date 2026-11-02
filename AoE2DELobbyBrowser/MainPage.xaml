@@ -145,6 +145,21 @@
                         <KeyboardAccelerator Key="E" Modifiers="Control" />
                     </ComboBox.KeyboardAccelerators>
                 </ComboBox>
+                <TextBlock Style="{StaticResource LabelTextBlock}" Text="Dataset" />
+                <TextBox
+                    Width="180"
+                    IsSpellCheckEnabled="False"
+                    KeyDown="FocusOnPage"
+                    PlaceholderText="dataset"
+                    Text="{x:Bind ViewModel.Settings.Dataset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    ToolTipService.ToolTip="Dataset contains text (Ctrl + D)">
+                    <TextBox.KeyboardAccelerators>
+                        <KeyboardAccelerator
+                            Key="D"
+                            Invoked="FocusOnTextBox"
+                            Modifiers="Control" />
+                    </TextBox.KeyboardAccelerators>
+                </TextBox>
             </StackPanel>
             <StackPanel
                 Padding="2"

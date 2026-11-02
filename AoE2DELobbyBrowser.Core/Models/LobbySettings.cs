@@ -19,6 +19,8 @@ namespace AoE2DELobbyBrowser.Core.Models
         [ObservableProperty]
         private string selectedMapType;
         [ObservableProperty]
+        private string dataset;
+        [ObservableProperty]
         private bool showNotifications;
         [ObservableProperty]
         private string playerQuery;
@@ -36,6 +38,7 @@ namespace AoE2DELobbyBrowser.Core.Models
             SelectedGameSpeed = settings.SelectedGameSpeed;
             SelectedGameType = settings.SelectedGameType;
             SelectedMapType = settings.SelectedMapType;
+            Dataset = settings.Dataset;
             ShowNotifications = settings.ShowNotifications;
         }
     }

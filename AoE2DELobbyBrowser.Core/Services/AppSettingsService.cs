@@ -56,6 +56,7 @@ namespace AoE2DELobbyBrowser.Core.Services
                     SelectedGameSpeed = new GameSpeed().GetAll().First(),
                     SelectedGameType = new GameType().GetAll().First(),
                     SelectedMapType = new MapType().GetAll().First(),
+                    Dataset = "",
                     ShowNotifications = true,
                 },
                 NewLobbyHighlightTime = TimeSpan.FromSeconds(30),

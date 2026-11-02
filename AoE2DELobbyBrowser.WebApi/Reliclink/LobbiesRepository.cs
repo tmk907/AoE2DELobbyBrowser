@@ -126,7 +126,8 @@ namespace AoE2DELobbyBrowser.WebApi.Reliclink
                     .OrderBy(x => (x.ProfileId == match.HostProfileId) ? 0 : 1)
                     .Select((x, i) => ToPlayer(i, x, avatars))
                     .ToList(),
-                Speed = GameSpeedConverter.ToName(speedId)
+                Speed = GameSpeedConverter.ToName(speedId),
+                Dataset = options.GetValueOrDefault(OptionsDecoder.Dataset, "")
             };
         }
 

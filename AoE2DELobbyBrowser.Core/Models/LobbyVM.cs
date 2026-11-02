@@ -31,6 +31,7 @@ namespace AoE2DELobbyBrowser.Core.Models
         public string Speed { get; private set; }
         public string GameType { get; private set; }
         public string Map { get; private set; }
+        public string Dataset { get; private set; }
 
         [ObservableProperty]
         private bool _isNew;
@@ -72,6 +73,7 @@ namespace AoE2DELobbyBrowser.Core.Models
                 Speed = dto.Speed,
                 GameType = dto.GameType,
                 Map = dto.MapType,
+                Dataset = dto.Dataset ?? "",
             };
             lobby.Players.AddRange(dto.Players.OrderBy(x => x.Slot).Take(dto.NumSlots).Select(x => PlayerVM.Create(x)));
             var settingsService = Ioc.Default.GetRequiredService<AppSettingsService>();
