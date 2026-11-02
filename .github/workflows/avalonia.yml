@@ -45,6 +45,5 @@ jobs:
         tag: avalonia-${{ env.App_Version }}
         name: Avalonia ${{ env.App_Version }}
         artifacts: ${{ env.Zip_Name }}
-        generateReleaseNotes: true
         allowUpdates: true
         token: ${{ secrets.GITHUB_TOKEN }}
