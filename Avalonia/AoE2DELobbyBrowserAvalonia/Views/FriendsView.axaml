@@ -46,7 +46,7 @@
                 KeyDown="UnFocusOnKeyDown"
                 Text="{Binding SteamId, Mode=TwoWay}"
                 ToolTip.Tip="Steam64 Id (Ctrl + F)"
-                Watermark="Steam64 Id" />
+                PlaceholderText="Steam64 Id" />
             <Button
                 Width="80"
                 Command="{Binding AddFriendFromIdCommand}"

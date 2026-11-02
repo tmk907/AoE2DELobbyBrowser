@@ -43,7 +43,7 @@ public partial class FriendsView : UserControl, IRecipient<KeyboardShortcutMessa
     {
         if (e.Key == Key.Escape || e.Key == Key.Enter)
         {
-            TopLevel.GetTopLevel(this)?.FocusManager?.ClearFocus();
+            TopLevel.GetTopLevel(this)?.FocusManager?.Focus(null);
         }
     }
 }

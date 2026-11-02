@@ -53,38 +53,38 @@
                 VerticalScrollBarVisibility="Auto">
                 <StackPanel Spacing="3">
                     <TextBlock Classes="settingsSectionHeaderTextBlockStyle" Text="Browser" />
-                    <ui:SettingsExpander Description="How many seconds new lobby should be highlighted" Header="New lobby">
-                        <ui:SettingsExpander.IconSource>
-                            <ui:FontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="{x:Static controls:SymbolIcons.Stopwatch}" />
-                        </ui:SettingsExpander.IconSource>
-                        <ui:SettingsExpander.Footer>
+                    <ui:FASettingsExpander Description="How many seconds new lobby should be highlighted" Header="New lobby">
+                        <ui:FASettingsExpander.IconSource>
+                            <ui:FAFontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="{x:Static controls:SymbolIcons.Stopwatch}" />
+                        </ui:FASettingsExpander.IconSource>
+                        <ui:FASettingsExpander.Footer>
                             <NumericUpDown
                                 HorizontalAlignment="Left"
                                 Increment="5"
                                 Maximum="120"
                                 Minimum="5"
                                 Value="{Binding NewLobbyHighlightTime, Mode=TwoWay}" />
-                        </ui:SettingsExpander.Footer>
-                    </ui:SettingsExpander>
+                        </ui:FASettingsExpander.Footer>
+                    </ui:FASettingsExpander>
 
-                    <ui:SettingsExpander Header="Query separator">
-                        <ui:SettingsExpander.IconSource>
-                            <ui:FontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="{x:Static controls:SymbolIcons.Edit}" />
-                        </ui:SettingsExpander.IconSource>
-                        <ui:SettingsExpander.Footer>
+                    <ui:FASettingsExpander Header="Query separator">
+                        <ui:FASettingsExpander.IconSource>
+                            <ui:FAFontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="{x:Static controls:SymbolIcons.Edit}" />
+                        </ui:FASettingsExpander.IconSource>
+                        <ui:FASettingsExpander.Footer>
                             <TextBox
                                 x:Name="separatorTextBox"
                                 Width="100"
                                 HorizontalAlignment="Left"
                                 Text="{Binding Separator, Mode=TwoWay}" />
-                        </ui:SettingsExpander.Footer>
-                    </ui:SettingsExpander>
+                        </ui:FASettingsExpander.Footer>
+                    </ui:FASettingsExpander>
 
-                    <ui:SettingsExpander Description="Type of link used to join a game" Header="Game link">
-                        <ui:SettingsExpander.IconSource>
-                            <ui:FontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="{x:Static controls:SymbolIcons.Link}" />
-                        </ui:SettingsExpander.IconSource>
-                        <ui:SettingsExpander.Footer>
+                    <ui:FASettingsExpander Description="Type of link used to join a game" Header="Game link">
+                        <ui:FASettingsExpander.IconSource>
+                            <ui:FAFontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="{x:Static controls:SymbolIcons.Link}" />
+                        </ui:FASettingsExpander.IconSource>
+                        <ui:FASettingsExpander.Footer>
                             <StackPanel Orientation="Vertical">
                                 <RadioButton
                                     Content="aoe2de://"
@@ -95,50 +95,50 @@
                                     GroupName="JoinLinkType"
                                     IsChecked="{Binding JoinLink, Converter={x:Static converters:Converters.EnumToBooleanConverter}, ConverterParameter={x:Static services:JoinLinkEnum.Steam}}" />
                             </StackPanel>
-                        </ui:SettingsExpander.Footer>
-                    </ui:SettingsExpander>
+                        </ui:FASettingsExpander.Footer>
+                    </ui:FASettingsExpander>
 
                     <!--  About  -->
                     <TextBlock Classes="settingsSectionHeaderTextBlockStyle" Text="About" />
 
-                    <ui:SettingsExpander Header="AoE2DE Lobby Browser">
-                        <ui:SettingsExpander.IconSource>
-                            <ui:BitmapIconSource UriSource="avares://AoE2DELobbyBrowserAvalonia/Assets/appIcon.ico" />
-                        </ui:SettingsExpander.IconSource>
-                        <ui:SettingsExpander.Footer>
+                    <ui:FASettingsExpander Header="AoE2DE Lobby Browser">
+                        <ui:FASettingsExpander.IconSource>
+                            <ui:FABitmapIconSource UriSource="avares://AoE2DELobbyBrowserAvalonia/Assets/appIcon.ico" />
+                        </ui:FASettingsExpander.IconSource>
+                        <ui:FASettingsExpander.Footer>
                             <TextBlock Margin="0,-2,0,0" Text="{Binding Version}" />
-                        </ui:SettingsExpander.Footer>
-                        <ui:SettingsExpander.Items>
-                            <ui:SettingsExpanderItem
+                        </ui:FASettingsExpander.Footer>
+                        <ui:FASettingsExpander.Items>
+                            <ui:FASettingsExpanderItem
                                 Command="{Binding RateAppCommand}"
                                 Content="Rate and review in Microsoft Store"
                                 IsClickEnabled="True">
-                                <ui:SettingsExpanderItem.ActionIconSource>
-                                    <ui:FontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="&#xE8A7;" />
-                                </ui:SettingsExpanderItem.ActionIconSource>
-                            </ui:SettingsExpanderItem>
-                            <ui:SettingsExpanderItem Content="Github">
-                                <ui:SettingsExpanderItem.Footer>
+                                <ui:FASettingsExpanderItem.ActionIconSource>
+                                    <ui:FAFontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="&#xE8A7;" />
+                                </ui:FASettingsExpanderItem.ActionIconSource>
+                            </ui:FASettingsExpanderItem>
+                            <ui:FASettingsExpanderItem Content="Github">
+                                <ui:FASettingsExpanderItem.Footer>
                                     <Button
                                         Classes="hyperlinkButton"
                                         Command="{Binding OpenUrlCommand}"
                                         CommandParameter="https://github.com/tmk907/AoE2DELobbyBrowser">
                                         <TextBlock Text="https://github.com/tmk907/AoE2DELobbyBrowser" />
                                     </Button>
-                                </ui:SettingsExpanderItem.Footer>
-                            </ui:SettingsExpanderItem>
-                            <ui:SettingsExpanderItem Content="Application icon">
-                                <ui:SettingsExpanderItem.Footer>
+                                </ui:FASettingsExpanderItem.Footer>
+                            </ui:FASettingsExpanderItem>
+                            <ui:FASettingsExpanderItem Content="Application icon">
+                                <ui:FASettingsExpanderItem.Footer>
                                     <Button
                                         Classes="hyperlinkButton"
                                         Command="{Binding OpenUrlCommand}"
                                         CommandParameter="https://www.flaticon.com/free-icons/roman">
                                         <TextBlock Text="Roman icons created by Freepik - Flaticon" />
                                     </Button>
-                                </ui:SettingsExpanderItem.Footer>
-                            </ui:SettingsExpanderItem>
-                            <ui:SettingsExpanderItem>
-                                <ui:SettingsExpanderItem.Content>
+                                </ui:FASettingsExpanderItem.Footer>
+                            </ui:FASettingsExpanderItem>
+                            <ui:FASettingsExpanderItem>
+                                <ui:FASettingsExpanderItem.Content>
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock Margin="0,0,0,16" Text="Dependencies &amp; references" />
                                         <StackPanel>
@@ -186,18 +186,18 @@
                                             </Button>
                                         </StackPanel>
                                     </StackPanel>
-                                </ui:SettingsExpanderItem.Content>
-                            </ui:SettingsExpanderItem>
-                            <ui:SettingsExpanderItem
+                                </ui:FASettingsExpanderItem.Content>
+                            </ui:FASettingsExpanderItem>
+                            <ui:FASettingsExpanderItem
                                 Command="{Binding OpenLogsFolderCommand}"
                                 Content="Open folder with log files"
                                 IsClickEnabled="True">
-                                <ui:SettingsExpanderItem.ActionIconSource>
-                                    <ui:FontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="&#xE8A7;" />
-                                </ui:SettingsExpanderItem.ActionIconSource>
-                            </ui:SettingsExpanderItem>
-                            <ui:SettingsExpanderItem>
-                                <ui:SettingsExpanderItem.Content>
+                                <ui:FASettingsExpanderItem.ActionIconSource>
+                                    <ui:FAFontIconSource FontFamily="{StaticResource SymbolFont}" Glyph="&#xE8A7;" />
+                                </ui:FASettingsExpanderItem.ActionIconSource>
+                            </ui:FASettingsExpanderItem>
+                            <ui:FASettingsExpanderItem>
+                                <ui:FASettingsExpanderItem.Content>
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock Margin="0,0,0,16" Text="Disclaimer" />
                                         <TextBlock TextWrapping="Wrap">
@@ -211,10 +211,10 @@
                                             <TextBlock Text="Game Content Usage Rules" />
                                         </Button>
                                     </StackPanel>
-                                </ui:SettingsExpanderItem.Content>
-                            </ui:SettingsExpanderItem>
-                        </ui:SettingsExpander.Items>
-                    </ui:SettingsExpander>
+                                </ui:FASettingsExpanderItem.Content>
+                            </ui:FASettingsExpanderItem>
+                        </ui:FASettingsExpander.Items>
+                    </ui:FASettingsExpander>
                 </StackPanel>
             </ScrollViewer>
         </Grid>

@@ -5,7 +5,6 @@ using AoE2DELobbyBrowserAvalonia.Views;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using CommunityToolkit.Mvvm.DependencyInjection;
 //using Live.Avalonia;
@@ -22,10 +21,6 @@ public partial class App : Application //, ILiveView
 
     public override void OnFrameworkInitializationCompleted()
     {
-        // Line below is needed to remove Avalonia data validation.
-        // Without this line you will get duplicate validations from both Avalonia and CT
-        BindingPlugins.DataValidators.RemoveAt(0);
-
         Services = ConfigureServices();
         Ioc.Default.ConfigureServices(Services);
         Name = Ioc.Default.GetRequiredService<IConfiguration>().AppDisplayName;
