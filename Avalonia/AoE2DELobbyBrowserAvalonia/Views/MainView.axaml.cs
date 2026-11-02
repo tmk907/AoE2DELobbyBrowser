@@ -23,6 +23,9 @@ public partial class MainView : UserControl, IRecipient<KeyboardShortcutMessage>
             case { Key: Key.G, Modifier: KeyModifiers.Control }:
                 this.FindControl<TextBox>("excludeTextBox")?.Focus();
                 break;
+            case { Key: Key.D, Modifier: KeyModifiers.Control }:
+                this.FindControl<TextBox>("datasetTextBox")?.Focus();
+                break;
             case { Key: Key.Q, Modifier: KeyModifiers.Control }:
                 var c = this.FindControl<ComboBox>("gameTypesCombobox");
                 c?.Focus();

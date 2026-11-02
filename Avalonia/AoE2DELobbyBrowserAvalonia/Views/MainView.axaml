@@ -123,13 +123,21 @@
                     Width="180"
                     ItemsSource="{Binding MapTypes}"
                     SelectedItem="{Binding Settings.SelectedMapType, Mode=TwoWay}"
-                    ToolTip.Tip="Game type (Ctrl + W)" />
+                    ToolTip.Tip="Map type (Ctrl + W)" />
                 <TextBlock Classes="labelTextBlock" Text="Speed" />
                 <ComboBox
                     Width="100"
                     ItemsSource="{Binding GameSpeeds}"
                     SelectedItem="{Binding Settings.SelectedGameSpeed, Mode=TwoWay}"
-                    ToolTip.Tip="Game type (Ctrl + E)" />
+                    ToolTip.Tip="Game speed (Ctrl + E)" />
+                <TextBlock Classes="labelTextBlock" Text="Dataset" />
+                <TextBox
+                    Name="datasetTextBox"
+                    Width="180"
+                    KeyDown="UnFocusOnKeyDown"
+                    Text="{Binding Settings.Dataset, Mode=TwoWay}"
+                    ToolTip.Tip="Dataset contains text (Ctrl + D)"
+                    PlaceholderText="dataset" />
             </StackPanel>
             <StackPanel
                 Margin="2"

@@ -28,6 +28,7 @@ public partial class MainWindow : Window
         RegisterKeyBinding(Key.F, KeyModifiers.Control);
         RegisterKeyBinding(Key.G, KeyModifiers.Control);
         RegisterKeyBinding(Key.Q, KeyModifiers.Control);
+        RegisterKeyBinding(Key.D, KeyModifiers.Control);
 
         DataContext = new MainWindowViewModel();
 
