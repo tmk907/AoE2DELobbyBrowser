@@ -100,22 +100,38 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v3
 
-    - name: Decode signing certificate
+    # MSBuild's own signing can't import password-protected PFX files on the runner (APPX0105/APPX0107),
+    # so the certificate goes into the user store and SignTool signs the package after the build.
+    - name: Import signing certificate
       env:
         PFX_BASE64: ${{ secrets.BASE64_ENCODED_PFX }}
+        PFX_PASSWORD: ${{ secrets.PFX_PASSWORD }}
       run: |
         if (-not $env:PFX_BASE64) { throw "Repository secret BASE64_ENCODED_PFX is not set." }
-        $pfxPath = Join-Path $env:RUNNER_TEMP 'signing.pfx'
-        [IO.File]::WriteAllBytes($pfxPath, [Convert]::FromBase64String($env:PFX_BASE64))
-        echo "Pfx_Path=$pfxPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        $flags = [Security.Cryptography.X509Certificates.X509KeyStorageFlags]'UserKeySet, PersistKeySet'
+        try {
+          $cert = [Security.Cryptography.X509Certificates.X509Certificate2]::new(
+            [Convert]::FromBase64String($env:PFX_BASE64), $env:PFX_PASSWORD, $flags)
+        } catch {
+          throw "Cannot open the PFX from BASE64_ENCODED_PFX. Check that PFX_PASSWORD matches it. $_"
+        }
+        if (-not $cert.HasPrivateKey) { throw "The PFX has no private key." }
+        if ($cert.Subject -ne $env:MsixPublisherId) {
+          throw "Certificate subject '$($cert.Subject)' must match the manifest publisher '$env:MsixPublisherId'."
+        }
+        $store = [Security.Cryptography.X509Certificates.X509Store]::new('My', 'CurrentUser')
+        $store.Open('ReadWrite')
+        $store.Add($cert)
+        $store.Close()
+        $cerPath = Join-Path $env:RUNNER_TEMP 'AoE2DELobbyBrowser.cer'
+        [IO.File]::WriteAllBytes($cerPath, $cert.Export('Cert'))
+        echo "Cert_Thumbprint=$($cert.Thumbprint)" >> $env:GITHUB_ENV
+        echo "Cer_Path=$cerPath" >> $env:GITHUB_ENV
 
     # Self-contained .NET and Windows App SDK: users need no runtime installed besides the MSIX itself.
     # App notifications (AppNotificationManager) work self-contained; the package identity and the
     # manifest's COM activator handle toast activation.
-    # MSBuild reads PackageCertificatePassword from the environment, which keeps it off the command line.
     - name: Build and package MSIX
-      env:
-        PackageCertificatePassword: ${{ secrets.PFX_PASSWORD }}
       run: >-
         msbuild $env:Project_Path /restore /v:minimal
         /p:Configuration=Release
@@ -127,28 +143,36 @@ jobs:
         /p:UapAppxPackageBuildMode=SideloadOnly
         /p:AppxBundle=Never
         /p:AppxPackageDir="$env:Package_Dir"
-        /p:AppxPackageSigningEnabled=true
-        /p:PackageCertificateKeyFile="$env:Pfx_Path"
-        /p:AppxPackageSigningTimestampServerUrl=http://timestamp.digicert.com
-        /p:AppxPackageSigningTimestampDigestAlgorithm=SHA256
+        /p:AppxPackageSigningEnabled=false
 
-    - name: Remove signing certificate
-      if: always()
-      run: Remove-Item -Force -ErrorAction SilentlyContinue (Join-Path $env:RUNNER_TEMP 'signing.pfx')
-
-    - name: Collect package
+    - name: Collect and sign package
       run: |
         New-Item -ItemType Directory -Force out | Out-Null
         $msix = @(Get-ChildItem $env:Package_Dir -Recurse -Filter *.msix)
         if ($msix.Count -ne 1) { throw "Expected one .msix, found $($msix.Count)." }
         $arch = '${{ matrix.platform }}'.ToLowerInvariant()
-        Copy-Item $msix[0].FullName "out/AoE2DELobbyBrowser-WinUI-$env:App_Version-$arch.msix"
+        $target = "out/AoE2DELobbyBrowser-WinUI-$env:App_Version-$arch.msix"
+        Copy-Item $msix[0].FullName $target
+        $signtool = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\x64\signtool.exe" |
+          Sort-Object { [version]$_.Directory.Parent.Name } | Select-Object -Last 1
+        if (-not $signtool) { throw "signtool.exe not found in the Windows SDK." }
+        & $signtool.FullName sign /fd SHA256 /sha1 $env:Cert_Thumbprint /s My `
+          /tr http://timestamp.digicert.com /td SHA256 $target
+        if ($LASTEXITCODE -ne 0) { throw "signtool failed with exit code $LASTEXITCODE." }
         # The public certificate is the same for every architecture, so publish it once.
-        if ($arch -eq 'x64') {
-          Get-ChildItem $env:Package_Dir -Recurse -Filter *.cer | Select-Object -First 1 |
-            Copy-Item -Destination out/AoE2DELobbyBrowser.cer
-        }
+        if ($arch -eq 'x64') { Copy-Item $env:Cer_Path out/AoE2DELobbyBrowser.cer }
         Get-ChildItem out
+
+    - name: Remove signing certificate
+      if: always()
+      run: |
+        if ($env:Cert_Thumbprint) {
+          $store = [Security.Cryptography.X509Certificates.X509Store]::new('My', 'CurrentUser')
+          $store.Open('ReadWrite')
+          $store.Certificates.Find('FindByThumbprint', $env:Cert_Thumbprint, $false) |
+            ForEach-Object { $store.Remove($_) }
+          $store.Close()
+        }
 
     - name: Upload package
       uses: actions/upload-artifact@v6
