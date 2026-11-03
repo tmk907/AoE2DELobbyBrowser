@@ -1,10 +1,12 @@
 ﻿using AoE2DELobbyBrowser.Core.Models;
 using AoE2DELobbyBrowser.Core.Services;
-using CommunityToolkit.WinUI.Notifications;
+using Microsoft.Windows.AppNotifications;
+using Microsoft.Windows.AppNotifications.Builder;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace AoE2DELobbyBrowser.Services
 {
@@ -39,14 +41,12 @@ namespace AoE2DELobbyBrowser.Services
         {
             try
             {
-                new ToastContentBuilder()
+                var notification = new AppNotificationBuilder()
                     .AddArgument("type", "lobby notification")
                     .AddText($"{lobbies.Count()} new lobbies")
-                    .Show(toast =>
-                    {
-                        toast.ExpiresOnReboot = true;
-                        toast.ExpirationTime = DateTime.Now.AddHours(1);
-                    });
+                    .BuildNotification();
+
+                Show(notification);
             }
             catch (Exception ex)
             {
@@ -58,24 +58,47 @@ namespace AoE2DELobbyBrowser.Services
         {
             try
             {
-                var toastArguments = new ToastArguments();
-                toastArguments.Add("JoinLink", lobby.JoinLink);
-                new ToastContentBuilder()
+                var payload = new AppNotificationBuilder()
                     .AddArgument("type", "lobby notification")
-                    .AddHeader("singlelobby", "New lobby", lobby.MatchId)
                     .AddText(lobby.Name)
                     .AddText(lobby.Players.FirstOrDefault()?.Name ?? "")
-                    .AddButton("Join game", ToastActivationType.Foreground, toastArguments.ToString())
-                    .Show(toast =>
-                    {
-                        toast.ExpiresOnReboot = true;
-                        toast.ExpirationTime = DateTime.Now.AddHours(1);
-                    });
+                    .AddButton(new AppNotificationButton("Join game")
+                        .AddArgument("JoinLink", lobby.JoinLink))
+                    .BuildNotification()
+                    .Payload;
+
+                // AppNotificationBuilder doesn't support headers, add it to the payload directly
+                var notification = new AppNotification(AddHeader(payload, "singlelobby", "New lobby", "type=lobby notification"));
+
+                Show(notification);
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }
+        }
+
+        private static void Show(AppNotification notification)
+        {
+            notification.Expiration = DateTimeOffset.Now.AddHours(1);
+            notification.ExpiresOnReboot = true;
+
+            AppNotificationManager.Default.Show(notification);
+
+            if (notification.Id == 0)
+            {
+                Log.Error("App notification failed to show");
+            }
+        }
+
+        private static string AddHeader(string payload, string id, string title, string arguments)
+        {
+            var toast = XDocument.Parse(payload);
+            toast.Root!.AddFirst(new XElement("header",
+                new XAttribute("id", id),
+                new XAttribute("title", title),
+                new XAttribute("arguments", arguments)));
+            return toast.ToString(SaveOptions.DisableFormatting);
         }
     }
 }

@@ -3,14 +3,16 @@ using AoE2DELobbyBrowser.Core.Api;
 using AoE2DELobbyBrowser.Core.Services;
 using AoE2DELobbyBrowser.Services;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.WinUI.Notifications;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
+using Microsoft.Windows.AppLifecycle;
+using Microsoft.Windows.AppNotifications;
 using ReactiveUI.Builder;
 using Serilog;
 using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -43,8 +45,9 @@ namespace AoE2DELobbyBrowser
                .WriteTo.File(Path.Combine(PlatformConfig.LogsFolder, "logs.txt"), rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
-            var isToastActivated = ToastNotificationManagerCompat.WasCurrentProcessToastActivated();
-            ToastNotificationManagerCompat.OnActivated += ToastNotificationManagerCompat_OnActivated;
+            var isToastActivated = IsAppNotificationActivated;
+            AppNotificationManager.Default.NotificationInvoked += AppNotificationManager_NotificationInvoked;
+            AppNotificationManager.Default.Register();
 
             Log.Information("App started {0} , isToastActivated {1}", DateTime.Now, isToastActivated);
             Log.Information("{0} ({1}) {2}", PlatformConfig.AppDisplayName, PlatformConfig.InformationVersion,
@@ -60,6 +63,12 @@ namespace AoE2DELobbyBrowser
         private static WinUI3Configuration PlatformConfig;
         private static DispatcherQueue DispatcherQueue;
 
+        // COM server arguments from Package.appxmanifest, passed when the app is launched by a notification
+        private static readonly bool IsAppNotificationActivated = Environment.GetCommandLineArgs()
+            .Any(arg => arg.Contains("----AppNotificationActivated:"));
+
+        private string m_launchNotificationArgument;
+
 
         private Window m_window;
 
@@ -73,17 +82,38 @@ namespace AoE2DELobbyBrowser
             // Get the app-level dispatcher
             DispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
-            // If we weren't launched by a toast, launch our window like normal.
-            // Otherwise if launched by a toast, our OnActivated callback will be triggered
-            if (!ToastNotificationManagerCompat.WasCurrentProcessToastActivated())
+            // If launched by a notification, its arguments come either with the activation args
+            // or through the NotificationInvoked event
+            var activatedArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+            if (activatedArgs.Kind == ExtendedActivationKind.AppNotification)
+            {
+                var notificationArgs = (AppNotificationActivatedEventArgs)activatedArgs.Data;
+                m_launchNotificationArgument = notificationArgs.Argument;
+                OnNotificationActivated(notificationArgs);
+            }
+            else if (!IsAppNotificationActivated)
             {
                 LaunchAndBringToForegroundIfNeeded();
             }
         }
 
-        private async void ToastNotificationManagerCompat_OnActivated(ToastNotificationActivatedEventArgsCompat toastArgs)
+        private void AppNotificationManager_NotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs args)
         {
-            ToastArguments args = ToastArguments.Parse(toastArgs.Argument);
+            // Skip the notification already handled from launch activation args
+            if (m_launchNotificationArgument != null && m_launchNotificationArgument == args.Argument)
+            {
+                m_launchNotificationArgument = null;
+                return;
+            }
+
+            OnNotificationActivated(args);
+        }
+
+        private async void OnNotificationActivated(AppNotificationActivatedEventArgs notificationArgs)
+        {
+            Log.Information("Notification activated {0}", notificationArgs.Argument);
+
+            var args = notificationArgs.Arguments;
             if (args.TryGetValue("JoinLink", out string link) && !string.IsNullOrEmpty(link))
             {
                 await Windows.System.Launcher.LaunchUriAsync(new Uri(link));
