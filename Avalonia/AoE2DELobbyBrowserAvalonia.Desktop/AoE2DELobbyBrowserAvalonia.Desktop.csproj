@@ -20,7 +20,31 @@
     <Company>tmk907</Company>
     <Description>Lobby browser for Age of Empires II: DE</Description>
   </PropertyGroup>
-	
+
+  <PropertyGroup>
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <!-- Core uses reflection-based System.Text.Json, which is disabled by default when trimming -->
+    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
+    <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
+  </PropertyGroup>
+
+  <!-- Skip native .pdb files (SkiaSharp, HarfBuzz) that NuGet packages copy to publish -->
+  <Target Name="RemovePdbsFromPublish" AfterTargets="ComputeResolvedFilesToPublishList">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.pdb'" />
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <!-- Trimming breaks the toolkit's COM interop (crash in ToastNotificationManagerCompat) -->
+    <TrimmerRootAssembly Include="Microsoft.Toolkit.Uwp.Notifications" />
+    <!-- App assemblies use reflection (ViewLocator, navigation, JSON DTOs) -->
+    <TrimmerRootAssembly Include="AoE2DELobbyBrowser.Core" />
+    <TrimmerRootAssembly Include="AoE2DELobbyBrowserAvalonia" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
 	<PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.14" />
