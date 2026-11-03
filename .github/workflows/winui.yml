@@ -1,0 +1,191 @@
+# Builds the WinUI 3 app as a signed sideload MSIX (x64 + ARM64) and publishes it as a GitHub release.
+#
+# Triggers:
+#   - pushing a tag winui-<major>.<minor>.<build>, e.g. winui-1.6.0
+#   - running the workflow manually (the tag is derived from the manifest version)
+# The version comes from Package.appxmanifest. Its Identity Version must be <major>.<minor>.<build>.0
+# and, for a tag push, must match the tag, otherwise the workflow fails.
+#
+# Required repository secrets (Settings > Secrets and variables > Actions):
+#   BASE64_ENCODED_PFX  base64 of the code-signing .pfx whose subject is CN=DryForest
+#   PFX_PASSWORD        password of that .pfx (leave unset if the .pfx has no password)
+
+name: Build WinUI sideload app
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'winui-[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: write
+
+env:
+  Manifest_Path: AoE2DELobbyBrowser/Package.appxmanifest
+
+jobs:
+
+  version:
+    runs-on: windows-latest
+
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Get and check app version
+      id: version
+      shell: pwsh
+      run: |
+        [xml]$manifest = Get-Content $env:Manifest_Path
+        $manifestVersion = [version]$manifest.Package.Identity.Version
+        if ($manifestVersion.Revision -ne 0) {
+          throw "Manifest version $manifestVersion must end in .0 (MSIX reserves the revision number)."
+        }
+        $version = $manifestVersion.ToString(3)
+        if ($env:GITHUB_REF_TYPE -eq 'tag') {
+          $tagVersion = $env:GITHUB_REF_NAME -replace '^winui-', ''
+          if ($tagVersion -ne $version) {
+            throw "Tag $env:GITHUB_REF_NAME does not match manifest version $manifestVersion. Update the manifest or the tag."
+          }
+        }
+        echo "version=$version" >> $env:GITHUB_OUTPUT
+        echo "WinUI version: $version"
+
+  build:
+    needs: version
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        include:
+          - platform: x64
+            rid: win-x64
+          - platform: ARM64
+            rid: win-arm64
+
+    env:
+      Project_Path: AoE2DELobbyBrowser/AoE2DELobbyBrowser.csproj
+      Package_Dir: ${{ github.workspace }}\winui-packages\
+      App_Version: ${{ needs.version.outputs.version }}
+      # Sideload identity, distinct from the Store identity so both can be installed side by side.
+      # The publisher must match the subject of the signing certificate.
+      MsixPackageId: DryForest.AoE2DELobbyBrowser
+      MsixPublisherId: CN=DryForest
+      ToastActivatorCLSID: 126CBD31-FDF5-4652-BB2A-8624CEC6E7AD
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Set sideload identity in manifest
+      run: |
+        $path = (Resolve-Path $env:Manifest_Path).Path
+        [xml]$manifest = Get-Content $path
+        $manifest.Package.Identity.Name = $env:MsixPackageId
+        $manifest.Package.Identity.Publisher = $env:MsixPublisherId
+        $ext = $manifest.Package.Applications.Application.Extensions.Extension
+        $ext[0].ToastNotificationActivation.ToastActivatorCLSID = $env:ToastActivatorCLSID
+        $ext[1].ComServer.ExeServer.Class.Id = $env:ToastActivatorCLSID
+        $manifest.Save($path)
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 10.0.x
+
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v3
+
+    - name: Decode signing certificate
+      env:
+        PFX_BASE64: ${{ secrets.BASE64_ENCODED_PFX }}
+      run: |
+        if (-not $env:PFX_BASE64) { throw "Repository secret BASE64_ENCODED_PFX is not set." }
+        $pfxPath = Join-Path $env:RUNNER_TEMP 'signing.pfx'
+        [IO.File]::WriteAllBytes($pfxPath, [Convert]::FromBase64String($env:PFX_BASE64))
+        echo "Pfx_Path=$pfxPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+    # Self-contained .NET and Windows App SDK: users need no runtime installed besides the MSIX itself.
+    # App notifications (AppNotificationManager) work self-contained; the package identity and the
+    # manifest's COM activator handle toast activation.
+    # MSBuild reads PackageCertificatePassword from the environment, which keeps it off the command line.
+    - name: Build and package MSIX
+      env:
+        PackageCertificatePassword: ${{ secrets.PFX_PASSWORD }}
+      run: >-
+        msbuild $env:Project_Path /restore /v:minimal
+        /p:Configuration=Release
+        /p:Platform=${{ matrix.platform }}
+        /p:RuntimeIdentifier=${{ matrix.rid }}
+        /p:SelfContained=true
+        /p:WindowsAppSDKSelfContained=true
+        /p:GenerateAppxPackageOnBuild=true
+        /p:UapAppxPackageBuildMode=SideloadOnly
+        /p:AppxBundle=Never
+        /p:AppxPackageDir="$env:Package_Dir"
+        /p:AppxPackageSigningEnabled=true
+        /p:PackageCertificateKeyFile="$env:Pfx_Path"
+        /p:AppxPackageSigningTimestampServerUrl=http://timestamp.digicert.com
+        /p:AppxPackageSigningTimestampDigestAlgorithm=SHA256
+
+    - name: Remove signing certificate
+      if: always()
+      run: Remove-Item -Force -ErrorAction SilentlyContinue (Join-Path $env:RUNNER_TEMP 'signing.pfx')
+
+    - name: Collect package
+      run: |
+        New-Item -ItemType Directory -Force out | Out-Null
+        $msix = @(Get-ChildItem $env:Package_Dir -Recurse -Filter *.msix)
+        if ($msix.Count -ne 1) { throw "Expected one .msix, found $($msix.Count)." }
+        $arch = '${{ matrix.platform }}'.ToLowerInvariant()
+        Copy-Item $msix[0].FullName "out/AoE2DELobbyBrowser-WinUI-$env:App_Version-$arch.msix"
+        # The public certificate is the same for every architecture, so publish it once.
+        if ($arch -eq 'x64') {
+          Get-ChildItem $env:Package_Dir -Recurse -Filter *.cer | Select-Object -First 1 |
+            Copy-Item -Destination out/AoE2DELobbyBrowser.cer
+        }
+        Get-ChildItem out
+
+    - name: Upload package
+      uses: actions/upload-artifact@v6
+      with:
+        name: winui-${{ matrix.platform }}
+        path: out/*
+        if-no-files-found: error
+
+  release:
+    needs: [version, build]
+    runs-on: windows-latest
+
+    env:
+      App_Version: ${{ needs.version.outputs.version }}
+
+    steps:
+    - name: Download packages
+      uses: actions/download-artifact@v7
+      with:
+        path: release
+        merge-multiple: true
+
+    - name: Create or update the GitHub release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: winui-${{ env.App_Version }}
+        name: WinUI ${{ env.App_Version }}
+        commit: ${{ github.sha }}
+        artifacts: release/*
+        # GitHub appends the generated release notes after this body.
+        body: |
+          ## Install
+
+          1. Download `AoE2DELobbyBrowser.cer` and the `.msix` for your PC: `x64` for most PCs, `arm64` for Windows on ARM.
+          2. Trust the certificate once (needs admin): open the `.cer`, choose **Install Certificate** > **Local Machine** > **Place all certificates in the following store** > **Trusted People**.
+             Or run in an elevated PowerShell: `Import-Certificate -FilePath AoE2DELobbyBrowser.cer -CertStoreLocation Cert:\LocalMachine\TrustedPeople`
+          3. Open the `.msix` and click **Install**. To update later, install the newer `.msix` the same way.
+        generateReleaseNotes: true
+        allowUpdates: true
+        token: ${{ secrets.GITHUB_TOKEN }}

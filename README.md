@@ -4,6 +4,8 @@
 <img width='240' height='96'  src='https://get.microsoft.com/images/en-us%20dark.svg' 
 alt='English badge'/></a>
 
+Not using the Microsoft Store? Download the signed MSIX (x64 or arm64) or the portable Avalonia zip from [Releases](https://github.com/tmk907/AoE2DELobbyBrowser/releases); install steps are in each release's notes.
+
 Lobby browser for Age of Empires II DE
 - Filter games by lobby name, game type, map type, speed
 - Show notifications for new games
